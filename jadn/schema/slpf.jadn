@@ -1,0 +1,56 @@
+{
+    "meta": {
+    "module": "oasis-open.org/openc2/v1.0/ap-slpf",
+    "title": "Stateless Packet Filtering",
+    "version": "wd02",
+    "description": "Data definitions for Stateless Packet Filtering (SLPF) functions",
+    "exports": ["Target", "Specifiers", "Args", "Results"]
+    },
+
+    "types": [
+
+    ["Target", "Choice", [], "SLPF targets", [
+        [1, "access_rules", "Rules", [], "Return the requested access rules in the response"]]
+    ],
+
+    ["Rules", "Map", [], "Specifiers for the access_rules target", [
+        [1, "allow_rules", "Rule-Target", ["[0"], "Return specified allow rules"],
+        [2, "deny_rules", "Rule-Target", ["[0"], "Return specified deny rules"]]
+    ],
+
+    ["Rule-Target", "Choice", [], "Specifier for an access rule", [
+        [1, "all", "Null", [], "Any rules"],
+        [2, "ip_addr", "..:IP-Addr", ["[0"], "Rules affecting the specified address"],
+        [3, "ip_connection", "..:IP-Connection", ["[0"], "Rules affecting the specified 5-tuple"]]
+    ],
+
+    ["Specifiers", "Map", [], "SLPF actuator specifiers", [
+        [1, "nfv_id", "String", [], "Identifier of a virtualized packet filter"]]
+    ],
+
+    ["Args", "Map", [], "SLPF command arguments", [
+      [1, "block-method", "Block-Method", [], "How to handle denied packets"],
+      [2, "insert", "Integer", [], "Position of a rule in access list"]]
+    ],
+
+    ["Block-Method", "Enumerated", [], "", [
+      [1, "drop", ""],
+      [2, "reject", ""],
+      [3, "deceive", ""]]
+    ],
+
+    ["Results", "Map", [], "SLPF results", [
+        [1, "access_rules", "Rule-Item", ["[0"], "Access rules matching a query"]]
+    ],
+
+    ["Rule-Item", "Array", [], "", [
+        [1, "id", "Integer", [], "Rule identifier within a ruleset"],
+        [2, "action", "Rule-Action", [], "Allow or Deny"],
+        [3, "rule", "Rule-Target", [], "Matching criterion"]]
+    ],
+
+    ["Rule-Action", "Enumerated", [], "", [
+        [1, "allow", "Matching packets are permitted"],
+        [2, "deny", "Matching packets are blocked"]]
+    ]]
+ }
