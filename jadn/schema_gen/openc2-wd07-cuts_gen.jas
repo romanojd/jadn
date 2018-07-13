@@ -1,0 +1,193 @@
+-- Generated from schema\openc2-wd07-cuts.jadn, Fri Jul 13 15:04:40 2018
+
+/*
+module:        /oasis-open.org/openc2/v1.0/openc2-lang
+title:         OpenC2 Language Objects
+version:       wd07
+description:   Datatypes that define the content of OpenC2 commands and
+               responses.
+exports:       ['OpenC2-Command', 'OpenC2-Response']
+imports:       [['slpf', '/oasis-open.org/openc2/v1.0/ap-slpf'], ['jadn', '/oasis-open.org/openc2/v1.0/jadn']]
+*/
+
+OpenC2-Command ::= RECORD {    -- The OpenC2 Command describes an action performed on a target. It can be directive or descriptive depending on the context.
+    action       Action,    -- The task or activity to be performed (i.e., the 'verb')
+    target       Target,    -- The object of the action. The action is performed on the target
+    actuator     Actuator OPTIONAL,    -- The subject of the action. The actuator executes the action on the target
+    args         Args OPTIONAL,    -- Additional information that applies to the command
+    id           Command-ID OPTIONAL     -- Identifier used to link responses to a command
+}
+
+Action ::= ENUMERATED {
+    scan         (1),    -- Systematic examination of some aspect of the entity or its environment in order to obtain information.
+    locate       (2),    -- Find an object physically, logically, functionally, or by organization.
+    query        (3),    -- Initiate a request for information.
+    report       (4),    -- Task an entity to provide information to a designated recipient.
+    notify       (5),    -- Set an entity's alerting preferences.
+    deny         (6),    -- Prevent a certain event or action from completion, such as preventing a flow from reaching a destination or preventing access.
+    contain      (7),    -- Isolate a file, process, or entity so that it cannot modify or access assets or processes.
+    allow        (8),    -- Permit access to or execution of a target.
+    start        (9),    -- Initiate a process, application, system, or activity.
+    stop         (10),    -- Halt a system or end an activity.
+    restart      (11),    -- Stop then start a system or activity.
+    pause        (12),    -- Cease operation of a system or activity while maintaining state.
+    resume       (13),    -- Start a system or activity from a paused state.
+    cancel       (14),    -- Invalidate a previously issued action.
+    set          (15),    -- Change a value, configuration, or state of a managed entity.
+    update       (16),    -- Instruct a component to retrieve, install, process, and operate in accordance with a software update, reconfiguration, or other update.
+    move         (17),    -- Change the location of a file, subnet, network, or process.
+    redirect     (18),    -- Change the flow of traffic to a destination other than its original destination.
+    create       (19),    -- Add a new entity of a known type (e.g., data, files, directories).
+    delete       (20),    -- Remove an entity (e.g., data, files, flows.
+    snapshot     (21),    -- Record and store the state of a target at an instant in time.
+    detonate     (22),    -- Execute and observe the behavior of a target (e.g., file, hyperlink) in an isolated environment.
+    restore      (23),    -- Return a system to a previously known state.
+    save         (24),    -- Commit data or system state to memory.
+    throttle     (25),    -- Adjust the rate of a process, function, or activity.
+    delay        (26),    -- Stop or hold up an activity or data transmittal.
+    substitute   (27),    -- Replace all or part of the payload.
+    copy         (28),    -- Duplicate a file or data flow.
+    sync         (29),    -- Synchronize a sensor or actuator with other system components.
+    investigate  (30),    -- Task the recipient to aggregate and report information as it pertains to a security event or incident.
+    mitigate     (31),    -- Task the recipient to circumvent a problem without necessarily eliminating the vulnerability or attack point.
+    remediate    (32)     -- Task the recipient to eliminate a vulnerability or attack point.
+}
+
+Target ::= CHOICE {    -- OpenC2 Target datatypes
+    artifact       [1] Artifact,    -- An array of bytes representing a file-like object or a link to that object.
+    command        [2] Command-ID,    -- A reference to a previously issued OpenC2 command
+    device         [3] Device,    -- The properties of a hardware device
+    domain_name    [7] Domain-Name,    -- A netowrk domain name
+    email_addr     [8] Email-Addr,    -- A single email address
+    file           [10] File,    -- Properties of a file
+    ip_addr        [11] IP-Addr,    -- The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation
+    mac_addr       [13] Mac-Addr,    -- A single Media Access Control (MAC) address
+    ip_connection  [15] IP-Connection,    -- A network connection that originates from a source and is addressed to a destination
+    openc2         [16] OpenC2,    -- A set of items used with the query action to determine an actuator's capabilities
+    process        [17] Process,    -- Common properties of an instance of a computer program as executed on an operating system
+    uri            [19] URI,    -- A uniform resource identifier
+    slpf           [1024] slpf:Target     -- Targets defined in the Stateless Packet Filter profile
+}
+
+Actuator ::= CHOICE {
+    generic      [1] Specifiers,    -- Generic actuator specifiers
+    slpf         [1024] slpf:Specifiers     -- Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01
+}
+
+Specifiers ::= MAP {
+    actuator_id  [1] URI OPTIONAL,    -- Network locater of the actuator
+    asset_id     [2] STRING OPTIONAL     -- Hardware identifier of a physical actuator device, such as a serial number or inventory barcode
+}
+
+Args ::= MAP {
+    start_time          [1] Date-Time OPTIONAL,    -- The specific date/time to initiate the action
+    stop_time           [2] Date-Time OPTIONAL,    -- The specific date/time to terminate the action
+    duration            [3] Duration OPTIONAL,    -- The length of time for an action to be in effect
+    response_requested  [4] Response-Type OPTIONAL,    -- The type of response required for the action
+    slpf                [1024] slpf:Args OPTIONAL     -- Command arguments defined in the Stateless Packet Filter profile
+}
+
+OpenC2-Response ::= RECORD {
+    id           Command-ID,    -- Id of the ommand that induced this response
+    status       Status-Code,    -- An integer status code
+    status_text  STRING OPTIONAL,    -- A free-form human-readable description of the response status
+    *            Results     -- Data or extended status information that was requested from an OpenC2 command
+}
+
+Status-Code ::= ENUMERATED {
+    Processing         (102),    -- An interim response used to inform the client that the server has accepted the request but not yet completed it.
+    OK                 (200),    -- The request has succeeded.
+    Moved Permanently  (301),    -- The target resource has been assigned a new permanent URI
+    Bad Request        (400),    -- The server cannot process the request due to something that is perceived to be a client error (e.g., malformed request syntax.)
+    Unauthorized       (401),    -- The request lacks valid authentication credentials for the target resources or authorization has been refused for the submitted credentials.
+    Forbidden          (403),    -- The server understood the request but refuses to authorize it.
+    Server Error       (500),    -- The server encountered an unexpected condition that prevented it from fulfilling the request.
+    Not Implemented    (501)     -- The server does not support the functionality required to fulfill the request.
+}
+
+Artifact ::= RECORD {
+    mime_type    STRING OPTIONAL,    -- Permitted values specified in the IANA Media Types registry
+    *            Payload OPTIONAL,    -- choice of literal content or URL to obtain content
+    hashes       Hashes OPTIONAL     -- Specifies a dictionary of hashes for the contents of the payload
+}
+
+Payload ::= CHOICE {
+    payload_bin  [1] BINARY,    -- Specifies the data contained in the artifact.
+    url          [2] URI     -- MUST be a valid URL that resolves to the un-encoded content
+}
+
+OpenC2 ::= ARRAY_OF    -- A target used to query Actuator for its supported capabilities
+
+Query-Item ::= ENUMERATED {    -- Results to be included in response to query openc2 command
+    versions     (1),    -- OpenC2 language versions supported by this actuator
+    profiles     (2),    -- List of profiles supported by this actuator
+    schema       (3)     -- Definition of the command syntax supported by this actuator
+}
+
+IP-Connection ::= RECORD {    -- 5-tuple that specifies a tcp/ip connection
+    src_addr         IP-Addr OPTIONAL,    -- source address
+    src_port         Port OPTIONAL,    -- source TCP/UDP port number
+    dst_addr         IP-Addr OPTIONAL,    -- destination address
+    dst_port         Port OPTIONAL,    -- destination TCP/UDP port number
+    layer4-protocol  L4-Protocol OPTIONAL     -- Protocol (IPv4) / Next Header (IPv6)
+}
+
+L4-Protocol ::= ENUMERATED {    -- protocol (IPv4) or next header (IPv6) field - any IANA value, RFC 5237
+    icmp         (1),    -- Internet Control Message Protocol - RFC 792
+    tcp          (6),    -- Transmission Control Protocol - RFC 793
+    udp          (17),    -- User Datagram Protocol - RFC 768
+    sctp         (132)     -- Stream Control Transmission Protocol - RFC 4960
+}
+
+File ::= MAP {
+    name         [1] STRING OPTIONAL,    -- The name of the file as defined in the file system
+    path         [2] STRING OPTIONAL,    -- The absolute path to the location of the file in the file system
+    hashes       [3] Hashes OPTIONAL     -- One or more cryptographic hash codes of the file contents
+}
+
+Response-Type ::= ENUMERATED {
+    none         (0),    -- No response
+    ack          (1),    -- Respond when command received
+    complete     (2)     -- Respond when all aspects of command completed
+}
+
+Process ::= MAP {
+    pid           [1] INTEGER OPTIONAL,    -- Process ID of the process
+    name          [2] STRING OPTIONAL,    -- Name of the process
+    cwd           [3] STRING OPTIONAL,    -- Current working directory of the process
+    executable    [4] File OPTIONAL,    -- Executable that was executed to start the process
+    parent        [5] Process OPTIONAL,    -- Process that spawned this one
+    command_line  [6] STRING OPTIONAL     -- The full command line invocation used to start this process, including all arguments
+}
+
+Hashes ::= MAP {    -- Cryptographic Hash values
+    md5          [1] BINARY OPTIONAL,    -- Hex-encoded MD5 hash as defined in RFC3121
+    sha1         [4] BINARY OPTIONAL,    -- Hex-encoded SHA1 hash as defined in RFC3174
+    sha256       [6] BINARY OPTIONAL     -- Hex-encoded SHA256 as defined in RFC6234
+}
+
+Device ::= MAP {
+    hostname     [1] Hostname,    -- A hostname that can be used to connect to this device over a network
+    description  [2] STRING OPTIONAL,    -- A human-readable description of the purpose, relevance, and/or properties of the device
+    device_id    [3] STRING OPTIONAL     -- An identifier that refers to this device within an inventory or management system
+}
+
+Command-ID ::= STRING    -- Uniquely identifies a particular command - TBD syntax
+
+Date-Time ::= STRING    -- RFC 3339 date-time
+
+Duration ::= STRING    -- RFC 3339 / ISO 8601 duration
+
+Domain-Name ::= STRING    -- Domain name, RFC 1034, section 3.5
+
+Email-Addr ::= STRING    -- Email address, RFC 5322, section 3.4.1
+
+IP-Addr ::= STRING    -- IPv4 or IPv6 address per RFC 2673 section 3.2, and RFC 4291 section 2.2
+
+Mac-Addr ::= STRING    -- 48 bit Media Access Code address
+
+Port ::= STRING    -- Service Name or Transport Protocol Port Number, RFC 6335
+
+Version ::= STRING    -- Version string - TBD syntax
+
+URI ::= STRING    -- Uniform Resource Identifier
