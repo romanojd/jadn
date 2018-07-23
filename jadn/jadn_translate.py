@@ -22,17 +22,16 @@ from libs.convert.w_base import base_dump
 
 if __name__ == '__main__':
     cdir = os.path.dirname(os.path.realpath('__file__'))    # Current directory
-    print(cdir)
-    idir = os.path.join(cdir, 'schema')
+    idir = 'schema'
+    odir = os.path.normpath(os.path.join(cdir, '..', 'schema_out'))     # Put generated files outside the repo
+    print('Translating schemas from', os.path.realpath(idir), 'to', odir)
     for fn in (f[0] for f in (os.path.splitext(i) for i in os.listdir(idir)) if f[1] == '.jadn'):
         print('**', fn)
-        ifname = os.path.join(idir, fn)
-        ofname = os.path.join(cdir, '..', '..', 'schema_out', fn)
+        source = os.path.join(idir, fn) + '.jadn'
+        dest = os.path.join(odir, fn) + '_gen'
 
         # Prettyprint JADN, and convert to other formats
 
-        source = ifname + '.jadn'
-        dest = ofname + '_gen'
         schema = jadn_load(source)
         sa = jadn_analyze(schema)
 

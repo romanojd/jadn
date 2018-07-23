@@ -2,8 +2,8 @@
  "meta": {
   "module": "/oasis-open.org/openc2/v1.0/openc2-lang",
   "title": "OpenC2 Language Objects",
-  "version": "wd07",
-  "description": "Datatypes that define the content of OpenC2 commands and responses.",
+  "version": "wd07-slpf",
+  "description": "Datatypes that define the content of OpenC2 commands and responses.  Trimmed for slpf profile.",
   "imports": [
     ["slpf", "/oasis-open.org/openc2/v1.0/ap-slpf"],
     ["jadn", "/oasis-open.org/openc2/v1.0/jadn"]
