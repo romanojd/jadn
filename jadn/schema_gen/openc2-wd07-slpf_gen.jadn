@@ -1,8 +1,8 @@
-"Generated from schema\openc2-wd07.jadn, Wed Aug  8 12:08:51 2018"
+"Generated from schema\openc2-wd07-slpf.jadn, Mon Jul 23 15:14:15 2018"
 
 {
  "meta": {
-  "description": "Datatypes that define the content of OpenC2 commands and responses.",
+  "description": "Datatypes that define the content of OpenC2 commands and responses.  Trimmed for slpf profile.",
   "exports": ["OpenC2-Command", "OpenC2-Response"],
   "imports": [
    ["slpf", "/oasis-open.org/openc2/v1.0/ap-slpf"],
@@ -10,11 +10,11 @@
 ,
   "module": "/oasis-open.org/openc2/v1.0/openc2-lang",
   "title": "OpenC2 Language Objects",
-  "version": "wd07"
+  "version": "wd07-slpf"
  },
 
  "types": [
-  ["OpenC2-Command", "Record", [], "The OpenC2 Command describes an action performed on a target.", [
+  ["OpenC2-Command", "Record", [], "The OpenC2 Command describes an action performed on a target. It can be directive or descriptive depending on the context.", [
     [1, "action", "Action", [], "The task or activity to be performed (i.e., the 'verb')"],
     [2, "target", "Target", [], "The object of the action. The action is performed on the target"],
     [3, "actuator", "Actuator", ["[0"], "The subject of the action. The actuator executes the action on the target"],
@@ -61,26 +61,15 @@
     [1, "artifact", "Artifact", [], "An array of bytes representing a file-like object or a link to that object."],
     [2, "command", "Command-ID", [], "A reference to a previously issued OpenC2 command"],
     [3, "device", "Device", [], "The properties of a hardware device"],
-    [4, "directory", "Directory", [], "The properties common to a file system directory"],
-    [5, "disk", "Disk", [], "A disk drive"],
-    [6, "disk_partition", "Disk-Partition", [], "A single partition of a disk drive"],
     [7, "domain_name", "Domain-Name", [], "A netowrk domain name"],
     [8, "email_addr", "Email-Addr", [], "A single email address"],
-    [9, "email_message", "Email-Message", [], "An instance of an email message, corresponding to the internet message format described in RFC 5322 and related RFCs"],
     [10, "file", "File", [], "Properties of a file"],
     [11, "ip_addr", "IP-Addr", [], "The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation"],
     [13, "mac_addr", "Mac-Addr", [], "A single Media Access Control (MAC) address"],
-    [14, "memory", "Memory", [], "A memory object"],
     [15, "ip_connection", "IP-Connection", [], "A network connection that originates from a source and is addressed to a destination"],
     [16, "openc2", "OpenC2", [], "A set of items used with the query action to determine an actuator's capabilities"],
     [17, "process", "Process", [], "Common properties of an instance of a computer program as executed on an operating system"],
-    [18, "software", "Software", [], "High-level properties associated with software, including software products"],
     [19, "uri", "URI", [], "A uniform resource identifier"],
-    [20, "user_account", "User-Account", [], "An instance of any type of user account, including but not limited to operating system, device, messaging service, and social media platform accounts"],
-    [21, "user_session", "User-Session", [], "A user session"],
-    [22, "volume", "Volume", [], "A generic drive volume"],
-    [23, "windows_registry_key", "Windows-Registry-Key", [], "The properties of a Windows registry key"],
-    [24, "x509_certificate", "X509-Certificate", [], "The properties of an X.509 certificate, as defined by ITU recommendation X.509"],
     [1024, "slpf", "slpf:Target", [], "Targets defined in the Stateless Packet Filter profile"]]
   ],
 
@@ -120,27 +109,6 @@
     [501, "Not Implemented", "The server does not support the functionality required to fulfill the request."]]
   ],
 
-  ["Results", "Map", [], "", [
-    [1, "strings", "String", ["[0", "]0"], "Generic set of string values"],
-    [2, "ints", "Integer", ["[0", "]0"], "Generic set of integer values"],
-    [3, "kvps", "KVP", ["[0", "]0"], "Generic set of string values"],
-    [4, "versions", "Version", ["[0", "]0"], "Supported OpenC2 Language versions"],
-    [5, "profiles", "jadn:Uname", ["[0", "]0"], "Supported actuator profiles"],
-    [6, "schema", "jadn:Schema", ["[0", "]0"], "Schema supported by this actuator"],
-    [7, "pairs", "ActionTargets", ["[0", "]0"], "List of targets applicable to each supported action"],
-    [1024, "slpf", "slpf:Results", ["[0", "]0"], "Results from Stateless Packet Filter profile"]]
-  ],
-
-  ["KVP", "Array", [], "", [
-    [1, "key", "Identifier", [], "name of this item"],
-    [2, "value", "String", [], "string value of this item"]]
-  ],
-
-  ["ActionTargets", "Array", [], "", [
-    [1, "action", "Action", [], "An action supported by this actuator"],
-    [2, "targets", "Target.*", ["]0"], "List of targets applicable to this action"]]
-  ],
-
   ["Artifact", "Record", [], "", [
     [1, "mime_type", "String", ["[0"], "Permitted values specified in the IANA Media Types registry"],
     [2, "*", "Payload", ["[0"], "choice of literal content or URL to obtain content"],
@@ -157,8 +125,7 @@
   ["Query-Item", "Enumerated", [], "Results to be included in response to query openc2 command", [
     [1, "versions", "OpenC2 language versions supported by this actuator"],
     [2, "profiles", "List of profiles supported by this actuator"],
-    [3, "schema", "Definition of the command syntax supported by this actuator"],
-    [4, "pairs", "List of supported actions and applicable targets"]]
+    [3, "schema", "Definition of the command syntax supported by this actuator"]]
   ],
 
   ["IP-Connection", "Record", [], "5-tuple that specifies a tcp/ip connection", [
