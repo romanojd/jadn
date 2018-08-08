@@ -1,4 +1,4 @@
-'''
+"""
 Translate JSON Abstract Data Notation (JADN) files to other formats.
 
 Creates text-based representations of a JADN syntax, including
@@ -10,7 +10,7 @@ Creates text-based representations of a JADN syntax, including
   * Thrift
 
 This script (jadn_translate) has no library dependencies other then jsonschema.
-'''
+"""
 
 from __future__ import print_function
 import os

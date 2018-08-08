@@ -1,4 +1,4 @@
-<!-- Generated from schema\jadn.jadn, Fri Jul 13 15:04:40 2018-->
+<!-- Generated from schema\jadn.jadn, Wed Aug  8 11:53:55 2018-->
 ## Schema
  .  | .
  ---:|:---
@@ -6,7 +6,7 @@ title: |JADN Syntax
 module: |/oasis-open.org/openc2/v1.0/jadn
 version: |wd01
 description: |Syntax of a JSON Abstract Data Notation (JADN) module.
-exports: |Schema
+exports: |Schema, Uname
 
 ## 3.2 Structure Types
 
