@@ -1,8 +1,8 @@
 {
     "meta": {
-        "module": "/oasis-open.org/openc2/v1.0/jadn",
+        "module": "oasis-open.org/openc2/v1.0/jadn",
+        "patch": "wd01",
         "title": "JADN Syntax",
-        "version": "wd01",
         "description": "Syntax of a JSON Abstract Data Notation (JADN) module.",
         "exports": ["Schema", "Uname"]
     },
@@ -15,9 +15,9 @@
         ],
 
         ["Meta", "Map", [], "Meta-information about this schema", [
-            [1, "module", "Uname", [], "Unique name"],
-            [2, "title", "String", ["[0"], "Title"],
-            [3, "version", "String", ["[0"], "Patch version (module includes major.minor version)"],
+            [1, "module", "Uname", [], "Schema unique name/version"],
+            [2, "patch", "String", ["[0"], "Patch version"],
+            [3, "title", "String", ["[0"], "Title"],
             [4, "description", "String", ["[0"], "Description"],
             [5, "imports", "Import", ["[0", "]0"], "Imported schema modules"],
             [6, "exports", "Identifier", ["[0", "]0"], "Data types exported by this module"],

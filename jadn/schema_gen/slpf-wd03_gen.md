@@ -1,16 +1,16 @@
-<!-- Generated from schema\slpf-wd03.jadn, Wed Aug  8 12:08:51 2018-->
+<!-- Generated from schema\slpf-wd03.jadn, Fri Aug 10 16:14:10 2018-->
 ## Schema
  .  | .
  ---:|:---
 title: |Stateless Packet Filtering
 module: |oasis-open.org/openc2/v1.0/ap-slpf
-version: |wd03
+patch: |wd03
 description: |Data definitions for Stateless Packet Filtering (SLPF) functions
 exports: |Target, Specifiers, Args, Results
 
-## 3.2 Structure Types
+## Structure Types
 
-### 3.2.1 Target
+### Target
 SLPF targets
 
 **Target (Choice)**
@@ -19,7 +19,7 @@ ID|Name|Type|Description
 ---:|:---|:---|:---
 1|rule|Rule-ID|Uniquely identifies a rule associated with a previously-issued deny or allow.
 
-### 3.2.2 Specifiers
+### Specifiers
 SLPF actuator specifiers
 
 **Specifiers (Map)**
@@ -28,7 +28,7 @@ ID|Name|Type|#|Description
 ---:|:---|:---|---:|:---
 1|nfv_id|String|1|Identifier of a virtualized packet filter
 
-### 3.2.3 Args
+### Args
 SLPF command arguments
 
 **Args (Map)**
@@ -40,7 +40,7 @@ ID|Name|Type|#|Description
 3|direction|Direction|0..1|Specifies direction (ingress or egress) for allow or deny rules. If omitted rules affact all traffic.
 4|insert_rule|Integer|1|Specifies the identifier of the rule within a list, typically used in a top-down rule list.
 
-### 3.2.4 Drop-Process
+### Drop-Process
 
 
 **Drop-Process (Enumerated)**
@@ -51,7 +51,7 @@ ID|Name|Description
 2|Reject|Drop the packet and send an ICMP host unreachable (or equivalent) to the source of the packet.
 3|False_ack|Drop the packet and send a false acknowledgement that the packet was received [???].
 
-### 3.2.5 Direction
+### Direction
 
 
 **Direction (Enumerated)**
@@ -61,7 +61,7 @@ ID|Name|Description
 1|ingress|Apply rules to incoming traffic only
 2|egress|Apply rule to outbound traffic only
 
-### 3.2.6 Results
+### Results
 SLPF results
 
 **Results (Map)**
@@ -70,7 +70,7 @@ ID|Name|Type|#|Description
 ---:|:---|:---|---:|:---
 1|rule|Rule-ID|0..1|Rule identifier returned from allow or deny command.
 
-## 3.3 Primitive Types
+## Primitive Types
 
 
 Name|Type|Description

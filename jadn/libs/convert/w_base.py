@@ -20,7 +20,9 @@ def doc_end_m():
 
 
 def sect_m(num, name):
-    return '\n' + len(num)*'#' + ' ' + '.'.join([str(n) for n in num]) + ' ' + name + '\n'
+    n = ''
+    # n = '.'.join([str(n) for n in num]) + ' '
+    return '\n' + len(num)*'#' + ' ' + n + name + '\n'
 
 
 def meta_begin_m():
@@ -75,7 +77,9 @@ def doc_end_h():
 
 def sect_h(num, name):
     hn = 'h' + str(len(num))
-    return '<' + hn + '>' + '.'.join([str(n) for n in num]) + ' ' + name + '</' + hn + '>\n'
+    n = ''
+    # n = '.'.join([str(n) for n in num]) + ' '
+    return '<' + hn + '>' + n + name + '</' + hn + '>\n'
 
 
 def meta_begin_h():
@@ -336,7 +340,7 @@ doc_end - closing content, if any
 sect - section heading for human document formats, nothing for machine-readable schemas
 meta_begin - begin meta content
 meta_item - most meta items
-meta_imps - special handling for imports meta statement
+meta_imps - special handling for imports meta item
 meta_end - close meta content
 type_begin - begin type definition
 type_item - add field to type definition
@@ -365,10 +369,10 @@ def base_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
 
     doc_begin, doc_end, sect, meta_begin, meta_item, meta_end, type_begin, type_item, type_end = wtab[form]
     meta = jadn['meta']
-    title = meta['module'] + (' v.' + meta['version']) if 'version' in meta else ''
+    title = meta['module'] + (' v.' + meta['patch']) if 'patch' in meta else ''
     text = doc_begin(title)
     text += meta_begin()
-    meta_list = ('title', 'module', 'version', 'description', 'exports', 'imports', 'bounds')
+    meta_list = ('title', 'module', 'patch', 'description', 'exports', 'imports', 'bounds')
     bn = ('max_msg', 'max_str', 'max_bin', 'max_fields')
     for h in meta_list + tuple(set(meta) - set(meta_list)):
         if h in meta:

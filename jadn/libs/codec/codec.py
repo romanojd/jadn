@@ -172,7 +172,7 @@ class Codec:
             for f in t[S_FLD].values():
                 if type(f) == list and f[S_FDEF][FNAME] == '*':
                     t = self.symtab[f[S_FDEF][FTYPE]][S_TDEF]
-                    assert(t[TTYPE] == 'Choice')
+                    assert(t[TTYPE] in ['Map', 'Choice'])
                     f[S_FNAMES] = [c[FNAME] for c in t[FIELDS]]
 
         self.symtab.update(self.arrays)         # Add anonymous arrays to symbol table

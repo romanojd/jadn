@@ -25,10 +25,10 @@ jadn_schema = {
             "required": ["module"],
             "additionalProperties": False,
             "properties": {
-                "description": {"type": "string"},
                 "module": {"type": "string"},
+                "patch": {"type": "string"},
                 "title": {"type": "string"},
-                "version": {"type": "string"},
+                "description": {"type": "string"},
                 "imports": {
                     "type": "array",
                     "items": {

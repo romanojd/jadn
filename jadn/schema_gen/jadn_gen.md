@@ -1,16 +1,16 @@
-<!-- Generated from schema\jadn.jadn, Wed Aug  8 11:53:55 2018-->
+<!-- Generated from schema\jadn.jadn, Fri Aug 10 16:14:10 2018-->
 ## Schema
  .  | .
  ---:|:---
 title: |JADN Syntax
-module: |/oasis-open.org/openc2/v1.0/jadn
-version: |wd01
+module: |oasis-open.org/openc2/v1.0/jadn
+patch: |wd01
 description: |Syntax of a JSON Abstract Data Notation (JADN) module.
 exports: |Schema, Uname
 
-## 3.2 Structure Types
+## Structure Types
 
-### 3.2.1 Schema
+### Schema
 Definition of a JADN file
 
 **Schema (Record)**
@@ -20,22 +20,22 @@ ID|Name|Type|#|Description
 1|meta|Meta|1|Information about this schema module
 2|types|Type|1..n|Types defined in this schema module
 
-### 3.2.2 Meta
+### Meta
 Meta-information about this schema
 
 **Meta (Map)**
 
 ID|Name|Type|#|Description
 ---:|:---|:---|---:|:---
-1|module|Uname|1|Unique name
-2|title|String|0..1|Title
-3|version|String|0..1|Patch version (module includes major.minor version)
+1|module|Uname|1|Schema unique name/version
+2|patch|String|0..1|Patch version
+3|title|String|0..1|Title
 4|description|String|0..1|Description
 5|imports|Import|0..n|Imported schema modules
 6|exports|Identifier|0..n|Data types exported by this module
 7|bounds|Bounds|0..1|Schema-wide upper bounds
 
-### 3.2.3 Import
+### Import
 Imported module id and unique name
 
 **Import (Array)**
@@ -45,7 +45,7 @@ ID|Type|#|Description
 1|Nsid|1|"nsid": A short local identifier (namespace id) used within this module to refer to the imported module
 2|Uname|1|"uname": Unique name of imported module
 
-### 3.2.4 Bounds
+### Bounds
 Schema-wide default upper bounds.  Overrides codec defaults, overridden by type definitions
 
 **Bounds (Array)**
@@ -57,7 +57,7 @@ ID|Type|#|Description
 3|Integer|1|"max_bin": Maximum binary length in octets
 4|Integer|1|"max_fields": Maximum number of elements in ArrayOf
 
-### 3.2.5 Type
+### Type
 
 
 **Type (Array)**
@@ -70,7 +70,7 @@ ID|Type|#|Description
 4|String|1|"desc": Description of this data type
 5|JADN-Type|1..n|"fields": List of fields for compound types.  Not present for primitive types
 
-### 3.2.6 JADN-Type
+### JADN-Type
 
 
 **JADN-Type (Choice {'compact': True})**
@@ -90,7 +90,7 @@ ID|Name|Type|Description
 11|Map|FullField|Unordered set of named fields
 12|Record|FullField|Ordered list of named fields
 
-### 3.2.7 EnumField
+### EnumField
 Item definition for Enumerated types
 
 **EnumField (Array)**
@@ -101,7 +101,7 @@ ID|Type|#|Description
 2|String|1|Item name
 3|String|1|Item description
 
-### 3.2.8 FullField
+### FullField
 Field definition for other compound types
 
 **FullField (Array)**
@@ -114,7 +114,7 @@ ID|Type|#|Description
 4|Option|0..n|Field options
 5|String|1|Field description
 
-## 3.3 Primitive Types
+## Primitive Types
 
 
 Name|Type|Description

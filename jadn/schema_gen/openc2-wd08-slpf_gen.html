@@ -1,24 +1,24 @@
-<!-- Generated from schema\openc2-wd08-slpf.jadn, Wed Aug  8 12:08:51 2018-->
+<!-- Generated from schema\openc2-wd08-slpf.jadn, Fri Aug 10 16:14:10 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="theme.css">
-<title>/oasis-open.org/openc2/v1.0/openc2-lang v.wd08-slpf</title>
+<title>oasis-open.org/openc2/v1.0/openc2-lang v.wd08-slpf</title>
 </head>
 <body>
 <h2>Schema</h2>
 <table>
 <tr><td class="h">title:</td><td class="s">OpenC2 Language Objects</td></tr>
-<tr><td class="h">module:</td><td class="s">/oasis-open.org/openc2/v1.0/openc2-lang</td></tr>
-<tr><td class="h">version:</td><td class="s">wd08-slpf</td></tr>
+<tr><td class="h">module:</td><td class="s">oasis-open.org/openc2/v1.0/openc2-lang</td></tr>
+<tr><td class="h">patch:</td><td class="s">wd08-slpf</td></tr>
 <tr><td class="h">description:</td><td class="s">OpenC2 Language content used by Stateless Packet Filters.</td></tr>
 <tr><td class="h">exports:</td><td class="s">OpenC2-Command, OpenC2-Response</td></tr>
 <tr><td class="h">imports:</td><td class="s"><span class="b">slpf</span>:&nbsp;/oasis-open.org/openc2/v1.0/ap-slpf<br>
 <span class="b">jadn</span>:&nbsp;/oasis-open.org/openc2/v1.0/jadn</td></tr>
 </table>
-<h2>3.2 Structure Types</h2>
-<h3>3.2.1 OpenC2-Command</h3>
+<h2>Structure Types</h2>
+<h3>OpenC2-Command</h3>
 The OpenC2 Command describes an action performed on a target. It can be directive or descriptive depending on the context.
 <table><caption>OpenC2-Command (Record)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">action</td><td class="s">Action</td><td class="n">1</td><td class="s">The task or activity to be performed (i.e., the 'verb')</td></tr>
@@ -27,7 +27,7 @@ The OpenC2 Command describes an action performed on a target. It can be directiv
 <tr><td class="n">4</td><td class="s">args</td><td class="s">Args</td><td class="n">0..1</td><td class="s">Additional information that applies to the command</td></tr>
 <tr><td class="n">5</td><td class="s">id</td><td class="s">Command-ID</td><td class="n">0..1</td><td class="s">Identifier used to link responses to a command</td></tr>
 </table>
-<h3>3.2.2 Action</h3>
+<h3>Action</h3>
 
 <table><caption>Action (Enumerated)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Description</th></tr>
 <tr><td class="n">3</td><td class="s">query</td><td class="s">Initiate a request for information. Used to communicate supported options and determine state or settings.</td></tr>
@@ -36,7 +36,7 @@ The OpenC2 Command describes an action performed on a target. It can be directiv
 <tr><td class="n">16</td><td class="s">update</td><td class="s">Instruct the actuator to update its configuration by retrieving and processing a configuration file and update.</td></tr>
 <tr><td class="n">20</td><td class="s">delete</td><td class="s">Remove a rule.</td></tr>
 </table>
-<h3>3.2.3 Target</h3>
+<h3>Target</h3>
 OpenC2 Target datatypes
 <table><caption>Target (Choice)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="n">10</td><td class="s">file</td><td class="s">File</td><td class="s">Properties of a file</td></tr>
@@ -45,17 +45,17 @@ OpenC2 Target datatypes
 <tr><td class="n">16</td><td class="s">openc2</td><td class="s">OpenC2</td><td class="s">A set of items used with the query action to determine an actuator's capabilities</td></tr>
 <tr><td class="n">1024</td><td class="s">slpf</td><td class="s">slpf:Target</td><td class="s">Targets defined in the Stateless Packet Filter profile</td></tr>
 </table>
-<h3>3.2.4 Actuator</h3>
+<h3>Actuator</h3>
 
 <table><caption>Actuator (Choice)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="n">1024</td><td class="s">slpf</td><td class="s">slpf:Specifiers</td><td class="s">Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01</td></tr>
 </table>
-<h3>3.2.5 Specifiers</h3>
+<h3>Specifiers</h3>
 
 <table><caption>Specifiers (Map)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">2</td><td class="s">asset_id</td><td class="s">String</td><td class="n">0..1</td><td class="s">Hardware identifier of a physical actuator device, such as a serial number or inventory barcode</td></tr>
 </table>
-<h3>3.2.6 Args</h3>
+<h3>Args</h3>
 
 <table><caption>Args (Map)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">start_time</td><td class="s">Date-Time</td><td class="n">0..1</td><td class="s">The specific date/time to initiate the action</td></tr>
@@ -64,7 +64,7 @@ OpenC2 Target datatypes
 <tr><td class="n">4</td><td class="s">response_requested</td><td class="s">Response-Type</td><td class="n">0..1</td><td class="s">The type of response required for the action</td></tr>
 <tr><td class="n">1024</td><td class="s">slpf</td><td class="s">slpf:Args</td><td class="n">0..1</td><td class="s">Command arguments defined in the Stateless Packet Filter profile</td></tr>
 </table>
-<h3>3.2.7 OpenC2-Response</h3>
+<h3>OpenC2-Response</h3>
 
 <table><caption>OpenC2-Response (Record)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">id</td><td class="s">Command-ID</td><td class="n">1</td><td class="s">Id of the ommand that induced this response</td></tr>
@@ -72,7 +72,7 @@ OpenC2 Target datatypes
 <tr><td class="n">3</td><td class="s">status_text</td><td class="s">String</td><td class="n">0..1</td><td class="s">A free-form human-readable description of the response status</td></tr>
 <tr><td class="n">4</td><td class="s">*</td><td class="s">Results</td><td class="n">1</td><td class="s">Data or extended status information that was requested from an OpenC2 command</td></tr>
 </table>
-<h3>3.2.8 Status-Code</h3>
+<h3>Status-Code</h3>
 
 <table><caption>Status-Code (Enumerated.Tag)</caption><tr><th class="n">Value</th><th class="s">Description</th></tr>
 <tr><td class="n">102</td><td class="s">Processing -- An interim response used to inform the client that the server has accepted the request but not yet completed it.</td></tr>
@@ -84,7 +84,7 @@ OpenC2 Target datatypes
 <tr><td class="n">500</td><td class="s">Server Error -- The server encountered an unexpected condition that prevented it from fulfilling the request.</td></tr>
 <tr><td class="n">501</td><td class="s">Not Implemented -- The server does not support the functionality required to fulfill the request.</td></tr>
 </table>
-<h3>3.2.9 Results</h3>
+<h3>Results</h3>
 
 <table><caption>Results (Map)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">4</td><td class="s">versions</td><td class="s">Version</td><td class="n">0..n</td><td class="s">Supported OpenC2 Language versions</td></tr>
@@ -93,25 +93,25 @@ OpenC2 Target datatypes
 <tr><td class="n">7</td><td class="s">pairs</td><td class="s">ActionTargets</td><td class="n">0..n</td><td class="s">List of targets applicable to each supported action</td></tr>
 <tr><td class="n">1024</td><td class="s">slpf</td><td class="s">slpf:Results</td><td class="n">0..n</td><td class="s">Results from Stateless Packet Filter profile</td></tr>
 </table>
-<h3>3.2.10 ActionTargets</h3>
+<h3>ActionTargets</h3>
 
 <table><caption>ActionTargets (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">Action</td><td class="n">1</td><td class="s">"action": An action supported by this actuator</td></tr>
 <tr><td class="n">2</td><td class="s">Target.*</td><td class="n">1..n</td><td class="s">"targets": List of targets applicable to this action</td></tr>
 </table>
-<h3>3.2.11 OpenC2</h3>
+<h3>OpenC2</h3>
 A target used to query Actuator for its supported capabilities
-<table><caption>OpenC2 (ArrayOf.Query-Item ['min', 'max'])</caption><tr></tr>
+<table><caption>OpenC2 (ArrayOf.Query-Item ['max', 'min'])</caption><tr></tr>
 </table>
 </table>
-<h3>3.2.12 Query-Item</h3>
+<h3>Query-Item</h3>
 Results to be included in response to query openc2 command
 <table><caption>Query-Item (Enumerated)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">versions</td><td class="s">OpenC2 language versions supported by this actuator</td></tr>
 <tr><td class="n">2</td><td class="s">profiles</td><td class="s">List of profiles supported by this actuator</td></tr>
 <tr><td class="n">3</td><td class="s">schema</td><td class="s">Definition of the command syntax supported by this actuator</td></tr>
 </table>
-<h3>3.2.13 IP-Connection</h3>
+<h3>IP-Connection</h3>
 5-tuple that specifies a tcp/ip connection
 <table><caption>IP-Connection (Record)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">src_addr</td><td class="s">IP-Addr</td><td class="n">0..1</td><td class="s">source address</td></tr>
@@ -120,7 +120,7 @@ Results to be included in response to query openc2 command
 <tr><td class="n">4</td><td class="s">dst_port</td><td class="s">Port</td><td class="n">0..1</td><td class="s">destination TCP/UDP port number</td></tr>
 <tr><td class="n">5</td><td class="s">layer4-protocol</td><td class="s">L4-Protocol</td><td class="n">0..1</td><td class="s">Protocol (IPv4) / Next Header (IPv6)</td></tr>
 </table>
-<h3>3.2.14 L4-Protocol</h3>
+<h3>L4-Protocol</h3>
 protocol (IPv4) or next header (IPv6) field - any IANA value, RFC 5237
 <table><caption>L4-Protocol (Enumerated)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">icmp</td><td class="s">Internet Control Message Protocol - RFC 792</td></tr>
@@ -128,28 +128,28 @@ protocol (IPv4) or next header (IPv6) field - any IANA value, RFC 5237
 <tr><td class="n">17</td><td class="s">udp</td><td class="s">User Datagram Protocol - RFC 768</td></tr>
 <tr><td class="n">132</td><td class="s">sctp</td><td class="s">Stream Control Transmission Protocol - RFC 4960</td></tr>
 </table>
-<h3>3.2.15 File</h3>
+<h3>File</h3>
 
 <table><caption>File (Map)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">name</td><td class="s">String</td><td class="n">0..1</td><td class="s">The name of the file as defined in the file system</td></tr>
 <tr><td class="n">2</td><td class="s">path</td><td class="s">String</td><td class="n">0..1</td><td class="s">The absolute path to the location of the file in the file system</td></tr>
 <tr><td class="n">3</td><td class="s">hashes</td><td class="s">Hashes</td><td class="n">0..1</td><td class="s">One or more cryptographic hash codes of the file contents</td></tr>
 </table>
-<h3>3.2.16 Response-Type</h3>
+<h3>Response-Type</h3>
 
 <table><caption>Response-Type (Enumerated)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Description</th></tr>
 <tr><td class="n">0</td><td class="s">none</td><td class="s">No response</td></tr>
 <tr><td class="n">1</td><td class="s">ack</td><td class="s">Respond when command received</td></tr>
 <tr><td class="n">2</td><td class="s">complete</td><td class="s">Respond when all aspects of command completed</td></tr>
 </table>
-<h3>3.2.17 Hashes</h3>
+<h3>Hashes</h3>
 Cryptographic Hash values
 <table><caption>Hashes (Map)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">md5</td><td class="s">Binary</td><td class="n">0..1</td><td class="s">Hex-encoded MD5 hash as defined in RFC3121</td></tr>
 <tr><td class="n">4</td><td class="s">sha1</td><td class="s">Binary</td><td class="n">0..1</td><td class="s">Hex-encoded SHA1 hash as defined in RFC3174</td></tr>
 <tr><td class="n">6</td><td class="s">sha256</td><td class="s">Binary</td><td class="n">0..1</td><td class="s">Hex-encoded SHA256 as defined in RFC6234</td></tr>
 </table>
-<h2>3.3 Primitive Types</h2>
+<h2>Primitive Types</h2>
 <table><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">Command-ID</td><td class="s">String</td><td class="s">Uniquely identifies a particular command - TBD syntax</td></tr>
 <tr><td class="s">Date-Time</td><td class="s">String (date-time)</td><td class="s">RFC 3339 date-time</td></tr>

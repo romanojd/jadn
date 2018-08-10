@@ -35,9 +35,9 @@ if __name__ == '__main__':
         schema = jadn_load(source)
         sa = jadn_analyze(schema)
 
-        version = ', ' + schema['meta']['version'] if 'version' in schema['meta'] else ''
+        patch = ', ' + schema['meta']['patch'] if 'patch' in schema['meta'] else ''
         exports = ', '.join(schema['meta']['exports']) if 'exports' in schema['meta'] else ''
-        sa.update({'module': schema['meta']['module'] + version, 'exports': exports})
+        sa.update({'module': schema['meta']['module'] + patch, 'exports': exports})
         print('\n'.join(['  ' + k + ': ' + str(sa[k]) for k in ('module', 'exports', 'unreferenced', 'undefined', 'cycles')]))
 
         jadn_dump(schema, dest + '.jadn', source)

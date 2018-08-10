@@ -1,10 +1,10 @@
--- Generated from schema\jadn.jadn, Wed Aug  8 11:53:55 2018
+-- Generated from schema\jadn.jadn, Fri Aug 10 16:14:10 2018
 
 /*
-module:        /oasis-open.org/openc2/v1.0/jadn
+module:        oasis-open.org/openc2/v1.0/jadn
 title:         JADN Syntax
-version:       wd01
 description:   Syntax of a JSON Abstract Data Notation (JADN) module.
+patch:         wd01
 exports:       ['Schema', 'Uname']
 */
 
@@ -14,9 +14,9 @@ Schema ::= RECORD {    -- Definition of a JADN file
 }
 
 Meta ::= MAP {    -- Meta-information about this schema
-    module       [1] Uname,    -- Unique name
-    title        [2] STRING OPTIONAL,    -- Title
-    version      [3] STRING OPTIONAL,    -- Patch version (module includes major.minor version)
+    module       [1] Uname,    -- Schema unique name/version
+    patch        [2] STRING OPTIONAL,    -- Patch version
+    title        [3] STRING OPTIONAL,    -- Title
     description  [4] STRING OPTIONAL,    -- Description
     imports      [5] Import OPTIONAL,    -- Imported schema modules ***{'max': 0}
     exports      [6] Identifier OPTIONAL,    -- Data types exported by this module ***{'max': 0}

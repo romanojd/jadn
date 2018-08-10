@@ -1,17 +1,17 @@
-<!-- Generated from schema\openc2-wd08-slpf.jadn, Wed Aug  8 12:08:51 2018-->
+<!-- Generated from schema\openc2-wd08-slpf.jadn, Fri Aug 10 16:14:10 2018-->
 ## Schema
  .  | .
  ---:|:---
 title: |OpenC2 Language Objects
-module: |/oasis-open.org/openc2/v1.0/openc2-lang
-version: |wd08-slpf
+module: |oasis-open.org/openc2/v1.0/openc2-lang
+patch: |wd08-slpf
 description: |OpenC2 Language content used by Stateless Packet Filters.
 exports: |OpenC2-Command, OpenC2-Response
 imports: |**slpf**:&nbsp;/oasis-open.org/openc2/v1.0/ap-slpf **jadn**:&nbsp;/oasis-open.org/openc2/v1.0/jadn
 
-## 3.2 Structure Types
+## Structure Types
 
-### 3.2.1 OpenC2-Command
+### OpenC2-Command
 The OpenC2 Command describes an action performed on a target. It can be directive or descriptive depending on the context.
 
 **OpenC2-Command (Record)**
@@ -24,7 +24,7 @@ ID|Name|Type|#|Description
 4|args|Args|0..1|Additional information that applies to the command
 5|id|Command-ID|0..1|Identifier used to link responses to a command
 
-### 3.2.2 Action
+### Action
 
 
 **Action (Enumerated)**
@@ -37,7 +37,7 @@ ID|Name|Description
 16|update|Instruct the actuator to update its configuration by retrieving and processing a configuration file and update.
 20|delete|Remove a rule.
 
-### 3.2.3 Target
+### Target
 OpenC2 Target datatypes
 
 **Target (Choice)**
@@ -50,7 +50,7 @@ ID|Name|Type|Description
 16|openc2|OpenC2|A set of items used with the query action to determine an actuator's capabilities
 1024|slpf|slpf:Target|Targets defined in the Stateless Packet Filter profile
 
-### 3.2.4 Actuator
+### Actuator
 
 
 **Actuator (Choice)**
@@ -59,7 +59,7 @@ ID|Name|Type|Description
 ---:|:---|:---|:---
 1024|slpf|slpf:Specifiers|Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01
 
-### 3.2.5 Specifiers
+### Specifiers
 
 
 **Specifiers (Map)**
@@ -68,7 +68,7 @@ ID|Name|Type|#|Description
 ---:|:---|:---|---:|:---
 2|asset_id|String|0..1|Hardware identifier of a physical actuator device, such as a serial number or inventory barcode
 
-### 3.2.6 Args
+### Args
 
 
 **Args (Map)**
@@ -81,7 +81,7 @@ ID|Name|Type|#|Description
 4|response_requested|Response-Type|0..1|The type of response required for the action
 1024|slpf|slpf:Args|0..1|Command arguments defined in the Stateless Packet Filter profile
 
-### 3.2.7 OpenC2-Response
+### OpenC2-Response
 
 
 **OpenC2-Response (Record)**
@@ -93,7 +93,7 @@ ID|Name|Type|#|Description
 3|status_text|String|0..1|A free-form human-readable description of the response status
 4|*|Results|1|Data or extended status information that was requested from an OpenC2 command
 
-### 3.2.8 Status-Code
+### Status-Code
 
 
 **Status-Code (Enumerated.Tag)**
@@ -109,7 +109,7 @@ Value|Description
 500|Server Error -- The server encountered an unexpected condition that prevented it from fulfilling the request.
 501|Not Implemented -- The server does not support the functionality required to fulfill the request.
 
-### 3.2.9 Results
+### Results
 
 
 **Results (Map)**
@@ -122,7 +122,7 @@ ID|Name|Type|#|Description
 7|pairs|ActionTargets|0..n|List of targets applicable to each supported action
 1024|slpf|slpf:Results|0..n|Results from Stateless Packet Filter profile
 
-### 3.2.10 ActionTargets
+### ActionTargets
 
 
 **ActionTargets (Array)**
@@ -132,15 +132,15 @@ ID|Type|#|Description
 1|Action|1|"action": An action supported by this actuator
 2|Target.*|1..n|"targets": List of targets applicable to this action
 
-### 3.2.11 OpenC2
+### OpenC2
 A target used to query Actuator for its supported capabilities
 
-**OpenC2 (ArrayOf.Query-Item ['min', 'max'])**
+**OpenC2 (ArrayOf.Query-Item ['max', 'min'])**
 
 
 
 
-### 3.2.12 Query-Item
+### Query-Item
 Results to be included in response to query openc2 command
 
 **Query-Item (Enumerated)**
@@ -151,7 +151,7 @@ ID|Name|Description
 2|profiles|List of profiles supported by this actuator
 3|schema|Definition of the command syntax supported by this actuator
 
-### 3.2.13 IP-Connection
+### IP-Connection
 5-tuple that specifies a tcp/ip connection
 
 **IP-Connection (Record)**
@@ -164,7 +164,7 @@ ID|Name|Type|#|Description
 4|dst_port|Port|0..1|destination TCP/UDP port number
 5|layer4-protocol|L4-Protocol|0..1|Protocol (IPv4) / Next Header (IPv6)
 
-### 3.2.14 L4-Protocol
+### L4-Protocol
 protocol (IPv4) or next header (IPv6) field - any IANA value, RFC 5237
 
 **L4-Protocol (Enumerated)**
@@ -176,7 +176,7 @@ ID|Name|Description
 17|udp|User Datagram Protocol - RFC 768
 132|sctp|Stream Control Transmission Protocol - RFC 4960
 
-### 3.2.15 File
+### File
 
 
 **File (Map)**
@@ -187,7 +187,7 @@ ID|Name|Type|#|Description
 2|path|String|0..1|The absolute path to the location of the file in the file system
 3|hashes|Hashes|0..1|One or more cryptographic hash codes of the file contents
 
-### 3.2.16 Response-Type
+### Response-Type
 
 
 **Response-Type (Enumerated)**
@@ -198,7 +198,7 @@ ID|Name|Description
 1|ack|Respond when command received
 2|complete|Respond when all aspects of command completed
 
-### 3.2.17 Hashes
+### Hashes
 Cryptographic Hash values
 
 **Hashes (Map)**
@@ -209,7 +209,7 @@ ID|Name|Type|#|Description
 4|sha1|Binary|0..1|Hex-encoded SHA1 hash as defined in RFC3174
 6|sha256|Binary|0..1|Hex-encoded SHA256 as defined in RFC6234
 
-## 3.3 Primitive Types
+## Primitive Types
 
 
 Name|Type|Description

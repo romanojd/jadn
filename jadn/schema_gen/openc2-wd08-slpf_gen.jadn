@@ -1,4 +1,4 @@
-"Generated from schema\openc2-wd08-slpf.jadn, Wed Aug  8 12:08:51 2018"
+"Generated from schema\openc2-wd08-slpf.jadn, Fri Aug 10 16:14:10 2018"
 
 {
  "meta": {
@@ -8,9 +8,9 @@
    ["slpf", "/oasis-open.org/openc2/v1.0/ap-slpf"],
    ["jadn", "/oasis-open.org/openc2/v1.0/jadn"]]
 ,
-  "module": "/oasis-open.org/openc2/v1.0/openc2-lang",
-  "title": "OpenC2 Language Objects",
-  "version": "wd08-slpf"
+  "module": "oasis-open.org/openc2/v1.0/openc2-lang",
+  "patch": "wd08-slpf",
+  "title": "OpenC2 Language Objects"
  },
 
  "types": [

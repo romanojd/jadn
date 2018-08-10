@@ -1,8 +1,8 @@
 {
   "meta": {
     "module": "oasis-open.org/openc2/v1.0/ap-slpf",
+    "patch": "wd03",
     "title": "Stateless Packet Filtering",
-    "version": "wd03",
     "description": "Data definitions for Stateless Packet Filtering (SLPF) functions",
     "exports": ["Target", "Specifiers", "Args", "Results"]
     },

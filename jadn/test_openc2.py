@@ -18,14 +18,14 @@ class Language(unittest.TestCase):
             print('Error: undefined:', sa['undefined'])
         self.tc = Codec(ls, verbose_rec=True, verbose_str=True)
 
-    mq1 = {"action": "query", "target": {"openc2": "versions"}}
-    mq2 = {"action": "query", "target": {"openc2": "profiles"}}
+    mq1 = {"action": "query", "target": {"openc2": ["versions"]}}
+    mq2 = {"action": "query", "target": {"openc2": ["profiles"]}}
 
     def test_query_oc2(self):
-        self.assertEqual(self.tc.encode("OpenC2-Command", mq1), mq1)
-        self.assertEqual(self.tc.decode("OpenC2-Command", mq1), mq1)
-        self.assertEqual(self.tc.encode("OpenC2-Command", mq2), mq2)
-        self.assertEqual(self.tc.decode("OpenC2-Command", mq2), mq2)
+        self.assertEqual(self.tc.encode("OpenC2-Command", self.mq1), self.mq1)
+        self.assertEqual(self.tc.decode("OpenC2-Command", self.mq1), self.mq1)
+        self.assertEqual(self.tc.encode("OpenC2-Command", self.mq2), self.mq2)
+        self.assertEqual(self.tc.decode("OpenC2-Command", self.mq2), self.mq2)
         with self.assertRaises(TypeError):
             self.tc.encode("OpenC2-Command", "mq_bad1")
         with self.assertRaises(TypeError):
