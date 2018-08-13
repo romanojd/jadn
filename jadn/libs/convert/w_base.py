@@ -7,6 +7,12 @@ from ..codec.jadn_defs import *
 from ..codec.codec_utils import topts_s2d, fopts_s2d, cardinality
 from datetime import datetime
 
+
+def _fmt(s, f):
+    f1 = {'n': '', 's': '', 'b': '**', 'h': '**_'}
+    f2 = {'n': '', 's': '', 'b': '**', 'h': '_**'}
+    return f1[f] + s + f2[f]
+
 #--------- Markdown ouput -----------------
 
 
@@ -22,11 +28,12 @@ def doc_end_m():
 def sect_m(num, name):
     n = ''
     # n = '.'.join([str(n) for n in num]) + ' '
-    return '\n' + len(num)*'#' + ' ' + n + name + '\n'
+    # return '\n' + len(num)*'#' + ' ' + n + name + '\n'
+    return ''
 
 
 def meta_begin_m():
-    return ' .  | .\n ---:|:---\n'
+    return '| . | . |\n| ---: | :--- |\n'
 
 
 def meta_item_m(h, val):
@@ -36,7 +43,7 @@ def meta_item_m(h, val):
         sval = ' '.join(['**' + i[0] + '**:&nbsp;' + i[1] for i in val])
     else:
         sval = val
-    return h + ': |' + sval + '\n'
+    return '| **' + h + ':** | ' + sval + ' |\n'
 
 
 def meta_end_m():
@@ -47,13 +54,13 @@ def type_begin_m(tname, ttype, topts, headers, cls):
     assert len(headers) == len(cls)
     ch = {'n': '---:', 'h': '---:', 's': ':---'}
     clh = [ch[c] if c in ch else '---' for c in cls]
-    tc = '\n**' + (tname + ' (' + ttype) + topts + ')' + '**' if tname else ''
-    return tc + '\n\n' + '|'.join(headers) + '\n' + '|'.join(clh) + '\n'
+    tc = '\n**_Type: ' + tname + ' (' + ttype + topts + ')_**' if tname else ''
+    return tc + '\n\n| ' + ' | '.join(headers) + ' |\n| ' + ' | '.join(clh) + ' |\n'
 
 
 def type_item_m(row, cls):
     assert len(row) == len(cls)
-    return '|'.join(row) + '\n'
+    return '| ' + ' | '.join([_fmt(*r) for r in zip(row, cls)]) + ' |\n'
 
 
 def type_end_m():
@@ -365,6 +372,12 @@ DEFAULT_FORMAT = 'html'
 def base_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
     """
     Translate JADN schema into other formats
+
+    Column classes for presentation formats:
+    n - number (right aligned)
+    h - meta header (bold, right aligned)
+    s - string (left aligned)
+    b - bold (bold, left aligned)
     """
 
     doc_begin, doc_end, sect, meta_begin, meta_item, meta_end, type_begin, type_item, type_end = wtab[form]
@@ -385,8 +398,8 @@ def base_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
     text += sect(sec, 'Structure Types')
     for td in jadn['types']:
         if td[TTYPE] in STRUCTURE_TYPES:
-            text += sect(sec + [sub], td[TNAME])
-            text += td[TDESC] + '\n'
+            # text += sect(sec + [sub], td[TNAME])
+            # text += td[TDESC] + '\n'
             to = topts_s2d(td[TOPTS])
             tos = ' ' + str(to) if to else ''
             if td[TTYPE] == 'ArrayOf':            # In STRUCTURE_TYPES but with no field definitions
@@ -411,15 +424,10 @@ def base_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
                             name = fd[FNAME] + ' -- ' if fd[FNAME] else ''
                             text += type_item([str(fd[FTAG]), name + fd[EDESC]], cls)
                     else:
-                        cls = ['n', 's', 's']
+                        cls = ['n', 'b', 's']
                         text += type_begin(td[TNAME], td[TTYPE], tos, ['ID', 'Name', 'Description'], cls)
                         for fd in td[FIELDS]:
                             text += type_item([str(fd[FTAG]), fd[FNAME], fd[EDESC]], cls)
-            elif td[TTYPE] == 'Choice':            # same as above but without cardinality column
-                cls = ['n', 's', 's', 's']
-                text += type_begin(td[TNAME], td[TTYPE], tos, ['ID', 'Name', 'Type', 'Description'], cls)
-                for fd in td[FIELDS]:
-                    text += type_item([str(fd[FTAG]), fd[FNAME], fd[FTYPE], fd[FDESC]], cls)
             elif td[TTYPE] == 'Array':
                 cls = ['n', 's', 'n', 's']
                 text += type_begin(td[TNAME], td[TTYPE], tos, ['ID', 'Type', '#', 'Description'], cls)
@@ -428,7 +436,12 @@ def base_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
                     fo.update(fopts_s2d(fd[FOPTS]))
                     fn = '"' + fd[FNAME] + '": ' if fd[FNAME] else ''
                     text += type_item([str(fd[FTAG]), fd[FTYPE], cardinality(fo['min'], fo['max']), fn + fd[FDESC]], cls)
-            else:
+            elif td[TTYPE] == 'Choice':            # same as Map/Record but without cardinality column
+                cls = ['n', 's', 's', 's']
+                text += type_begin(td[TNAME], td[TTYPE], tos, ['ID', 'Name', 'Type', 'Description'], cls)
+                for fd in td[FIELDS]:
+                    text += type_item([str(fd[FTAG]), fd[FNAME], fd[FTYPE], fd[FDESC]], cls)
+            else:                                   # Map, Record
                 cls = ['n', 's', 's', 'n', 's']
                 text += type_begin(td[TNAME], td[TTYPE], tos, ['ID', 'Name', 'Type', '#', 'Description'], cls)
                 for fd in td[FIELDS]:

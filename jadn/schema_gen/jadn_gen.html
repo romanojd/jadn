@@ -1,4 +1,4 @@
-<!-- Generated from schema\jadn.jadn, Fri Aug 10 16:14:10 2018-->
+<!-- Generated from schema\jadn.jadn, Mon Aug 13 14:51:52 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,14 +16,10 @@
 <tr><td class="h">exports:</td><td class="s">Schema, Uname</td></tr>
 </table>
 <h2>Structure Types</h2>
-<h3>Schema</h3>
-Definition of a JADN file
 <table><caption>Schema (Record)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">meta</td><td class="s">Meta</td><td class="n">1</td><td class="s">Information about this schema module</td></tr>
 <tr><td class="n">2</td><td class="s">types</td><td class="s">Type</td><td class="n">1..n</td><td class="s">Types defined in this schema module</td></tr>
 </table>
-<h3>Meta</h3>
-Meta-information about this schema
 <table><caption>Meta (Map)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">module</td><td class="s">Uname</td><td class="n">1</td><td class="s">Schema unique name/version</td></tr>
 <tr><td class="n">2</td><td class="s">patch</td><td class="s">String</td><td class="n">0..1</td><td class="s">Patch version</td></tr>
@@ -33,22 +29,16 @@ Meta-information about this schema
 <tr><td class="n">6</td><td class="s">exports</td><td class="s">Identifier</td><td class="n">0..n</td><td class="s">Data types exported by this module</td></tr>
 <tr><td class="n">7</td><td class="s">bounds</td><td class="s">Bounds</td><td class="n">0..1</td><td class="s">Schema-wide upper bounds</td></tr>
 </table>
-<h3>Import</h3>
-Imported module id and unique name
 <table><caption>Import (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">Nsid</td><td class="n">1</td><td class="s">"nsid": A short local identifier (namespace id) used within this module to refer to the imported module</td></tr>
 <tr><td class="n">2</td><td class="s">Uname</td><td class="n">1</td><td class="s">"uname": Unique name of imported module</td></tr>
 </table>
-<h3>Bounds</h3>
-Schema-wide default upper bounds.  Overrides codec defaults, overridden by type definitions
 <table><caption>Bounds (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">Integer</td><td class="n">1</td><td class="s">"max_msg": Maximum serialized message size in octets or characters</td></tr>
 <tr><td class="n">2</td><td class="s">Integer</td><td class="n">1</td><td class="s">"max_str": Maximum string length in characters</td></tr>
 <tr><td class="n">3</td><td class="s">Integer</td><td class="n">1</td><td class="s">"max_bin": Maximum binary length in octets</td></tr>
 <tr><td class="n">4</td><td class="s">Integer</td><td class="n">1</td><td class="s">"max_fields": Maximum number of elements in ArrayOf</td></tr>
 </table>
-<h3>Type</h3>
-
 <table><caption>Type (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">Identifier</td><td class="n">1</td><td class="s">"tname": Name of this datatype</td></tr>
 <tr><td class="n">2</td><td class="s">JADN-Type</td><td class="n">1</td><td class="s">"btype": Base type.  Enumerated value derived from list of JADN data types</td></tr>
@@ -56,8 +46,6 @@ Schema-wide default upper bounds.  Overrides codec defaults, overridden by type 
 <tr><td class="n">4</td><td class="s">String</td><td class="n">1</td><td class="s">"desc": Description of this data type</td></tr>
 <tr><td class="n">5</td><td class="s">JADN-Type</td><td class="n">1..n</td><td class="s">"fields": List of fields for compound types.  Not present for primitive types</td></tr>
 </table>
-<h3>JADN-Type</h3>
-
 <table><caption>JADN-Type (Choice {'compact': True})</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">Binary</td><td class="s">Null</td><td class="s">Octet (binary) string</td></tr>
 <tr><td class="n">2</td><td class="s">Boolean</td><td class="s">Null</td><td class="s">True or False</td></tr>
@@ -72,15 +60,11 @@ Schema-wide default upper bounds.  Overrides codec defaults, overridden by type 
 <tr><td class="n">11</td><td class="s">Map</td><td class="s">FullField</td><td class="s">Unordered set of named fields</td></tr>
 <tr><td class="n">12</td><td class="s">Record</td><td class="s">FullField</td><td class="s">Ordered list of named fields</td></tr>
 </table>
-<h3>EnumField</h3>
-Item definition for Enumerated types
 <table><caption>EnumField (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">Integer</td><td class="n">1</td><td class="s">Item ID</td></tr>
 <tr><td class="n">2</td><td class="s">String</td><td class="n">1</td><td class="s">Item name</td></tr>
 <tr><td class="n">3</td><td class="s">String</td><td class="n">1</td><td class="s">Item description</td></tr>
 </table>
-<h3>FullField</h3>
-Field definition for other compound types
 <table><caption>FullField (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">Integer</td><td class="n">1</td><td class="s">Field ID or ordinal position</td></tr>
 <tr><td class="n">2</td><td class="s">Identifier</td><td class="n">1</td><td class="s">Field name</td></tr>
