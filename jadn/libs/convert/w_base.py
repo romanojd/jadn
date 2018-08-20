@@ -54,7 +54,8 @@ def type_begin_m(tname, ttype, topts, headers, cls):
     assert len(headers) == len(cls)
     ch = {'n': '---:', 'h': '---:', 's': ':---'}
     clh = [ch[c] if c in ch else '---' for c in cls]
-    tc = '\n**_Type: ' + tname + ' (' + ttype + topts + ')_**' if tname else ''
+    to = ' (' + ttype + topts + ')' if ttype else ''
+    tc = '\n**_Type: ' + tname + to + '_**' if tname else ''
     return tc + '\n\n| ' + ' | '.join(headers) + ' |\n| ' + ' | '.join(clh) + ' |\n'
 
 
@@ -114,7 +115,8 @@ def meta_end_h():
 
 def type_begin_h(tname, ttype, topts, headers, cls):
     assert len(headers) == len(cls)
-    tc = '<caption>' + (tname + ' (' + ttype) + topts + ')' + '</caption>' if tname else ''
+    to = ' (' + ttype + topts + ')' if ttype else ''
+    tc = '<caption>' + tname + to + '</caption>' if tname else ''
     rc = zip(headers, cls)
     return '<table>' + tc + '<tr>' + ''.join(['<th class="' + c[1] + '">' + c[0] + '</th>' for c in rc]) + '</tr>\n'
 
@@ -368,7 +370,6 @@ wtab = {
 DEFAULT_SECTION = (3, 2)
 DEFAULT_FORMAT = 'html'
 
-
 def base_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
     """
     Translate JADN schema into other formats
@@ -379,6 +380,28 @@ def base_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
     s - string (left aligned)
     b - bold (bold, left aligned)
     """
+
+    def _tbegin(to, td, head, cls):
+        tor = set(to)
+        id = ''
+        h = head
+        c = cls
+        if 'compact' in to:
+            tor -= {'compact', }
+            id = '.ID'
+            h = [head[0]] + head[2:]
+            c = [cls[0]] + cls[2:]
+        tos = ' ' + str([str(k) for k in tor]) if tor else ''
+        return type_begin(td[TNAME], td[TTYPE] + id, tos, h, c)
+
+    def _titem(to, fitems, cls):
+        f = fitems
+        c = cls
+        if 'compact' in to:
+            f = [fitems[0]] + fitems[2:]
+            f[-1] = (fitems[1] + ' -- ' if fitems[1] else '') + f[-1]
+            c = [cls[0]] + cls[2:]
+        return type_item(f, c)
 
     doc_begin, doc_end, sect, meta_begin, meta_item, meta_end, type_begin, type_item, type_end = wtab[form]
     meta = jadn['meta']
@@ -395,74 +418,60 @@ def base_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
 
     sub = 1
     sec = list(section)
-    text += sect(sec, 'Structure Types')
+    text += sect(sec, 'Types')
     for td in jadn['types']:
-        if td[TTYPE] in STRUCTURE_TYPES:
-            # text += sect(sec + [sub], td[TNAME])
-            # text += td[TDESC] + '\n'
-            to = topts_s2d(td[TOPTS])
-            tos = ' ' + str(to) if to else ''
-            if td[TTYPE] == 'ArrayOf':            # In STRUCTURE_TYPES but with no field definitions
-                tor = set(to) - {'rtype', }
-                tos = ' ' + str([str(k) for k in tor]) if tor else ''
-                rtype = '.' + to['rtype']
-                text += type_begin(td[TNAME], td[TTYPE] + rtype, tos, [], [])
-                text += type_end()
-            elif td[TTYPE] == 'Enumerated':
-                tor = set(to) - {'compact', }
-                tos = ' ' + str([str(k) for k in tor]) if tor else ''
-                if 'rtype' in to:
-                    tt = '.Tag' if 'compact' in to else ''
-                    rtype = '.*' + to['rtype']
-                    text += type_begin(td[TNAME], td[TTYPE] + tt + rtype, tos, [], [])
-                    text += type_end()
-                else:
-                    if 'compact' in to:
-                        cls = ['n', 's']
-                        text += type_begin(td[TNAME], td[TTYPE] + '.Tag', tos, ['Value', 'Description'], cls)
-                        for fd in td[FIELDS]:
-                            name = fd[FNAME] + ' -- ' if fd[FNAME] else ''
-                            text += type_item([str(fd[FTAG]), name + fd[EDESC]], cls)
-                    else:
-                        cls = ['n', 'b', 's']
-                        text += type_begin(td[TNAME], td[TTYPE], tos, ['ID', 'Name', 'Description'], cls)
-                        for fd in td[FIELDS]:
-                            text += type_item([str(fd[FTAG]), fd[FNAME], fd[EDESC]], cls)
-            elif td[TTYPE] == 'Array':
-                cls = ['n', 's', 'n', 's']
-                text += type_begin(td[TNAME], td[TTYPE], tos, ['ID', 'Type', '#', 'Description'], cls)
-                for fd in td[FIELDS]:
-                    fo = {'min': 1, 'max': 1}
-                    fo.update(fopts_s2d(fd[FOPTS]))
-                    fn = '"' + fd[FNAME] + '": ' if fd[FNAME] else ''
-                    text += type_item([str(fd[FTAG]), fd[FTYPE], cardinality(fo['min'], fo['max']), fn + fd[FDESC]], cls)
-            elif td[TTYPE] == 'Choice':            # same as Map/Record but without cardinality column
-                cls = ['n', 's', 's', 's']
-                text += type_begin(td[TNAME], td[TTYPE], tos, ['ID', 'Name', 'Type', 'Description'], cls)
-                for fd in td[FIELDS]:
-                    text += type_item([str(fd[FTAG]), fd[FNAME], fd[FTYPE], fd[FDESC]], cls)
-            else:                                   # Map, Record
-                cls = ['n', 's', 's', 'n', 's']
-                text += type_begin(td[TNAME], td[TTYPE], tos, ['ID', 'Name', 'Type', '#', 'Description'], cls)
-                for fd in td[FIELDS]:
-                    fo = {'min': 1, 'max': 1}
-                    fo.update(fopts_s2d(fd[FOPTS]))
-                    text += type_item([str(fd[FTAG]), fd[FNAME], fd[FTYPE], cardinality(fo['min'], fo['max']), fd[FDESC]], cls)
-            sub += 1
-            text += type_end()
-
-    sec[-1] += 1
-    text += sect(sec, 'Primitive Types')
-    cls = ['s', 's', 's']
-    text += type_begin(None, None, None, ['Name', 'Type', 'Description'], cls)
-    for td in jadn['types']:                    # 0:type name, 1:base type, 2:type opts, 3:type desc, 4:fields
+        to = topts_s2d(td[TOPTS])
+        tor = set(to)
+        tos = ' ' + str([str(k) for k in tor]) if tor else ''
+        # text += sect(sec + [sub], td[TNAME])
+        # text += td[TDESC] + '\n'
         if td[TTYPE] in PRIMITIVE_TYPES:
-            to = topts_s2d(td[TOPTS])
+            cls = ['s', 's', 's']
+            text += type_begin(td[TNAME], None, None, ['Name', 'Type', 'Description'], cls)
             rng = ''            # TODO: format min-max into string length or number range
             fmt = ' (' + to['format'] + ')' if 'format' in to else ''
             text += type_item([td[TNAME], td[TTYPE] + rng + fmt, td[TDESC]], cls)
-    text += type_end() + doc_end()
+        elif td[TTYPE] == 'ArrayOf':            # In STRUCTURE_TYPES but with no field definitions
+            cls = ['s', 's', 's']
+            text += type_begin(td[TNAME], None, None, ['Name', 'Type', 'Description'], cls)
+            tor = set(to) - {'rtype', }
+            tos = ' ' + str([str(k) for k in tor]) if tor else ''
+            rtype = '(' + to['rtype'] + ')'
+            text += type_item([td[TNAME], td[TTYPE] + rtype + tos, td[TDESC]], cls)
+        elif td[TTYPE] == 'Enumerated':
+            if 'rtype' in to:
+                rtype = '.*' + to['rtype']
+                text += type_begin(td[TNAME], td[TTYPE] + rtype, tos, [], [])
+            else:
+                cls = ['n', 'b', 's']
+                text += _tbegin(to, td, ['ID', 'Name', 'Description'], cls)
+                for fd in td[FIELDS]:
+                    text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[EDESC]], cls)
+        elif td[TTYPE] == 'Array':
+            cls = ['n', 's', 'n', 's']
+            text += _tbegin(to, td, ['ID', 'Type', '#', 'Description'], cls)
+            cls = ['n', 's', 's', 'n', 's']     # Don't print ".ID" in type name but display fields as compact
+            for fd in td[FIELDS]:
+                fo = {'min': 1, 'max': 1}
+                fo.update(fopts_s2d(fd[FOPTS]))
+                to.update({'compact': True})
+                text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[FTYPE], cardinality(fo['min'], fo['max']), fd[FDESC]], cls)
+        elif td[TTYPE] == 'Choice':            # same as Map/Record but without cardinality column
+            cls = ['n', 's', 's', 's']
+            text += _tbegin(to, td, ['ID', 'Name', 'Type', 'Description'], cls)
+            for fd in td[FIELDS]:
+                text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[FTYPE], fd[FDESC]], cls)
+        else:                                   # Map, Record
+            cls = ['n', 's', 's', 'n', 's']
+            text += _tbegin(to, td, ['ID', 'Name', 'Type', '#', 'Description'], cls)
+            for fd in td[FIELDS]:
+                fo = {'min': 1, 'max': 1}
+                fo.update(fopts_s2d(fd[FOPTS]))
+                text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[FTYPE], cardinality(fo['min'], fo['max']), fd[FDESC]], cls)
+        sub += 1
+        text += type_end()
 
+    text += doc_end()
     return text
 
 

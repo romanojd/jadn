@@ -1,4 +1,4 @@
-<!-- Generated from schema\slpf-wd03.jadn, Mon Aug 13 14:51:52 2018-->
+<!-- Generated from schema\slpf-wd03.jadn, Mon Aug 20 12:12:54 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -50,6 +50,7 @@
 | ---: | :--- | :--- | ---: | :--- |
 | 1 | rule | Rule-ID | 0..1 | Rule identifier returned from allow or deny command. |
 
+**_Type: Rule-ID_**
 
 | Name | Type | Description |
 | :--- | :--- | :--- |

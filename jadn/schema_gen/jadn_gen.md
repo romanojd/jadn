@@ -1,4 +1,4 @@
-<!-- Generated from schema\jadn.jadn, Mon Aug 13 14:51:52 2018-->
+<!-- Generated from schema\jadn.jadn, Mon Aug 20 12:12:53 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -31,29 +31,29 @@
 
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |
-| 1 | Nsid | 1 | "nsid": A short local identifier (namespace id) used within this module to refer to the imported module |
-| 2 | Uname | 1 | "uname": Unique name of imported module |
+| 1 | Nsid | 1 | nsid -- A short local identifier (namespace id) used within this module to refer to the imported module |
+| 2 | Uname | 1 | uname -- Unique name of imported module |
 
 **_Type: Bounds (Array)_**
 
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |
-| 1 | Integer | 1 | "max_msg": Maximum serialized message size in octets or characters |
-| 2 | Integer | 1 | "max_str": Maximum string length in characters |
-| 3 | Integer | 1 | "max_bin": Maximum binary length in octets |
-| 4 | Integer | 1 | "max_fields": Maximum number of elements in ArrayOf |
+| 1 | Integer | 1 | max_msg -- Maximum serialized message size in octets or characters |
+| 2 | Integer | 1 | max_str -- Maximum string length in characters |
+| 3 | Integer | 1 | max_bin -- Maximum binary length in octets |
+| 4 | Integer | 1 | max_fields -- Maximum number of elements in ArrayOf |
 
 **_Type: Type (Array)_**
 
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |
-| 1 | Identifier | 1 | "tname": Name of this datatype |
-| 2 | JADN-Type | 1 | "btype": Base type.  Enumerated value derived from list of JADN data types |
-| 3 | Option | 1..n | "opts": Type options |
-| 4 | String | 1 | "desc": Description of this data type |
-| 5 | JADN-Type | 1..n | "fields": List of fields for compound types.  Not present for primitive types |
+| 1 | Identifier | 1 | tname -- Name of this datatype |
+| 2 | JADN-Type | 1 | btype -- Base type.  Enumerated value derived from list of JADN data types |
+| 3 | Option | 1..n | opts -- Type options |
+| 4 | String | 1 | desc -- Description of this data type |
+| 5 | JADN-Type | 1..n | fields -- List of fields for compound types.  Not present for primitive types |
 
-**_Type: JADN-Type (Choice {'compact': True})_**
+**_Type: JADN-Type (Choice)_**
 
 | ID | Name | Type | Description |
 | ---: | :--- | :--- | :--- |
@@ -88,10 +88,26 @@
 | 4 | Option | 0..n | Field options |
 | 5 | String | 1 | Field description |
 
+**_Type: Identifier_**
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
 | Identifier | String | A string starting with an alpha char followed by zero or more alphanumeric / underscore / dash chars |
+
+**_Type: Nsid_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
 | Nsid | String | Namespace ID - a short identifier |
+
+**_Type: Uname_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
 | Uname | String | Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes |
+
+**_Type: Option_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
 | Option | String | Option string: 1st char = option id |

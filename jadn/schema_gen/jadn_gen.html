@@ -1,4 +1,4 @@
-<!-- Generated from schema\jadn.jadn, Mon Aug 13 14:51:52 2018-->
+<!-- Generated from schema\jadn.jadn, Mon Aug 20 12:12:53 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +15,7 @@
 <tr><td class="h">description:</td><td class="s">Syntax of a JSON Abstract Data Notation (JADN) module.</td></tr>
 <tr><td class="h">exports:</td><td class="s">Schema, Uname</td></tr>
 </table>
-<h2>Structure Types</h2>
+<h2>Types</h2>
 <table><caption>Schema (Record)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">meta</td><td class="s">Meta</td><td class="n">1</td><td class="s">Information about this schema module</td></tr>
 <tr><td class="n">2</td><td class="s">types</td><td class="s">Type</td><td class="n">1..n</td><td class="s">Types defined in this schema module</td></tr>
@@ -30,23 +30,23 @@
 <tr><td class="n">7</td><td class="s">bounds</td><td class="s">Bounds</td><td class="n">0..1</td><td class="s">Schema-wide upper bounds</td></tr>
 </table>
 <table><caption>Import (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="s">Nsid</td><td class="n">1</td><td class="s">"nsid": A short local identifier (namespace id) used within this module to refer to the imported module</td></tr>
-<tr><td class="n">2</td><td class="s">Uname</td><td class="n">1</td><td class="s">"uname": Unique name of imported module</td></tr>
+<tr><td class="n">1</td><td class="s">Nsid</td><td class="n">1</td><td class="s">nsid -- A short local identifier (namespace id) used within this module to refer to the imported module</td></tr>
+<tr><td class="n">2</td><td class="s">Uname</td><td class="n">1</td><td class="s">uname -- Unique name of imported module</td></tr>
 </table>
 <table><caption>Bounds (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="s">Integer</td><td class="n">1</td><td class="s">"max_msg": Maximum serialized message size in octets or characters</td></tr>
-<tr><td class="n">2</td><td class="s">Integer</td><td class="n">1</td><td class="s">"max_str": Maximum string length in characters</td></tr>
-<tr><td class="n">3</td><td class="s">Integer</td><td class="n">1</td><td class="s">"max_bin": Maximum binary length in octets</td></tr>
-<tr><td class="n">4</td><td class="s">Integer</td><td class="n">1</td><td class="s">"max_fields": Maximum number of elements in ArrayOf</td></tr>
+<tr><td class="n">1</td><td class="s">Integer</td><td class="n">1</td><td class="s">max_msg -- Maximum serialized message size in octets or characters</td></tr>
+<tr><td class="n">2</td><td class="s">Integer</td><td class="n">1</td><td class="s">max_str -- Maximum string length in characters</td></tr>
+<tr><td class="n">3</td><td class="s">Integer</td><td class="n">1</td><td class="s">max_bin -- Maximum binary length in octets</td></tr>
+<tr><td class="n">4</td><td class="s">Integer</td><td class="n">1</td><td class="s">max_fields -- Maximum number of elements in ArrayOf</td></tr>
 </table>
 <table><caption>Type (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="s">Identifier</td><td class="n">1</td><td class="s">"tname": Name of this datatype</td></tr>
-<tr><td class="n">2</td><td class="s">JADN-Type</td><td class="n">1</td><td class="s">"btype": Base type.  Enumerated value derived from list of JADN data types</td></tr>
-<tr><td class="n">3</td><td class="s">Option</td><td class="n">1..n</td><td class="s">"opts": Type options</td></tr>
-<tr><td class="n">4</td><td class="s">String</td><td class="n">1</td><td class="s">"desc": Description of this data type</td></tr>
-<tr><td class="n">5</td><td class="s">JADN-Type</td><td class="n">1..n</td><td class="s">"fields": List of fields for compound types.  Not present for primitive types</td></tr>
+<tr><td class="n">1</td><td class="s">Identifier</td><td class="n">1</td><td class="s">tname -- Name of this datatype</td></tr>
+<tr><td class="n">2</td><td class="s">JADN-Type</td><td class="n">1</td><td class="s">btype -- Base type.  Enumerated value derived from list of JADN data types</td></tr>
+<tr><td class="n">3</td><td class="s">Option</td><td class="n">1..n</td><td class="s">opts -- Type options</td></tr>
+<tr><td class="n">4</td><td class="s">String</td><td class="n">1</td><td class="s">desc -- Description of this data type</td></tr>
+<tr><td class="n">5</td><td class="s">JADN-Type</td><td class="n">1..n</td><td class="s">fields -- List of fields for compound types.  Not present for primitive types</td></tr>
 </table>
-<table><caption>JADN-Type (Choice {'compact': True})</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
+<table><caption>JADN-Type (Choice)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">Binary</td><td class="s">Null</td><td class="s">Octet (binary) string</td></tr>
 <tr><td class="n">2</td><td class="s">Boolean</td><td class="s">Null</td><td class="s">True or False</td></tr>
 <tr><td class="n">3</td><td class="s">Integer</td><td class="s">Null</td><td class="s">Whole number</td></tr>
@@ -72,11 +72,16 @@
 <tr><td class="n">4</td><td class="s">Option</td><td class="n">0..n</td><td class="s">Field options</td></tr>
 <tr><td class="n">5</td><td class="s">String</td><td class="n">1</td><td class="s">Field description</td></tr>
 </table>
-<h2>Primitive Types</h2>
-<table><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
+<table><caption>Identifier</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">Identifier</td><td class="s">String</td><td class="s">A string starting with an alpha char followed by zero or more alphanumeric / underscore / dash chars</td></tr>
+</table>
+<table><caption>Nsid</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">Nsid</td><td class="s">String</td><td class="s">Namespace ID - a short identifier</td></tr>
+</table>
+<table><caption>Uname</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">Uname</td><td class="s">String</td><td class="s">Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes</td></tr>
+</table>
+<table><caption>Option</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">Option</td><td class="s">String</td><td class="s">Option string: 1st char = option id</td></tr>
 </table>
 </body>

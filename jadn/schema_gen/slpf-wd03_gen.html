@@ -1,4 +1,4 @@
-<!-- Generated from schema\slpf-wd03.jadn, Mon Aug 13 14:51:52 2018-->
+<!-- Generated from schema\slpf-wd03.jadn, Mon Aug 20 12:12:54 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +15,7 @@
 <tr><td class="h">description:</td><td class="s">Data definitions for Stateless Packet Filtering (SLPF) functions</td></tr>
 <tr><td class="h">exports:</td><td class="s">Target, Specifiers, Args, Results</td></tr>
 </table>
-<h2>Structure Types</h2>
+<h2>Types</h2>
 <table><caption>Target (Choice)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">rule</td><td class="s">Rule-ID</td><td class="s">Uniquely identifies a rule associated with a previously-issued deny or allow.</td></tr>
 </table>
@@ -40,8 +40,7 @@
 <table><caption>Results (Map)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">rule</td><td class="s">Rule-ID</td><td class="n">0..1</td><td class="s">Rule identifier returned from allow or deny command.</td></tr>
 </table>
-<h2>Primitive Types</h2>
-<table><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
+<table><caption>Rule-ID</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">Rule-ID</td><td class="s">Integer</td><td class="s">Immutable identifier assigned when an access rule is created.</td></tr>
 </table>
 </body>

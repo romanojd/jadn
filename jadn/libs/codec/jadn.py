@@ -95,7 +95,7 @@ def jadn_check(schema):
 #        jc = Codec(json.load(f), verbose_rec=True, verbose_str=True)
 #        assert jc.encode("Schema", schema) == schema
 
-    valid_topts = {
+    valid_topts = {                         # TODO: comprehensive review of valid type and field options, plus unit tests
         'Binary': ['min', 'max'],
         'Boolean': [],
         'Integer': ['min', 'max'],
@@ -105,8 +105,8 @@ def jadn_check(schema):
         'Array': ['min'],
         'ArrayOf': ['min', 'max', 'rtype'],
         'Choice': ['compact'],
-        'Enumerated': ['compact'],
-        'Map': ['min'],
+        'Enumerated': ['compact', 'rtype'],
+        'Map': ['compact', 'min'],
         'Record': ['min'],
     }
     valid_fopts = {
@@ -150,7 +150,7 @@ def jadn_check(schema):
                 n = 3 if tt == "Enumerated" else 5
                 for k, i in enumerate(t[FIELDS]):       # item definition: 0-tag, 1-name, 2-type, 3-options, 4-description
                     tags.update({i[FTAG]})              # or (enumerated): 0-tag, 1-name, 2-description
-                    ordinal = tt in ('Array', 'Record') or (tt == 'Choice' and 'compact' in topts)
+                    ordinal = tt in ('Array', 'Record')
                     if ordinal and i[FTAG] != k + 1:
                         print("Item tag error:", t[TNAME] + '(' + tt + '):' + i[FNAME], '--', i[FTAG], "should be", k + 1)
                     if len(i) != n:

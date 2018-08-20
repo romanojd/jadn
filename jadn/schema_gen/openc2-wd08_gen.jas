@@ -1,4 +1,4 @@
--- Generated from schema\openc2-wd07.jadn, Mon Aug 20 12:12:53 2018
+-- Generated from schema\openc2-wd08.jadn, Mon Aug 20 12:12:53 2018
 
 /*
 module:        oasis-open.org/openc2/v1.0/openc2-lang
@@ -7,15 +7,15 @@ description:   Datatypes that define the content of OpenC2 commands and
                responses.
 imports:       [['slpf', 'oasis-open.org/openc2/v1.0/ap-slpf'], ['jadn', 'oasis-open.org/openc2/v1.0/jadn']]
 exports:       ['OpenC2-Command', 'OpenC2-Response']
-patch:         wd07
+patch:         wd08
 */
 
-OpenC2-Command ::= RECORD {    -- The OpenC2 Command describes an action performed on a target.
-    action       Action,    -- The task or activity to be performed (i.e., the 'verb')
-    target       Target,    -- The object of the action. The action is performed on the target
-    actuator     Actuator OPTIONAL,    -- The subject of the action. The actuator executes the action on the target
-    args         Args OPTIONAL,    -- Additional information that applies to the command
-    id           Command-ID OPTIONAL     -- Identifier used to link responses to a command
+OpenC2-Command ::= RECORD {
+    action       Action,    -- The task or activity to be performed (i.e., the 'verb').
+    target       Target,    -- The object of the action. The action is performed on the target.
+    actuator     Actuator OPTIONAL,    -- The subject of the action. The actuator executes the action on the target.
+    args         Args OPTIONAL,    -- Additional information that applies to the command.
+    id           Command-ID OPTIONAL     -- Identifier used to link responses to a command.
 }
 
 Action ::= ENUMERATED {
@@ -43,43 +43,47 @@ Action ::= ENUMERATED {
 
 Target ::= CHOICE {    -- OpenC2 Target datatypes
     artifact              [1] Artifact,    -- An array of bytes representing a file-like object or a link to that object.
-    command               [2] Command-ID,    -- A reference to a previously issued OpenC2 command
-    device                [3] Device,    -- The properties of a hardware device
-    directory             [4] Directory,    -- The properties common to a file system directory
-    domain_name           [7] Domain-Name,    -- A netowrk domain name
-    email_addr            [8] Email-Addr,    -- A single email address
-    email_message         [9] Email-Message,    -- An instance of an email message, corresponding to the internet message format described in RFC 5322 and related RFCs
-    file                  [10] File,    -- Properties of a file
-    ip_addr               [11] IP-Addr,    -- The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation
-    mac_addr              [13] Mac-Addr,    -- A single Media Access Control (MAC) address
-    ip_connection         [15] IP-Connection,    -- A network connection that originates from a source and is addressed to a destination
+    command               [2] Command-ID,    -- A reference to a previously issued OpenC2 command.
+    device                [3] Device,    -- The properties of a hardware device.
+    directory             [4] Directory,    -- The properties common to a file system directory.
+    domain_name           [7] Domain-Name,    -- A network domain name.
+    email_addr            [8] Email-Addr,    -- A single email address.
+    email_message         [9] Email-Message,    -- An instance of an email message, corresponding to the internet message format described in RFC 5322 and related RFCs.
+    file                  [10] File,    -- Properties of a file.
+    ip_addr               [11] IP-Addr,    -- The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation.
+    mac_addr              [13] Mac-Addr,    -- A single Media Access Control (MAC) address.
+    ip_connection         [15] IP-Connection,    -- A network connection that originates from a source and is addressed to a destination. Source and destination addresses may be either IPv4 or IPv6; both should be the same version.
     openc2                [16] OpenC2,    -- A set of items used with the query action to determine an actuator's capabilities
-    process               [17] Process,    -- Common properties of an instance of a computer program as executed on an operating system
-    software              [18] Software,    -- High-level properties associated with software, including software products
-    windows_registry_key  [23] Windows-Registry-Key,    -- The properties of a Windows registry key
-    property              [25] Property,    -- Data attribute associated with an actuator.
+    process               [17] Process,    -- Common properties of an instance of a computer program as executed on an operating system.
+    property              [25] Property,    -- Data attribute associated with an actuator
+    software              [18] Software,    -- High-level properties associated with software, including software products.
+    uri                   [19] URI,    -- A uniform resource identifier (URI).
+    windows_registry_key  [23] Windows-Registry-Key,    -- The properties of a Windows registry key.
+    pent                  [1000] PE-Target,    -- Targets defined in a Private Enterprise extension profile
     slpf                  [1024] slpf:Target     -- Targets defined in the Stateless Packet Filter profile.
 }
 
 Actuator ::= CHOICE {
-    generic      [1] Actuator-Specifiers,    -- Generic actuator specifiers
-    slpf         [1024] slpf:Specifiers     -- Actuator specifiers and options as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01
+    pent         [1000] PE-Specifiers,    -- Specifiers defined in a Private Enterprise extension profile.
+    slpf         [1024] slpf:Specifiers     -- Actuator specifiers and options as defined in the Stateless Packet Filter profile.
 }
 
 Args ::= MAP {
     start_time          [1] Date-Time OPTIONAL,    -- The specific date/time to initiate the action
     stop_time           [2] Date-Time OPTIONAL,    -- The specific date/time to terminate the action
     duration            [3] Duration OPTIONAL,    -- The length of time for an action to be in effect
-    response_requested  [4] Response-Type OPTIONAL,    -- The type of response required for the action
+    response_requested  [4] Response-Type OPTIONAL,    -- The type of response required for the action: **none, ack, status, complete**. When not explicitly contained in an OpenC2 Command, a Consumer MUST responde the same as response type complete.
+    pent                [1000] PE-Args OPTIONAL,    -- Command arguments defined in a Private Enterprise extension profile
     slpf                [1024] slpf:Args OPTIONAL     -- Command arguments defined in the Stateless Packet Filter profile
 }
 
 OpenC2-Response ::= RECORD {
-    id           Command-ID OPTIONAL,    -- Id of the response
     status       Status-Code,    -- An integer status code
     status_text  STRING OPTIONAL,    -- A free-form human-readable description of the response status
-    *            Results,    -- Data or extended status information that was requested from an OpenC2 command
-    id_ref       Command-ID     -- Id of the command that induced this response.
+    *            Results OPTIONAL,    -- Data or extended status information that was requested from an OpenC2 command
+    id           Command-ID OPTIONAL,    -- ID of the response
+    id_ref       Command-ID OPTIONAL,    -- ID of the command that induced this response
+    actuator_id  STRING OPTIONAL     -- ID of the actuator sending the response
 }
 
 Status-Code ::= ENUMERATED {
@@ -91,6 +95,22 @@ Status-Code ::= ENUMERATED {
     Forbidden          (403),    -- The server understood the request but refuses to authorize it.
     Server Error       (500),    -- The server encountered an unexpected condition that prevented it from fulfilling the request.
     Not Implemented    (501)     -- The server does not support the functionality required to fulfill the request.
+}
+
+PE-Target ::= CHOICE {
+    Example      [32473] 32473:Target     -- Targets defined in the Example Inc. extension profile
+}
+
+PE-Specifiers ::= CHOICE {
+    Example      [32473] 32473:Specifiers     -- Specifiers defined in the Example Inc. extension profile
+}
+
+PE-Args ::= MAP {
+    Example      [32473] 32473:Args     -- Command Arguments defined in the Example Inc. extension profile
+}
+
+PE-Results ::= MAP {
+    Example      [32473] 32473:Results     -- Results defined in the Example Inc. extension profile
 }
 
 Artifact ::= RECORD {
@@ -105,7 +125,7 @@ Device ::= MAP {
     device_id    [3] STRING OPTIONAL     -- An identifier that refers to this device within an inventory or management system
 }
 
-Domain-Name ::= STRING    -- Domain name, RFC 1034, section 3.5
+Domain-Name ::= STRING    -- RFC 1034, section 3.5
 
 Email-Addr ::= STRING    -- Email address, RFC 5322, section 3.4.1
 
@@ -118,11 +138,11 @@ File ::= MAP {
 IP-Addr ::= STRING    -- IPv4 or IPv6 address per RFC 2673 section 3.2, and RFC 4291 section 2.2
 
 IP-Connection ::= RECORD {    -- 5-tuple that specifies a tcp/ip connection
-    src_addr         IP-Addr OPTIONAL,    -- source address
-    src_port         Port OPTIONAL,    -- source TCP/UDP port number
-    dst_addr         IP-Addr OPTIONAL,    -- destination address
-    dst_port         Port OPTIONAL,    -- destination TCP/UDP port number
-    layer4-protocol  L4-Protocol OPTIONAL     -- Protocol (IPv4) / Next Header (IPv6)
+    src_addr     IP-Addr OPTIONAL,    -- source address
+    src_port     Port OPTIONAL,    -- source TCP/UDP port number
+    dst_addr     IP-Addr OPTIONAL,    -- destination address
+    dst_port     Port OPTIONAL,    -- destination TCP/UDP port number
+    protocol     L4-Protocol OPTIONAL     -- Protocol (IPv4) / Next Header (IPv6)
 }
 
 OpenC2 ::= ARRAY_OF    -- A target used to query Actuator for its supported capabilities
@@ -137,16 +157,20 @@ Process ::= MAP {
 }
 
 Property ::= RECORD {
-    name          STRING OPTIONAL,    -- The name that uniquely identifies a property of an actuator.
-    query_string  STRING OPTIONAL     -- A query string that identifies a single property of an actuator. The syntax of the query string is defined in the actuator profile.
+    name          STRING,    -- The name that uniquely identifies a property of an actuator.
+    query_string  STRING     -- A query string that identifies a single property of an actuator. The syntax of the query string is defined in the actuator profile
 }
 
-Command-ID ::= STRING    -- Uniquely identifies a particular command - TBD syntax
+Command-ID ::= STRING    -- Uniquely identifies a particular command
+
+Date-Time ::= INTEGER    -- Milliseconds since 00:00:00 UTC, 1 January 1970.
+
+Duration ::= INTEGER    -- Milliseconds
 
 Hashes ::= MAP {    -- Cryptographic Hash values
-    md5          [1] STRING OPTIONAL,    -- Hex-encoded MD5 hash as defined in RFC3121
-    sha1         [4] STRING OPTIONAL,    -- Hex-encoded SHA1 hash as defined in RFC3174
-    sha256       [6] STRING OPTIONAL     -- Hex-encoded SHA256 as defined in RFC6234
+    md5          [1] BINARY OPTIONAL,    -- MD5 hash as defined in RFC3121
+    sha1         [4] BINARY OPTIONAL,    -- SHA1 hash as defined in RFC3174
+    sha256       [6] BINARY OPTIONAL     -- SHA256 as defined in RFC6234
 }
 
 Hostname ::= STRING    -- A legal Internet host name as specified in RFC 1123
@@ -177,8 +201,11 @@ Query-Item ::= ENUMERATED {    -- Results to be included in response to query op
 Response-Type ::= ENUMERATED {
     none         (0),    -- No response
     ack          (1),    -- Respond when command received
-    complete     (2)     -- Respond when all aspects of command completed
+    status       (2),    -- Respond with progress toward command completion
+    complete     (3)     -- Respond when all aspects of command completed
 }
+
+URI ::= STRING    -- Uniform Resource Identifier
 
 Version ::= STRING    -- TBSL
 
@@ -188,9 +215,10 @@ Results ::= MAP {
     kvps         [3] KVP OPTIONAL,    -- Generic set of string values ***{'max': 0}
     versions     [4] Version OPTIONAL,    -- Supported OpenC2 Language versions ***{'max': 0}
     profiles     [5] jadn:Uname OPTIONAL,    -- Supported actuator profiles ***{'max': 0}
-    schema       [6] jadn:Schema OPTIONAL,    -- Schema supported by this actuator ***{'max': 0}
-    actions      [7] ActionTargets OPTIONAL,    -- List of targets applicable to each supported action ***{'max': 0}
-    slpf         [1024] slpf:Results OPTIONAL     -- Results from Stateless Packet Filter profile ***{'max': 0}
+    schema       [6] jadn:Schema OPTIONAL,    -- Syntax of the OpenC2 language elements supported by this actuator ***{'max': 0}
+    pairs        [7] ActionTargets OPTIONAL,    -- List of targets applicable to each supported action ***{'max': 0}
+    pent         [1000] PE-Results OPTIONAL,    -- Response data defined in a Private Enterprise profile
+    slpf         [1024] slpf:Results OPTIONAL     -- Results from Stateless Packet Filter profile
 }
 
 KVP ::= ARRAY {

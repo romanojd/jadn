@@ -1,4 +1,4 @@
-<!-- Generated from schema\openc2-wd08-slpf.jadn, Mon Aug 13 14:51:52 2018-->
+<!-- Generated from schema\openc2-wd08-slpf.jadn, Mon Aug 20 12:12:53 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -13,11 +13,11 @@
 
 | ID | Name | Type | # | Description |
 | ---: | :--- | :--- | ---: | :--- |
-| 1 | action | Action | 1 | The task or activity to be performed (i.e., the 'verb') |
-| 2 | target | Target | 1 | The object of the action. The action is performed on the target |
-| 3 | actuator | Actuator | 0..1 | The subject of the action. The actuator executes the action on the target |
-| 4 | args | Args | 0..1 | Additional information that applies to the command |
-| 5 | id | Command-ID | 0..1 | Identifier used to link responses to a command |
+| 1 | action | Action | 1 | The task or activity to be performed (i.e., the 'verb'). |
+| 2 | target | Target | 1 | The object of the action. The action is performed on the target. |
+| 3 | actuator | Actuator | 0..1 | The subject of the action. The actuator executes the action on the target. |
+| 4 | args | Args | 0..1 | Additional information that applies to the command. |
+| 5 | id | Command-ID | 0..1 | Identifier used to link responses to a command. |
 
 **_Type: Action (Enumerated)_**
 
@@ -45,12 +45,6 @@
 | ---: | :--- | :--- | :--- |
 | 1024 | slpf | slpf:Specifiers | Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01 |
 
-**_Type: Specifiers (Map)_**
-
-| ID | Name | Type | # | Description |
-| ---: | :--- | :--- | ---: | :--- |
-| 2 | asset_id | String | 0..1 | Hardware identifier of a physical actuator device, such as a serial number or inventory barcode |
-
 **_Type: Args (Map)_**
 
 | ID | Name | Type | # | Description |
@@ -65,14 +59,16 @@
 
 | ID | Name | Type | # | Description |
 | ---: | :--- | :--- | ---: | :--- |
-| 1 | id | Command-ID | 1 | Id of the ommand that induced this response |
-| 2 | status | Status-Code | 1 | An integer status code |
-| 3 | status_text | String | 0..1 | A free-form human-readable description of the response status |
-| 4 | * | Results | 1 | Data or extended status information that was requested from an OpenC2 command |
+| 1 | status | Status-Code | 1 | An integer status code |
+| 2 | status_text | String | 0..1 | A free-form human-readable description of the response status |
+| 3 | * | Results | 0..1 | Data or extended status information that was requested from an OpenC2 command |
+| 4 | id | Command-ID | 0..1 | ID of the response |
+| 5 | id_ref | Command-ID | 0..1 | ID of the command that induced this response |
+| 6 | actuator_id | String | 0..1 | ID of the actuator sending the response |
 
-**_Type: Status-Code (Enumerated.Tag)_**
+**_Type: Status-Code (Enumerated.ID)_**
 
-| Value | Description |
+| ID | Description |
 | ---: | :--- |
 | 102 | Processing -- An interim response used to inform the client that the server has accepted the request but not yet completed it. |
 | 200 | OK -- The request has succeeded. |
@@ -82,6 +78,101 @@
 | 403 | Forbidden -- The server understood the request but refuses to authorize it. |
 | 500 | Server Error -- The server encountered an unexpected condition that prevented it from fulfilling the request. |
 | 501 | Not Implemented -- The server does not support the functionality required to fulfill the request. |
+
+**_Type: File (Map)_**
+
+| ID | Name | Type | # | Description |
+| ---: | :--- | :--- | ---: | :--- |
+| 1 | name | String | 0..1 | The name of the file as defined in the file system |
+| 2 | path | String | 0..1 | The absolute path to the location of the file in the file system |
+| 3 | hashes | Hashes | 0..1 | One or more cryptographic hash codes of the file contents |
+
+**_Type: IP-Addr_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| IP-Addr | String (ip) | IPv4 or IPv6 address per RFC 2673 section 3.2, and RFC 4291 section 2.2 |
+
+**_Type: IP-Connection (Record)_**
+
+| ID | Name | Type | # | Description |
+| ---: | :--- | :--- | ---: | :--- |
+| 1 | src_addr | IP-Addr | 0..1 | source address |
+| 2 | src_port | Port | 0..1 | source TCP/UDP port number |
+| 3 | dst_addr | IP-Addr | 0..1 | destination address |
+| 4 | dst_port | Port | 0..1 | destination TCP/UDP port number |
+| 5 | protocol | L4-Protocol | 0..1 | Protocol (IPv4) / Next Header (IPv6) |
+
+**_Type: OpenC2_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| OpenC2 | ArrayOf(Query-Item) ['min', 'max'] | A target used to query Actuator for its supported capabilities |
+
+**_Type: Command-ID_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| Command-ID | String | Uniquely identifies a particular command |
+
+**_Type: Date-Time_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| Date-Time | Integer | Milliseconds since 00:00:00 UTC, 1 January 1970. |
+
+**_Type: Duration_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| Duration | Integer | Milliseconds |
+
+**_Type: Hashes (Map)_**
+
+| ID | Name | Type | # | Description |
+| ---: | :--- | :--- | ---: | :--- |
+| 1 | md5 | Binary | 0..1 | MD5 hash as defined in RFC3121 |
+| 4 | sha1 | Binary | 0..1 | SHA1 hash as defined in RFC3174 |
+| 6 | sha256 | Binary | 0..1 | SHA256 as defined in RFC6234 |
+
+**_Type: Hostname_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| Hostname | String | A legal Internet host name as specified in RFC 1123 |
+
+**_Type: L4-Protocol (Enumerated)_**
+
+| ID | Name | Description |
+| ---: | --- | :--- |
+| 1 | **icmp** | Internet Control Message Protocol - RFC 792 |
+| 6 | **tcp** | Transmission Control Protocol - RFC 793 |
+| 17 | **udp** | User Datagram Protocol - RFC 768 |
+| 132 | **sctp** | Stream Control Transmission Protocol - RFC 4960 |
+
+**_Type: Port_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| Port | String (port) | Service Name or Transport Protocol Port Number, RFC 6335 |
+
+**_Type: Query-Item (Enumerated)_**
+
+| ID | Name | Description |
+| ---: | --- | :--- |
+| 1 | **versions** | OpenC2 language versions supported by this actuator |
+| 2 | **profiles** | List of profiles supported by this actuator |
+| 3 | **schema** | Definition of the command syntax supported by this actuator |
+| 4 | **pairs** | List of supported actions and applicable targets |
+
+**_Type: Response-Type (Enumerated)_**
+
+| ID | Name | Description |
+| ---: | --- | :--- |
+| 0 | **none** | No response |
+| 1 | **ack** | Respond when command received |
+| 2 | **status** | Respond with progress toward command completion |
+| 3 | **complete** | Respond when all aspects of command completed |
 
 **_Type: Results (Map)_**
 
@@ -97,71 +188,5 @@
 
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |
-| 1 | Action | 1 | "action": An action supported by this actuator |
-| 2 | Target.* | 1..n | "targets": List of targets applicable to this action |
-
-**_Type: OpenC2 (ArrayOf.Query-Item ['min', 'max'])_**
-
-|  |
-|  |
-
-**_Type: Query-Item (Enumerated)_**
-
-| ID | Name | Description |
-| ---: | --- | :--- |
-| 1 | **versions** | OpenC2 language versions supported by this actuator |
-| 2 | **profiles** | List of profiles supported by this actuator |
-| 3 | **schema** | Definition of the command syntax supported by this actuator |
-
-**_Type: IP-Connection (Record)_**
-
-| ID | Name | Type | # | Description |
-| ---: | :--- | :--- | ---: | :--- |
-| 1 | src_addr | IP-Addr | 0..1 | source address |
-| 2 | src_port | Port | 0..1 | source TCP/UDP port number |
-| 3 | dst_addr | IP-Addr | 0..1 | destination address |
-| 4 | dst_port | Port | 0..1 | destination TCP/UDP port number |
-| 5 | layer4-protocol | L4-Protocol | 0..1 | Protocol (IPv4) / Next Header (IPv6) |
-
-**_Type: L4-Protocol (Enumerated)_**
-
-| ID | Name | Description |
-| ---: | --- | :--- |
-| 1 | **icmp** | Internet Control Message Protocol - RFC 792 |
-| 6 | **tcp** | Transmission Control Protocol - RFC 793 |
-| 17 | **udp** | User Datagram Protocol - RFC 768 |
-| 132 | **sctp** | Stream Control Transmission Protocol - RFC 4960 |
-
-**_Type: File (Map)_**
-
-| ID | Name | Type | # | Description |
-| ---: | :--- | :--- | ---: | :--- |
-| 1 | name | String | 0..1 | The name of the file as defined in the file system |
-| 2 | path | String | 0..1 | The absolute path to the location of the file in the file system |
-| 3 | hashes | Hashes | 0..1 | One or more cryptographic hash codes of the file contents |
-
-**_Type: Response-Type (Enumerated)_**
-
-| ID | Name | Description |
-| ---: | --- | :--- |
-| 0 | **none** | No response |
-| 1 | **ack** | Respond when command received |
-| 2 | **complete** | Respond when all aspects of command completed |
-
-**_Type: Hashes (Map)_**
-
-| ID | Name | Type | # | Description |
-| ---: | :--- | :--- | ---: | :--- |
-| 1 | md5 | Binary | 0..1 | Hex-encoded MD5 hash as defined in RFC3121 |
-| 4 | sha1 | Binary | 0..1 | Hex-encoded SHA1 hash as defined in RFC3174 |
-| 6 | sha256 | Binary | 0..1 | Hex-encoded SHA256 as defined in RFC6234 |
-
-
-| Name | Type | Description |
-| :--- | :--- | :--- |
-| Command-ID | String | Uniquely identifies a particular command - TBD syntax |
-| Date-Time | String (date-time) | RFC 3339 date-time |
-| Duration | String (duration) | RFC 3339 / ISO 8601 duration |
-| IP-Addr | String (ip) | IPv4 or IPv6 address per RFC 2673 section 3.2, and RFC 4291 section 2.2 |
-| Port | String (port) | Service Name or Transport Protocol Port Number, RFC 6335 |
-| Version | String | Version string - TBD syntax |
+| 1 | Action | 1 | action -- An action supported by this actuator |
+| 2 | Target.* | 1..n | targets -- List of targets applicable to this action |

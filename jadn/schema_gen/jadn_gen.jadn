@@ -1,4 +1,4 @@
-"Generated from schema\jadn.jadn, Mon Aug 13 14:51:51 2018"
+"Generated from schema\jadn.jadn, Mon Aug 20 12:12:53 2018"
 
 {
  "meta": {
@@ -45,7 +45,7 @@
     [5, "fields", "JADN-Type", ["&btype", "]0"], "List of fields for compound types.  Not present for primitive types"]]
   ],
 
-  ["JADN-Type", "Choice", ["="], "", [
+  ["JADN-Type", "Choice", [], "", [
     [1, "Binary", "Null", [], "Octet (binary) string"],
     [2, "Boolean", "Null", [], "True or False"],
     [3, "Integer", "Null", [], "Whole number"],

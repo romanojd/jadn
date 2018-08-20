@@ -1,10 +1,10 @@
-<!-- Generated from schema\openc2-wd07.jadn, Mon Aug 20 12:12:53 2018-->
+<!-- Generated from schema\openc2-wd08.jadn, Mon Aug 20 12:12:53 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
 | **title:** | OpenC2 Language Objects |
 | **module:** | oasis-open.org/openc2/v1.0/openc2-lang |
-| **patch:** | wd07 |
+| **patch:** | wd08 |
 | **description:** | Datatypes that define the content of OpenC2 commands and responses. |
 | **exports:** | OpenC2-Command, OpenC2-Response |
 | **imports:** | **slpf**:&nbsp;oasis-open.org/openc2/v1.0/ap-slpf **jadn**:&nbsp;oasis-open.org/openc2/v1.0/jadn |
@@ -13,11 +13,11 @@
 
 | ID | Name | Type | # | Description |
 | ---: | :--- | :--- | ---: | :--- |
-| 1 | action | Action | 1 | The task or activity to be performed (i.e., the 'verb') |
-| 2 | target | Target | 1 | The object of the action. The action is performed on the target |
-| 3 | actuator | Actuator | 0..1 | The subject of the action. The actuator executes the action on the target |
-| 4 | args | Args | 0..1 | Additional information that applies to the command |
-| 5 | id | Command-ID | 0..1 | Identifier used to link responses to a command |
+| 1 | action | Action | 1 | The task or activity to be performed (i.e., the 'verb'). |
+| 2 | target | Target | 1 | The object of the action. The action is performed on the target. |
+| 3 | actuator | Actuator | 0..1 | The subject of the action. The actuator executes the action on the target. |
+| 4 | args | Args | 0..1 | Additional information that applies to the command. |
+| 5 | id | Command-ID | 0..1 | Identifier used to link responses to a command. |
 
 **_Type: Action (Enumerated)_**
 
@@ -49,29 +49,31 @@
 | ID | Name | Type | Description |
 | ---: | :--- | :--- | :--- |
 | 1 | artifact | Artifact | An array of bytes representing a file-like object or a link to that object. |
-| 2 | command | Command-ID | A reference to a previously issued OpenC2 command |
-| 3 | device | Device | The properties of a hardware device |
-| 4 | directory | Directory | The properties common to a file system directory |
-| 7 | domain_name | Domain-Name | A netowrk domain name |
-| 8 | email_addr | Email-Addr | A single email address |
-| 9 | email_message | Email-Message | An instance of an email message, corresponding to the internet message format described in RFC 5322 and related RFCs |
-| 10 | file | File | Properties of a file |
-| 11 | ip_addr | IP-Addr | The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation |
-| 13 | mac_addr | Mac-Addr | A single Media Access Control (MAC) address |
-| 15 | ip_connection | IP-Connection | A network connection that originates from a source and is addressed to a destination |
+| 2 | command | Command-ID | A reference to a previously issued OpenC2 command. |
+| 3 | device | Device | The properties of a hardware device. |
+| 4 | directory | Directory | The properties common to a file system directory. |
+| 7 | domain_name | Domain-Name | A network domain name. |
+| 8 | email_addr | Email-Addr | A single email address. |
+| 9 | email_message | Email-Message | An instance of an email message, corresponding to the internet message format described in RFC 5322 and related RFCs. |
+| 10 | file | File | Properties of a file. |
+| 11 | ip_addr | IP-Addr | The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation. |
+| 13 | mac_addr | Mac-Addr | A single Media Access Control (MAC) address. |
+| 15 | ip_connection | IP-Connection | A network connection that originates from a source and is addressed to a destination. Source and destination addresses may be either IPv4 or IPv6; both should be the same version. |
 | 16 | openc2 | OpenC2 | A set of items used with the query action to determine an actuator's capabilities |
-| 17 | process | Process | Common properties of an instance of a computer program as executed on an operating system |
-| 18 | software | Software | High-level properties associated with software, including software products |
-| 23 | windows_registry_key | Windows-Registry-Key | The properties of a Windows registry key |
-| 25 | property | Property | Data attribute associated with an actuator. |
+| 17 | process | Process | Common properties of an instance of a computer program as executed on an operating system. |
+| 25 | property | Property | Data attribute associated with an actuator |
+| 18 | software | Software | High-level properties associated with software, including software products. |
+| 19 | uri | URI | A uniform resource identifier (URI). |
+| 23 | windows_registry_key | Windows-Registry-Key | The properties of a Windows registry key. |
+| 1000 | pent | PE-Target | Targets defined in a Private Enterprise extension profile |
 | 1024 | slpf | slpf:Target | Targets defined in the Stateless Packet Filter profile. |
 
 **_Type: Actuator (Choice)_**
 
 | ID | Name | Type | Description |
 | ---: | :--- | :--- | :--- |
-| 1 | generic | Actuator-Specifiers | Generic actuator specifiers |
-| 1024 | slpf | slpf:Specifiers | Actuator specifiers and options as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01 |
+| 1000 | pent | PE-Specifiers | Specifiers defined in a Private Enterprise extension profile. |
+| 1024 | slpf | slpf:Specifiers | Actuator specifiers and options as defined in the Stateless Packet Filter profile. |
 
 **_Type: Args (Map)_**
 
@@ -80,18 +82,20 @@
 | 1 | start_time | Date-Time | 0..1 | The specific date/time to initiate the action |
 | 2 | stop_time | Date-Time | 0..1 | The specific date/time to terminate the action |
 | 3 | duration | Duration | 0..1 | The length of time for an action to be in effect |
-| 4 | response_requested | Response-Type | 0..1 | The type of response required for the action |
+| 4 | response_requested | Response-Type | 0..1 | The type of response required for the action: **none, ack, status, complete**. When not explicitly contained in an OpenC2 Command, a Consumer MUST responde the same as response type complete. |
+| 1000 | pent | PE-Args | 0..1 | Command arguments defined in a Private Enterprise extension profile |
 | 1024 | slpf | slpf:Args | 0..1 | Command arguments defined in the Stateless Packet Filter profile |
 
 **_Type: OpenC2-Response (Record)_**
 
 | ID | Name | Type | # | Description |
 | ---: | :--- | :--- | ---: | :--- |
-| 1 | id | Command-ID | 0..1 | Id of the response |
-| 2 | status | Status-Code | 1 | An integer status code |
-| 3 | status_text | String | 0..1 | A free-form human-readable description of the response status |
-| 4 | * | Results | 1 | Data or extended status information that was requested from an OpenC2 command |
-| 5 | id_ref | Command-ID | 1 | Id of the command that induced this response. |
+| 1 | status | Status-Code | 1 | An integer status code |
+| 2 | status_text | String | 0..1 | A free-form human-readable description of the response status |
+| 3 | * | Results | 0..1 | Data or extended status information that was requested from an OpenC2 command |
+| 4 | id | Command-ID | 0..1 | ID of the response |
+| 5 | id_ref | Command-ID | 0..1 | ID of the command that induced this response |
+| 6 | actuator_id | String | 0..1 | ID of the actuator sending the response |
 
 **_Type: Status-Code (Enumerated.ID)_**
 
@@ -105,6 +109,30 @@
 | 403 | Forbidden -- The server understood the request but refuses to authorize it. |
 | 500 | Server Error -- The server encountered an unexpected condition that prevented it from fulfilling the request. |
 | 501 | Not Implemented -- The server does not support the functionality required to fulfill the request. |
+
+**_Type: PE-Target (Choice.ID)_**
+
+| ID | Type | Description |
+| ---: | :--- | :--- |
+| 32473 | 32473:Target | Example -- Targets defined in the Example Inc. extension profile |
+
+**_Type: PE-Specifiers (Choice.ID)_**
+
+| ID | Type | Description |
+| ---: | :--- | :--- |
+| 32473 | 32473:Specifiers | Example -- Specifiers defined in the Example Inc. extension profile |
+
+**_Type: PE-Args (Map.ID)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+| 32473 | 32473:Args | 1 | Example -- Command Arguments defined in the Example Inc. extension profile |
+
+**_Type: PE-Results (Map.ID)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+| 32473 | 32473:Results | 1 | Example -- Results defined in the Example Inc. extension profile |
 
 **_Type: Artifact (Record)_**
 
@@ -126,7 +154,7 @@
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| Domain-Name | String (hostname) | Domain name, RFC 1034, section 3.5 |
+| Domain-Name | String (hostname) | RFC 1034, section 3.5 |
 
 **_Type: Email-Addr_**
 
@@ -156,7 +184,7 @@
 | 2 | src_port | Port | 0..1 | source TCP/UDP port number |
 | 3 | dst_addr | IP-Addr | 0..1 | destination address |
 | 4 | dst_port | Port | 0..1 | destination TCP/UDP port number |
-| 5 | layer4-protocol | L4-Protocol | 0..1 | Protocol (IPv4) / Next Header (IPv6) |
+| 5 | protocol | L4-Protocol | 0..1 | Protocol (IPv4) / Next Header (IPv6) |
 
 **_Type: OpenC2_**
 
@@ -179,22 +207,34 @@
 
 | ID | Name | Type | # | Description |
 | ---: | :--- | :--- | ---: | :--- |
-| 1 | name | String | 0..1 | The name that uniquely identifies a property of an actuator. |
-| 2 | query_string | String | 0..1 | A query string that identifies a single property of an actuator. The syntax of the query string is defined in the actuator profile. |
+| 1 | name | String | 1 | The name that uniquely identifies a property of an actuator. |
+| 2 | query_string | String | 1 | A query string that identifies a single property of an actuator. The syntax of the query string is defined in the actuator profile |
 
 **_Type: Command-ID_**
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| Command-ID | String | Uniquely identifies a particular command - TBD syntax |
+| Command-ID | String | Uniquely identifies a particular command |
+
+**_Type: Date-Time_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| Date-Time | Integer | Milliseconds since 00:00:00 UTC, 1 January 1970. |
+
+**_Type: Duration_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| Duration | Integer | Milliseconds |
 
 **_Type: Hashes (Map)_**
 
 | ID | Name | Type | # | Description |
 | ---: | :--- | :--- | ---: | :--- |
-| 1 | md5 | String | 0..1 | Hex-encoded MD5 hash as defined in RFC3121 |
-| 4 | sha1 | String | 0..1 | Hex-encoded SHA1 hash as defined in RFC3174 |
-| 6 | sha256 | String | 0..1 | Hex-encoded SHA256 as defined in RFC6234 |
+| 1 | md5 | Binary | 0..1 | MD5 hash as defined in RFC3121 |
+| 4 | sha1 | Binary | 0..1 | SHA1 hash as defined in RFC3174 |
+| 6 | sha256 | Binary | 0..1 | SHA256 as defined in RFC6234 |
 
 **_Type: Hostname_**
 
@@ -245,7 +285,14 @@
 | ---: | --- | :--- |
 | 0 | **none** | No response |
 | 1 | **ack** | Respond when command received |
-| 2 | **complete** | Respond when all aspects of command completed |
+| 2 | **status** | Respond with progress toward command completion |
+| 3 | **complete** | Respond when all aspects of command completed |
+
+**_Type: URI_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| URI | String | Uniform Resource Identifier |
 
 **_Type: Version_**
 
@@ -262,9 +309,10 @@
 | 3 | kvps | KVP | 0..n | Generic set of string values |
 | 4 | versions | Version | 0..n | Supported OpenC2 Language versions |
 | 5 | profiles | jadn:Uname | 0..n | Supported actuator profiles |
-| 6 | schema | jadn:Schema | 0..n | Schema supported by this actuator |
-| 7 | actions | ActionTargets | 0..n | List of targets applicable to each supported action |
-| 1024 | slpf | slpf:Results | 0..n | Results from Stateless Packet Filter profile |
+| 6 | schema | jadn:Schema | 0..n | Syntax of the OpenC2 language elements supported by this actuator |
+| 7 | pairs | ActionTargets | 0..n | List of targets applicable to each supported action |
+| 1000 | pent | PE-Results | 0..1 | Response data defined in a Private Enterprise profile |
+| 1024 | slpf | slpf:Results | 0..1 | Results from Stateless Packet Filter profile |
 
 **_Type: KVP (Array)_**
 

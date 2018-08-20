@@ -1,20 +1,20 @@
--- Generated from schema\openc2-wd08-slpf.jadn, Mon Aug 13 14:51:52 2018
+-- Generated from schema\openc2-wd08-slpf.jadn, Mon Aug 20 12:12:53 2018
 
 /*
 module:        oasis-open.org/openc2/v1.0/openc2-lang
 title:         OpenC2 Language Objects
 description:   OpenC2 Language content used by Stateless Packet Filters.
+imports:       [['slpf', '/oasis-open.org/openc2/v1.0/ap-slpf'], ['jadn', '/oasis-open.org/openc2/v1.0/jadn']]
 exports:       ['OpenC2-Command', 'OpenC2-Response']
 patch:         wd08-slpf
-imports:       [['slpf', '/oasis-open.org/openc2/v1.0/ap-slpf'], ['jadn', '/oasis-open.org/openc2/v1.0/jadn']]
 */
 
-OpenC2-Command ::= RECORD {    -- The OpenC2 Command describes an action performed on a target. It can be directive or descriptive depending on the context.
-    action       Action,    -- The task or activity to be performed (i.e., the 'verb')
-    target       Target,    -- The object of the action. The action is performed on the target
-    actuator     Actuator OPTIONAL,    -- The subject of the action. The actuator executes the action on the target
-    args         Args OPTIONAL,    -- Additional information that applies to the command
-    id           Command-ID OPTIONAL     -- Identifier used to link responses to a command
+OpenC2-Command ::= RECORD {
+    action       Action,    -- The task or activity to be performed (i.e., the 'verb').
+    target       Target,    -- The object of the action. The action is performed on the target.
+    actuator     Actuator OPTIONAL,    -- The subject of the action. The actuator executes the action on the target.
+    args         Args OPTIONAL,    -- Additional information that applies to the command.
+    id           Command-ID OPTIONAL     -- Identifier used to link responses to a command.
 }
 
 Action ::= ENUMERATED {
@@ -37,10 +37,6 @@ Actuator ::= CHOICE {
     slpf         [1024] slpf:Specifiers     -- Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01
 }
 
-Specifiers ::= MAP {
-    asset_id     [2] STRING OPTIONAL     -- Hardware identifier of a physical actuator device, such as a serial number or inventory barcode
-}
-
 Args ::= MAP {
     start_time          [1] Date-Time OPTIONAL,    -- The specific date/time to initiate the action
     stop_time           [2] Date-Time OPTIONAL,    -- The specific date/time to terminate the action
@@ -50,10 +46,12 @@ Args ::= MAP {
 }
 
 OpenC2-Response ::= RECORD {
-    id           Command-ID,    -- Id of the ommand that induced this response
     status       Status-Code,    -- An integer status code
     status_text  STRING OPTIONAL,    -- A free-form human-readable description of the response status
-    *            Results     -- Data or extended status information that was requested from an OpenC2 command
+    *            Results OPTIONAL,    -- Data or extended status information that was requested from an OpenC2 command
+    id           Command-ID OPTIONAL,    -- ID of the response
+    id_ref       Command-ID OPTIONAL,    -- ID of the command that induced this response
+    actuator_id  STRING OPTIONAL     -- ID of the actuator sending the response
 }
 
 Status-Code ::= ENUMERATED {
@@ -65,6 +63,61 @@ Status-Code ::= ENUMERATED {
     Forbidden          (403),    -- The server understood the request but refuses to authorize it.
     Server Error       (500),    -- The server encountered an unexpected condition that prevented it from fulfilling the request.
     Not Implemented    (501)     -- The server does not support the functionality required to fulfill the request.
+}
+
+File ::= MAP {
+    name         [1] STRING OPTIONAL,    -- The name of the file as defined in the file system
+    path         [2] STRING OPTIONAL,    -- The absolute path to the location of the file in the file system
+    hashes       [3] Hashes OPTIONAL     -- One or more cryptographic hash codes of the file contents
+}
+
+IP-Addr ::= STRING    -- IPv4 or IPv6 address per RFC 2673 section 3.2, and RFC 4291 section 2.2
+
+IP-Connection ::= RECORD {    -- 5-tuple that specifies a tcp/ip connection
+    src_addr     IP-Addr OPTIONAL,    -- source address
+    src_port     Port OPTIONAL,    -- source TCP/UDP port number
+    dst_addr     IP-Addr OPTIONAL,    -- destination address
+    dst_port     Port OPTIONAL,    -- destination TCP/UDP port number
+    protocol     L4-Protocol OPTIONAL     -- Protocol (IPv4) / Next Header (IPv6)
+}
+
+OpenC2 ::= ARRAY_OF    -- A target used to query Actuator for its supported capabilities
+
+Command-ID ::= STRING    -- Uniquely identifies a particular command
+
+Date-Time ::= INTEGER    -- Milliseconds since 00:00:00 UTC, 1 January 1970.
+
+Duration ::= INTEGER    -- Milliseconds
+
+Hashes ::= MAP {    -- Cryptographic Hash values
+    md5          [1] BINARY OPTIONAL,    -- MD5 hash as defined in RFC3121
+    sha1         [4] BINARY OPTIONAL,    -- SHA1 hash as defined in RFC3174
+    sha256       [6] BINARY OPTIONAL     -- SHA256 as defined in RFC6234
+}
+
+Hostname ::= STRING    -- A legal Internet host name as specified in RFC 1123
+
+L4-Protocol ::= ENUMERATED {    -- protocol (IPv4) or next header (IPv6) field - any IANA value, RFC 5237
+    icmp         (1),    -- Internet Control Message Protocol - RFC 792
+    tcp          (6),    -- Transmission Control Protocol - RFC 793
+    udp          (17),    -- User Datagram Protocol - RFC 768
+    sctp         (132)     -- Stream Control Transmission Protocol - RFC 4960
+}
+
+Port ::= STRING    -- Service Name or Transport Protocol Port Number, RFC 6335
+
+Query-Item ::= ENUMERATED {    -- Results to be included in response to query openc2 command
+    versions     (1),    -- OpenC2 language versions supported by this actuator
+    profiles     (2),    -- List of profiles supported by this actuator
+    schema       (3),    -- Definition of the command syntax supported by this actuator
+    pairs        (4)     -- List of supported actions and applicable targets
+}
+
+Response-Type ::= ENUMERATED {
+    none         (0),    -- No response
+    ack          (1),    -- Respond when command received
+    status       (2),    -- Respond with progress toward command completion
+    complete     (3)     -- Respond when all aspects of command completed
 }
 
 Results ::= MAP {
@@ -79,56 +132,3 @@ ActionTargets ::= ARRAY {
     action       [1] Action,    -- An action supported by this actuator
     targets      [2] Target.*     -- List of targets applicable to this action ***{'max': 0}
 }
-
-OpenC2 ::= ARRAY_OF    -- A target used to query Actuator for its supported capabilities
-
-Query-Item ::= ENUMERATED {    -- Results to be included in response to query openc2 command
-    versions     (1),    -- OpenC2 language versions supported by this actuator
-    profiles     (2),    -- List of profiles supported by this actuator
-    schema       (3)     -- Definition of the command syntax supported by this actuator
-}
-
-IP-Connection ::= RECORD {    -- 5-tuple that specifies a tcp/ip connection
-    src_addr         IP-Addr OPTIONAL,    -- source address
-    src_port         Port OPTIONAL,    -- source TCP/UDP port number
-    dst_addr         IP-Addr OPTIONAL,    -- destination address
-    dst_port         Port OPTIONAL,    -- destination TCP/UDP port number
-    layer4-protocol  L4-Protocol OPTIONAL     -- Protocol (IPv4) / Next Header (IPv6)
-}
-
-L4-Protocol ::= ENUMERATED {    -- protocol (IPv4) or next header (IPv6) field - any IANA value, RFC 5237
-    icmp         (1),    -- Internet Control Message Protocol - RFC 792
-    tcp          (6),    -- Transmission Control Protocol - RFC 793
-    udp          (17),    -- User Datagram Protocol - RFC 768
-    sctp         (132)     -- Stream Control Transmission Protocol - RFC 4960
-}
-
-File ::= MAP {
-    name         [1] STRING OPTIONAL,    -- The name of the file as defined in the file system
-    path         [2] STRING OPTIONAL,    -- The absolute path to the location of the file in the file system
-    hashes       [3] Hashes OPTIONAL     -- One or more cryptographic hash codes of the file contents
-}
-
-Response-Type ::= ENUMERATED {
-    none         (0),    -- No response
-    ack          (1),    -- Respond when command received
-    complete     (2)     -- Respond when all aspects of command completed
-}
-
-Hashes ::= MAP {    -- Cryptographic Hash values
-    md5          [1] BINARY OPTIONAL,    -- Hex-encoded MD5 hash as defined in RFC3121
-    sha1         [4] BINARY OPTIONAL,    -- Hex-encoded SHA1 hash as defined in RFC3174
-    sha256       [6] BINARY OPTIONAL     -- Hex-encoded SHA256 as defined in RFC6234
-}
-
-Command-ID ::= STRING    -- Uniquely identifies a particular command - TBD syntax
-
-Date-Time ::= STRING    -- RFC 3339 date-time
-
-Duration ::= STRING    -- RFC 3339 / ISO 8601 duration
-
-IP-Addr ::= STRING    -- IPv4 or IPv6 address per RFC 2673 section 3.2, and RFC 4291 section 2.2
-
-Port ::= STRING    -- Service Name or Transport Protocol Port Number, RFC 6335
-
-Version ::= STRING    -- Version string - TBD syntax

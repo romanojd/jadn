@@ -44,7 +44,7 @@
             [5, "fields", "JADN-Type", ["&btype", "]0"], "List of fields for compound types.  Not present for primitive types"]]
         ],
 
-        ["JADN-Type", "Choice", ["="], "", [
+        ["JADN-Type", "Choice", [], "", [
             [1, "Binary", "Null", [], "Octet (binary) string"],
             [2, "Boolean", "Null", [], "True or False"],
             [3, "Integer", "Null", [], "Whole number"],
