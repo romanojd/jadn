@@ -1,4 +1,4 @@
-<!-- Generated from schema\openc2-wd08-slpf.jadn, Mon Aug 20 12:12:53 2018-->
+<!-- Generated from schema\openc2-wd08-slpf.jadn, Thu Aug 23 15:09:22 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,12 +18,12 @@
 <span class="b">jadn</span>:&nbsp;/oasis-open.org/openc2/v1.0/jadn</td></tr>
 </table>
 <h2>Types</h2>
-<table><caption>OpenC2-Command (Record)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="s">action</td><td class="s">Action</td><td class="n">1</td><td class="s">The task or activity to be performed (i.e., the 'verb').</td></tr>
-<tr><td class="n">2</td><td class="s">target</td><td class="s">Target</td><td class="n">1</td><td class="s">The object of the action. The action is performed on the target.</td></tr>
-<tr><td class="n">3</td><td class="s">actuator</td><td class="s">Actuator</td><td class="n">0..1</td><td class="s">The subject of the action. The actuator executes the action on the target.</td></tr>
-<tr><td class="n">4</td><td class="s">args</td><td class="s">Args</td><td class="n">0..1</td><td class="s">Additional information that applies to the command.</td></tr>
-<tr><td class="n">5</td><td class="s">id</td><td class="s">Command-ID</td><td class="n">0..1</td><td class="s">Identifier used to link responses to a command.</td></tr>
+<table><caption>OpenC2-Command (Record)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">1</td><td class="b">action</td><td class="s">Action</td><td class="n">1</td><td class="s">The task or activity to be performed (i.e., the 'verb').</td></tr>
+<tr><td class="n">2</td><td class="b">target</td><td class="s">Target</td><td class="n">1</td><td class="s">The object of the action. The action is performed on the target.</td></tr>
+<tr><td class="n">3</td><td class="b">actuator</td><td class="s">Actuator</td><td class="n">0..1</td><td class="s">The subject of the action. The actuator executes the action on the target.</td></tr>
+<tr><td class="n">4</td><td class="b">args</td><td class="s">Args</td><td class="n">0..1</td><td class="s">Additional information that applies to the command.</td></tr>
+<tr><td class="n">5</td><td class="b">id</td><td class="s">Command-ID</td><td class="n">0..1</td><td class="s">Identifier used to link responses to a command.</td></tr>
 </table>
 <table><caption>Action (Enumerated)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Description</th></tr>
 <tr><td class="n">3</td><td class="b">query</td><td class="s">Initiate a request for information. Used to communicate supported options and determine state or settings.</td></tr>
@@ -32,30 +32,30 @@
 <tr><td class="n">16</td><td class="b">update</td><td class="s">Instruct the actuator to update its configuration by retrieving and processing a configuration file and update.</td></tr>
 <tr><td class="n">20</td><td class="b">delete</td><td class="s">Remove a rule.</td></tr>
 </table>
-<table><caption>Target (Choice)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="n">10</td><td class="s">file</td><td class="s">File</td><td class="s">Properties of a file</td></tr>
-<tr><td class="n">11</td><td class="s">ip_addr</td><td class="s">IP-Addr</td><td class="s">The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation</td></tr>
-<tr><td class="n">15</td><td class="s">ip_connection</td><td class="s">IP-Connection</td><td class="s">A network connection that originates from a source and is addressed to a destination</td></tr>
-<tr><td class="n">16</td><td class="s">openc2</td><td class="s">OpenC2</td><td class="s">A set of items used with the query action to determine an actuator's capabilities</td></tr>
-<tr><td class="n">1024</td><td class="s">slpf</td><td class="s">slpf:Target</td><td class="s">Targets defined in the Stateless Packet Filter profile</td></tr>
+<table><caption>Target (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
+<tr><td class="n">10</td><td class="b">file</td><td class="s">File</td><td class="s">Properties of a file</td></tr>
+<tr><td class="n">11</td><td class="b">ip_addr</td><td class="s">IP-Addr</td><td class="s">The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation</td></tr>
+<tr><td class="n">15</td><td class="b">ip_connection</td><td class="s">IP-Connection</td><td class="s">A network connection that originates from a source and is addressed to a destination</td></tr>
+<tr><td class="n">16</td><td class="b">openc2</td><td class="s">OpenC2</td><td class="s">A set of items used with the query action to determine an actuator's capabilities</td></tr>
+<tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Target</td><td class="s">Targets defined in the Stateless Packet Filter profile</td></tr>
 </table>
-<table><caption>Actuator (Choice)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="n">1024</td><td class="s">slpf</td><td class="s">slpf:Specifiers</td><td class="s">Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01</td></tr>
+<table><caption>Actuator (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
+<tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Specifiers</td><td class="s">Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01</td></tr>
 </table>
-<table><caption>Args (Map)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="s">start_time</td><td class="s">Date-Time</td><td class="n">0..1</td><td class="s">The specific date/time to initiate the action</td></tr>
-<tr><td class="n">2</td><td class="s">stop_time</td><td class="s">Date-Time</td><td class="n">0..1</td><td class="s">The specific date/time to terminate the action</td></tr>
-<tr><td class="n">3</td><td class="s">duration</td><td class="s">Duration</td><td class="n">0..1</td><td class="s">The length of time for an action to be in effect</td></tr>
-<tr><td class="n">4</td><td class="s">response_requested</td><td class="s">Response-Type</td><td class="n">0..1</td><td class="s">The type of response required for the action</td></tr>
-<tr><td class="n">1024</td><td class="s">slpf</td><td class="s">slpf:Args</td><td class="n">0..1</td><td class="s">Command arguments defined in the Stateless Packet Filter profile</td></tr>
+<table><caption>Args (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">1</td><td class="b">start_time</td><td class="s">Date-Time</td><td class="n">0..1</td><td class="s">The specific date/time to initiate the action</td></tr>
+<tr><td class="n">2</td><td class="b">stop_time</td><td class="s">Date-Time</td><td class="n">0..1</td><td class="s">The specific date/time to terminate the action</td></tr>
+<tr><td class="n">3</td><td class="b">duration</td><td class="s">Duration</td><td class="n">0..1</td><td class="s">The length of time for an action to be in effect</td></tr>
+<tr><td class="n">4</td><td class="b">response_requested</td><td class="s">Response-Type</td><td class="n">0..1</td><td class="s">The type of response required for the action</td></tr>
+<tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Args</td><td class="n">0..1</td><td class="s">Command arguments defined in the Stateless Packet Filter profile</td></tr>
 </table>
-<table><caption>OpenC2-Response (Record)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="s">status</td><td class="s">Status-Code</td><td class="n">1</td><td class="s">An integer status code</td></tr>
-<tr><td class="n">2</td><td class="s">status_text</td><td class="s">String</td><td class="n">0..1</td><td class="s">A free-form human-readable description of the response status</td></tr>
-<tr><td class="n">3</td><td class="s">*</td><td class="s">Results</td><td class="n">0..1</td><td class="s">Data or extended status information that was requested from an OpenC2 command</td></tr>
-<tr><td class="n">4</td><td class="s">id</td><td class="s">Command-ID</td><td class="n">0..1</td><td class="s">ID of the response</td></tr>
-<tr><td class="n">5</td><td class="s">id_ref</td><td class="s">Command-ID</td><td class="n">0..1</td><td class="s">ID of the command that induced this response</td></tr>
-<tr><td class="n">6</td><td class="s">actuator_id</td><td class="s">String</td><td class="n">0..1</td><td class="s">ID of the actuator sending the response</td></tr>
+<table><caption>OpenC2-Response (Record)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">1</td><td class="b">status</td><td class="s">Status-Code</td><td class="n">1</td><td class="s">An integer status code</td></tr>
+<tr><td class="n">2</td><td class="b">status_text</td><td class="s">String</td><td class="n">0..1</td><td class="s">A free-form human-readable description of the response status</td></tr>
+<tr><td class="n">3</td><td class="b">*</td><td class="s">Results</td><td class="n">0..1</td><td class="s">Data or extended status information that was requested from an OpenC2 command</td></tr>
+<tr><td class="n">4</td><td class="b">id</td><td class="s">Command-ID</td><td class="n">0..1</td><td class="s">ID of the response</td></tr>
+<tr><td class="n">5</td><td class="b">id_ref</td><td class="s">Command-ID</td><td class="n">0..1</td><td class="s">ID of the command that induced this response</td></tr>
+<tr><td class="n">6</td><td class="b">actuator_id</td><td class="s">String</td><td class="n">0..1</td><td class="s">ID of the actuator sending the response</td></tr>
 </table>
 <table><caption>Status-Code (Enumerated.ID)</caption><tr><th class="n">ID</th><th class="s">Description</th></tr>
 <tr><td class="n">102</td><td class="s">Processing -- An interim response used to inform the client that the server has accepted the request but not yet completed it.</td></tr>
@@ -67,23 +67,23 @@
 <tr><td class="n">500</td><td class="s">Server Error -- The server encountered an unexpected condition that prevented it from fulfilling the request.</td></tr>
 <tr><td class="n">501</td><td class="s">Not Implemented -- The server does not support the functionality required to fulfill the request.</td></tr>
 </table>
-<table><caption>File (Map)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="s">name</td><td class="s">String</td><td class="n">0..1</td><td class="s">The name of the file as defined in the file system</td></tr>
-<tr><td class="n">2</td><td class="s">path</td><td class="s">String</td><td class="n">0..1</td><td class="s">The absolute path to the location of the file in the file system</td></tr>
-<tr><td class="n">3</td><td class="s">hashes</td><td class="s">Hashes</td><td class="n">0..1</td><td class="s">One or more cryptographic hash codes of the file contents</td></tr>
+<table><caption>File (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">1</td><td class="b">name</td><td class="s">String</td><td class="n">0..1</td><td class="s">The name of the file as defined in the file system</td></tr>
+<tr><td class="n">2</td><td class="b">path</td><td class="s">String</td><td class="n">0..1</td><td class="s">The absolute path to the location of the file in the file system</td></tr>
+<tr><td class="n">3</td><td class="b">hashes</td><td class="s">Hashes</td><td class="n">0..1</td><td class="s">One or more cryptographic hash codes of the file contents</td></tr>
 </table>
 <table><caption>IP-Addr</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">IP-Addr</td><td class="s">String (ip)</td><td class="s">IPv4 or IPv6 address per RFC 2673 section 3.2, and RFC 4291 section 2.2</td></tr>
 </table>
-<table><caption>IP-Connection (Record)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="s">src_addr</td><td class="s">IP-Addr</td><td class="n">0..1</td><td class="s">source address</td></tr>
-<tr><td class="n">2</td><td class="s">src_port</td><td class="s">Port</td><td class="n">0..1</td><td class="s">source TCP/UDP port number</td></tr>
-<tr><td class="n">3</td><td class="s">dst_addr</td><td class="s">IP-Addr</td><td class="n">0..1</td><td class="s">destination address</td></tr>
-<tr><td class="n">4</td><td class="s">dst_port</td><td class="s">Port</td><td class="n">0..1</td><td class="s">destination TCP/UDP port number</td></tr>
-<tr><td class="n">5</td><td class="s">protocol</td><td class="s">L4-Protocol</td><td class="n">0..1</td><td class="s">Protocol (IPv4) / Next Header (IPv6)</td></tr>
+<table><caption>IP-Connection (Record)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">1</td><td class="b">src_addr</td><td class="s">IP-Addr</td><td class="n">0..1</td><td class="s">source address</td></tr>
+<tr><td class="n">2</td><td class="b">src_port</td><td class="s">Port</td><td class="n">0..1</td><td class="s">source TCP/UDP port number</td></tr>
+<tr><td class="n">3</td><td class="b">dst_addr</td><td class="s">IP-Addr</td><td class="n">0..1</td><td class="s">destination address</td></tr>
+<tr><td class="n">4</td><td class="b">dst_port</td><td class="s">Port</td><td class="n">0..1</td><td class="s">destination TCP/UDP port number</td></tr>
+<tr><td class="n">5</td><td class="b">protocol</td><td class="s">L4-Protocol</td><td class="n">0..1</td><td class="s">Protocol (IPv4) / Next Header (IPv6)</td></tr>
 </table>
 <table><caption>OpenC2</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="s">OpenC2</td><td class="s">ArrayOf(Query-Item) ['min', 'max']</td><td class="s">A target used to query Actuator for its supported capabilities</td></tr>
+<tr><td class="s">OpenC2</td><td class="s">ArrayOf(Query-Item) ['max', 'min']</td><td class="s">A target used to query Actuator for its supported capabilities</td></tr>
 </table>
 <table><caption>Command-ID</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">Command-ID</td><td class="s">String</td><td class="s">Uniquely identifies a particular command</td></tr>
@@ -94,10 +94,10 @@
 <table><caption>Duration</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">Duration</td><td class="s">Integer</td><td class="s">Milliseconds</td></tr>
 </table>
-<table><caption>Hashes (Map)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="s">md5</td><td class="s">Binary</td><td class="n">0..1</td><td class="s">MD5 hash as defined in RFC3121</td></tr>
-<tr><td class="n">4</td><td class="s">sha1</td><td class="s">Binary</td><td class="n">0..1</td><td class="s">SHA1 hash as defined in RFC3174</td></tr>
-<tr><td class="n">6</td><td class="s">sha256</td><td class="s">Binary</td><td class="n">0..1</td><td class="s">SHA256 as defined in RFC6234</td></tr>
+<table><caption>Hashes (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">1</td><td class="b">md5</td><td class="s">Binary</td><td class="n">0..1</td><td class="s">MD5 hash as defined in RFC3121</td></tr>
+<tr><td class="n">4</td><td class="b">sha1</td><td class="s">Binary</td><td class="n">0..1</td><td class="s">SHA1 hash as defined in RFC3174</td></tr>
+<tr><td class="n">6</td><td class="b">sha256</td><td class="s">Binary</td><td class="n">0..1</td><td class="s">SHA256 as defined in RFC6234</td></tr>
 </table>
 <table><caption>Hostname</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">Hostname</td><td class="s">String</td><td class="s">A legal Internet host name as specified in RFC 1123</td></tr>
@@ -123,12 +123,12 @@
 <tr><td class="n">2</td><td class="b">status</td><td class="s">Respond with progress toward command completion</td></tr>
 <tr><td class="n">3</td><td class="b">complete</td><td class="s">Respond when all aspects of command completed</td></tr>
 </table>
-<table><caption>Results (Map)</caption><tr><th class="n">ID</th><th class="s">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
-<tr><td class="n">4</td><td class="s">versions</td><td class="s">Version</td><td class="n">0..n</td><td class="s">Supported OpenC2 Language versions</td></tr>
-<tr><td class="n">5</td><td class="s">profiles</td><td class="s">jadn:Uname</td><td class="n">0..n</td><td class="s">Supported actuator profiles</td></tr>
-<tr><td class="n">6</td><td class="s">schema</td><td class="s">jadn:Schema</td><td class="n">0..n</td><td class="s">Schema supported by this actuator</td></tr>
-<tr><td class="n">7</td><td class="s">pairs</td><td class="s">ActionTargets</td><td class="n">0..n</td><td class="s">List of targets applicable to each supported action</td></tr>
-<tr><td class="n">1024</td><td class="s">slpf</td><td class="s">slpf:Results</td><td class="n">0..n</td><td class="s">Results from Stateless Packet Filter profile</td></tr>
+<table><caption>Results (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">4</td><td class="b">versions</td><td class="s">Version</td><td class="n">0..n</td><td class="s">Supported OpenC2 Language versions</td></tr>
+<tr><td class="n">5</td><td class="b">profiles</td><td class="s">jadn:Uname</td><td class="n">0..n</td><td class="s">Supported actuator profiles</td></tr>
+<tr><td class="n">6</td><td class="b">schema</td><td class="s">jadn:Schema</td><td class="n">0..n</td><td class="s">Schema supported by this actuator</td></tr>
+<tr><td class="n">7</td><td class="b">pairs</td><td class="s">ActionTargets</td><td class="n">0..n</td><td class="s">List of targets applicable to each supported action</td></tr>
+<tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Results</td><td class="n">0..n</td><td class="s">Results from Stateless Packet Filter profile</td></tr>
 </table>
 <table><caption>ActionTargets (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">Action</td><td class="n">1</td><td class="s">action -- An action supported by this actuator</td></tr>

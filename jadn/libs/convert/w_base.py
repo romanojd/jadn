@@ -11,7 +11,8 @@ from datetime import datetime
 def _fmt(s, f):
     f1 = {'n': '', 's': '', 'b': '**', 'h': '**_'}
     f2 = {'n': '', 's': '', 'b': '**', 'h': '_**'}
-    return f1[f] + s + f2[f]
+    ss = '\*' if s == '*' else s
+    return f1[f] + ss + f2[f]
 
 #--------- Markdown ouput -----------------
 
@@ -457,12 +458,12 @@ def base_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
                 to.update({'compact': True})
                 text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[FTYPE], cardinality(fo['min'], fo['max']), fd[FDESC]], cls)
         elif td[TTYPE] == 'Choice':            # same as Map/Record but without cardinality column
-            cls = ['n', 's', 's', 's']
+            cls = ['n', 'b', 's', 's']
             text += _tbegin(to, td, ['ID', 'Name', 'Type', 'Description'], cls)
             for fd in td[FIELDS]:
                 text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[FTYPE], fd[FDESC]], cls)
         else:                                   # Map, Record
-            cls = ['n', 's', 's', 'n', 's']
+            cls = ['n', 'b', 's', 'n', 's']
             text += _tbegin(to, td, ['ID', 'Name', 'Type', '#', 'Description'], cls)
             for fd in td[FIELDS]:
                 fo = {'min': 1, 'max': 1}

@@ -62,12 +62,12 @@
     [18, "software", "Software", [], "High-level properties associated with software, including software products."],
     [19, "uri", "URI", [], "A uniform resource identifier (URI)."],
     [23, "windows_registry_key", "Windows-Registry-Key", [], "The properties of a Windows registry key."],
-    [1000, "pent", "PE-Target", [], "Targets defined in a Private Enterprise extension profile"],
+    [1000, "extension", "PE-Target", [], "Targets defined in a Private Enterprise extension profile"],
     [1024, "slpf", "slpf:Target", [], "Targets defined in the Stateless Packet Filter profile."]]
   ],
 
   ["Actuator", "Choice", [], "", [
-    [1000, "pent", "PE-Specifiers", [], "Specifiers defined in a Private Enterprise extension profile."],
+    [1000, "extension", "PE-Specifiers", [], "Specifiers defined in a Private Enterprise extension profile."],
     [1024, "slpf", "slpf:Specifiers", [], "Actuator specifiers and options as defined in the Stateless Packet Filter profile."]]
   ],
 
@@ -76,14 +76,14 @@
     [2, "stop_time", "Date-Time", ["[0"], "The specific date/time to terminate the action"],
     [3, "duration", "Duration", ["[0"], "The length of time for an action to be in effect"],
     [4, "response_requested", "Response-Type", ["[0"], "The type of response required for the action: **none, ack, status, complete**. When not explicitly contained in an OpenC2 Command, a Consumer MUST responde the same as response type complete."],
-    [1000, "pent", "PE-Args", ["[0"], "Command arguments defined in a Private Enterprise extension profile"],
+    [1000, "extension", "PE-Args", ["[0"], "Command arguments defined in a Private Enterprise extension profile"],
     [1024, "slpf", "slpf:Args", ["[0"], "Command arguments defined in the Stateless Packet Filter profile"]]
   ],
 
   ["OpenC2-Response", "Record", [], "", [
     [1, "status", "Status-Code", [], "An integer status code"],
     [2, "status_text", "String", ["[0"], "A free-form human-readable description of the response status"],
-    [3, "*", "Results", ["[0"], "Data or extended status information that was requested from an OpenC2 command"],
+    [3, "*", "Results", ["[0"], "Data or extended status information"],
     [4, "id", "Command-ID", ["[0"], "ID of the response"],
     [5, "id_ref", "Command-ID", ["[0"], "ID of the command that induced this response"],
     [6, "actuator_id", "String", ["[0"], "ID of the actuator sending the response"]]
@@ -215,13 +215,13 @@
   ["Results", "Map", [], "", [
     [1, "strings", "String", ["[0","]0"], "Generic set of string values"],
     [2, "ints", "Integer", ["[0","]0"], "Generic set of integer values"],
-    [3, "kvps", "KVP", ["[0","]0"], "Generic set of string values"],
-    [4, "versions", "Version", ["[0","]0"], "Supported OpenC2 Language versions"],
-    [5, "profiles", "jadn:Uname", ["[0","]0"], "Supported actuator profiles"],
+    [3, "kvps", "KVP", ["[0","]0"], "Generic set of key:value pairs"],
+    [4, "versions", "Version", ["[0","]0"], "The list of OpenC2 language versions supported by this actuator"],
+    [5, "profiles", "jadn:Uname", ["[0","]0"], "The list of profiles supported by this actuator"],
     [6, "schema", "jadn:Schema", ["[0","]0"], "Syntax of the OpenC2 language elements supported by this actuator"],
     [7, "pairs", "ActionTargets", ["[0","]0"], "List of targets applicable to each supported action"],
-    [1000, "pent", "PE-Results", ["[0"], "Response data defined in a Private Enterprise profile"],
-    [1024, "slpf", "slpf:Results", ["[0"], "Results from Stateless Packet Filter profile"]]
+    [1000, "extension", "PE-Results", ["[0"], "Response data defined in a Private Enterprise profile"],
+    [1024, "slpf", "slpf:Results", ["[0"], "Response data defined in the Stateless Packet Filter profile"]]
   ],
 
   ["KVP", "Array", [], "", [

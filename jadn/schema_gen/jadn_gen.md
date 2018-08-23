@@ -1,4 +1,4 @@
-<!-- Generated from schema\jadn.jadn, Mon Aug 20 12:12:53 2018-->
+<!-- Generated from schema\jadn.jadn, Thu Aug 23 15:09:22 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -11,21 +11,21 @@
 **_Type: Schema (Record)_**
 
 | ID | Name | Type | # | Description |
-| ---: | :--- | :--- | ---: | :--- |
-| 1 | meta | Meta | 1 | Information about this schema module |
-| 2 | types | Type | 1..n | Types defined in this schema module |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **meta** | Meta | 1 | Information about this schema module |
+| 2 | **types** | Type | 1..n | Types defined in this schema module |
 
 **_Type: Meta (Map)_**
 
 | ID | Name | Type | # | Description |
-| ---: | :--- | :--- | ---: | :--- |
-| 1 | module | Uname | 1 | Schema unique name/version |
-| 2 | patch | String | 0..1 | Patch version |
-| 3 | title | String | 0..1 | Title |
-| 4 | description | String | 0..1 | Description |
-| 5 | imports | Import | 0..n | Imported schema modules |
-| 6 | exports | Identifier | 0..n | Data types exported by this module |
-| 7 | bounds | Bounds | 0..1 | Schema-wide upper bounds |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **module** | Uname | 1 | Schema unique name/version |
+| 2 | **patch** | String | 0..1 | Patch version |
+| 3 | **title** | String | 0..1 | Title |
+| 4 | **description** | String | 0..1 | Description |
+| 5 | **imports** | Import | 0..n | Imported schema modules |
+| 6 | **exports** | Identifier | 0..n | Data types exported by this module |
+| 7 | **bounds** | Bounds | 0..1 | Schema-wide upper bounds |
 
 **_Type: Import (Array)_**
 
@@ -56,19 +56,19 @@
 **_Type: JADN-Type (Choice)_**
 
 | ID | Name | Type | Description |
-| ---: | :--- | :--- | :--- |
-| 1 | Binary | Null | Octet (binary) string |
-| 2 | Boolean | Null | True or False |
-| 3 | Integer | Null | Whole number |
-| 4 | Number | Null | Real number |
-| 5 | Null | Null | Nothing |
-| 6 | String | Null | Character (text) string |
-| 7 | Array | FullField | Ordered list of unnamed fields |
-| 8 | ArrayOf | Null | Ordered list of fields of a specified type |
-| 9 | Choice | FullField | One of a set of named fields |
-| 10 | Enumerated | EnumField | One of a set of id:name pairs |
-| 11 | Map | FullField | Unordered set of named fields |
-| 12 | Record | FullField | Ordered list of named fields |
+| ---: | --- | :--- | :--- |
+| 1 | **Binary** | Null | Octet (binary) string |
+| 2 | **Boolean** | Null | True or False |
+| 3 | **Integer** | Null | Whole number |
+| 4 | **Number** | Null | Real number |
+| 5 | **Null** | Null | Nothing |
+| 6 | **String** | Null | Character (text) string |
+| 7 | **Array** | FullField | Ordered list of unnamed fields |
+| 8 | **ArrayOf** | Null | Ordered list of fields of a specified type |
+| 9 | **Choice** | FullField | One of a set of named fields |
+| 10 | **Enumerated** | EnumField | One of a set of id:name pairs |
+| 11 | **Map** | FullField | Unordered set of named fields |
+| 12 | **Record** | FullField | Ordered list of named fields |
 
 **_Type: EnumField (Array)_**
 
@@ -85,7 +85,7 @@
 | 1 | Integer | 1 | Field ID or ordinal position |
 | 2 | Identifier | 1 | Field name |
 | 3 | Identifier | 1 | Field type |
-| 4 | Option | 0..n | Field options |
+| 4 | Options | 1 | Field options |
 | 5 | String | 1 | Field description |
 
 **_Type: Identifier_**
@@ -105,6 +105,12 @@
 | Name | Type | Description |
 | :--- | :--- | :--- |
 | Uname | String | Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes |
+
+**_Type: Options_**
+
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| Options | ArrayOf(Option) ['max', 'min'] | Options list may be empty but may not be omitted |
 
 **_Type: Option_**
 

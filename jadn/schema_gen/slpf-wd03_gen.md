@@ -1,4 +1,4 @@
-<!-- Generated from schema\slpf-wd03.jadn, Mon Aug 20 12:12:54 2018-->
+<!-- Generated from schema\slpf-wd03.jadn, Thu Aug 23 15:09:23 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -11,23 +11,23 @@
 **_Type: Target (Choice)_**
 
 | ID | Name | Type | Description |
-| ---: | :--- | :--- | :--- |
-| 1 | rule | Rule-ID | Uniquely identifies a rule associated with a previously-issued deny or allow. |
+| ---: | --- | :--- | :--- |
+| 1 | **rule** | Rule-ID | Uniquely identifies a rule associated with a previously-issued deny or allow. |
 
 **_Type: Specifiers (Map)_**
 
 | ID | Name | Type | # | Description |
-| ---: | :--- | :--- | ---: | :--- |
-| 1 | nfv_id | String | 1 | Identifier of a virtualized packet filter |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **nfv_id** | String | 1 | Identifier of a virtualized packet filter |
 
 **_Type: Args (Map)_**
 
 | ID | Name | Type | # | Description |
-| ---: | :--- | :--- | ---: | :--- |
-| 1 | drop_process | Drop-Process | 0..1 | How to handle denied packets |
-| 2 | running | Boolean | 0..1 | Normal operation assumes updates are persistent. If TRUE, updates are not persistent in the event of a reboot or restart.  Default=FALSE. |
-| 3 | direction | Direction | 0..1 | Specifies direction (ingress or egress) for allow or deny rules. If omitted rules affact all traffic. |
-| 4 | insert_rule | Integer | 1 | Specifies the identifier of the rule within a list, typically used in a top-down rule list. |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **drop_process** | Drop-Process | 0..1 | How to handle denied packets |
+| 2 | **running** | Boolean | 0..1 | Normal operation assumes updates are persistent. If TRUE, updates are not persistent in the event of a reboot or restart.  Default=FALSE. |
+| 3 | **direction** | Direction | 0..1 | Specifies direction (ingress or egress) for allow or deny rules. If omitted rules affact all traffic. |
+| 4 | **insert_rule** | Integer | 1 | Specifies the identifier of the rule within a list, typically used in a top-down rule list. |
 
 **_Type: Drop-Process (Enumerated)_**
 
@@ -47,8 +47,8 @@
 **_Type: Results (Map)_**
 
 | ID | Name | Type | # | Description |
-| ---: | :--- | :--- | ---: | :--- |
-| 1 | rule | Rule-ID | 0..1 | Rule identifier returned from allow or deny command. |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **rule** | Rule-ID | 0..1 | Rule identifier returned from allow or deny command. |
 
 **_Type: Rule-ID_**
 

@@ -1,12 +1,12 @@
--- Generated from schema\openc2-wd08.jadn, Mon Aug 20 12:12:53 2018
+-- Generated from schema\openc2-wd08.jadn, Thu Aug 23 15:09:22 2018
 
 /*
 module:        oasis-open.org/openc2/v1.0/openc2-lang
 title:         OpenC2 Language Objects
 description:   Datatypes that define the content of OpenC2 commands and
                responses.
-imports:       [['slpf', 'oasis-open.org/openc2/v1.0/ap-slpf'], ['jadn', 'oasis-open.org/openc2/v1.0/jadn']]
 exports:       ['OpenC2-Command', 'OpenC2-Response']
+imports:       [['slpf', 'oasis-open.org/openc2/v1.0/ap-slpf'], ['jadn', 'oasis-open.org/openc2/v1.0/jadn']]
 patch:         wd08
 */
 
@@ -59,12 +59,12 @@ Target ::= CHOICE {    -- OpenC2 Target datatypes
     software              [18] Software,    -- High-level properties associated with software, including software products.
     uri                   [19] URI,    -- A uniform resource identifier (URI).
     windows_registry_key  [23] Windows-Registry-Key,    -- The properties of a Windows registry key.
-    pent                  [1000] PE-Target,    -- Targets defined in a Private Enterprise extension profile
+    extension             [1000] PE-Target,    -- Targets defined in a Private Enterprise extension profile
     slpf                  [1024] slpf:Target     -- Targets defined in the Stateless Packet Filter profile.
 }
 
 Actuator ::= CHOICE {
-    pent         [1000] PE-Specifiers,    -- Specifiers defined in a Private Enterprise extension profile.
+    extension    [1000] PE-Specifiers,    -- Specifiers defined in a Private Enterprise extension profile.
     slpf         [1024] slpf:Specifiers     -- Actuator specifiers and options as defined in the Stateless Packet Filter profile.
 }
 
@@ -73,14 +73,14 @@ Args ::= MAP {
     stop_time           [2] Date-Time OPTIONAL,    -- The specific date/time to terminate the action
     duration            [3] Duration OPTIONAL,    -- The length of time for an action to be in effect
     response_requested  [4] Response-Type OPTIONAL,    -- The type of response required for the action: **none, ack, status, complete**. When not explicitly contained in an OpenC2 Command, a Consumer MUST responde the same as response type complete.
-    pent                [1000] PE-Args OPTIONAL,    -- Command arguments defined in a Private Enterprise extension profile
+    extension           [1000] PE-Args OPTIONAL,    -- Command arguments defined in a Private Enterprise extension profile
     slpf                [1024] slpf:Args OPTIONAL     -- Command arguments defined in the Stateless Packet Filter profile
 }
 
 OpenC2-Response ::= RECORD {
     status       Status-Code,    -- An integer status code
     status_text  STRING OPTIONAL,    -- A free-form human-readable description of the response status
-    *            Results OPTIONAL,    -- Data or extended status information that was requested from an OpenC2 command
+    *            Results OPTIONAL,    -- Data or extended status information
     id           Command-ID OPTIONAL,    -- ID of the response
     id_ref       Command-ID OPTIONAL,    -- ID of the command that induced this response
     actuator_id  STRING OPTIONAL     -- ID of the actuator sending the response
@@ -212,13 +212,13 @@ Version ::= STRING    -- TBSL
 Results ::= MAP {
     strings      [1] STRING OPTIONAL,    -- Generic set of string values ***{'max': 0}
     ints         [2] INTEGER OPTIONAL,    -- Generic set of integer values ***{'max': 0}
-    kvps         [3] KVP OPTIONAL,    -- Generic set of string values ***{'max': 0}
-    versions     [4] Version OPTIONAL,    -- Supported OpenC2 Language versions ***{'max': 0}
-    profiles     [5] jadn:Uname OPTIONAL,    -- Supported actuator profiles ***{'max': 0}
+    kvps         [3] KVP OPTIONAL,    -- Generic set of key:value pairs ***{'max': 0}
+    versions     [4] Version OPTIONAL,    -- The list of OpenC2 language versions supported by this actuator ***{'max': 0}
+    profiles     [5] jadn:Uname OPTIONAL,    -- The list of profiles supported by this actuator ***{'max': 0}
     schema       [6] jadn:Schema OPTIONAL,    -- Syntax of the OpenC2 language elements supported by this actuator ***{'max': 0}
     pairs        [7] ActionTargets OPTIONAL,    -- List of targets applicable to each supported action ***{'max': 0}
-    pent         [1000] PE-Results OPTIONAL,    -- Response data defined in a Private Enterprise profile
-    slpf         [1024] slpf:Results OPTIONAL     -- Results from Stateless Packet Filter profile
+    extension    [1000] PE-Results OPTIONAL,    -- Response data defined in a Private Enterprise profile
+    slpf         [1024] slpf:Results OPTIONAL     -- Response data defined in the Stateless Packet Filter profile
 }
 
 KVP ::= ARRAY {
