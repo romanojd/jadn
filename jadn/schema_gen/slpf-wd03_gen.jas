@@ -1,32 +1,28 @@
--- Generated from schema\slpf-wd03.jadn, Thu Aug 23 15:09:22 2018
+-- Generated from schema\slpf-wd03.jadn, Fri Aug 24 16:29:42 2018
 
 /*
 module:        oasis-open.org/openc2/v1.0/ap-slpf
 title:         Stateless Packet Filtering
 description:   Data definitions for Stateless Packet Filtering (SLPF) functions
-exports:       ['Target', 'Specifiers', 'Args', 'Results']
 patch:         wd03
+exports:       ['Target', 'Specifiers', 'Args', 'Results']
 */
 
 Target ::= CHOICE {    -- SLPF targets
-    rule         [1] Rule-ID     -- Uniquely identifies a rule associated with a previously-issued deny or allow.
-}
-
-Specifiers ::= MAP {    -- SLPF actuator specifiers
-    nfv_id       [1] STRING     -- Identifier of a virtualized packet filter
+    rule-number  [1] Rule-ID     -- Uniquely identifies a rule associated with a previously-issued deny or allow.
 }
 
 Args ::= MAP {    -- SLPF command arguments
-    drop_process  [1] Drop-Process OPTIONAL,    -- How to handle denied packets
+    drop_process  [1] Drop-Process OPTIONAL,    -- Specifies how to handle denied packets
     running       [2] BOOLEAN OPTIONAL,    -- Normal operation assumes updates are persistent. If TRUE, updates are not persistent in the event of a reboot or restart.  Default=FALSE.
-    direction     [3] Direction OPTIONAL,    -- Specifies direction (ingress or egress) for allow or deny rules. If omitted rules affact all traffic.
-    insert_rule   [4] INTEGER     -- Specifies the identifier of the rule within a list, typically used in a top-down rule list.
+    direction     [3] Direction OPTIONAL,    -- Specifies whether to apply rules to incoming or outgoing traffic. If omitted, rules are applied to both.
+    insert_rule   [4] Rule-ID OPTIONAL     -- Specifies the identifier of the rule within a list, typically used in a top-down rule list.
 }
 
 Drop-Process ::= ENUMERATED {
-    None         (1),    -- Drop the packet and do not send a notification to the source of the packet.
-    Reject       (2),    -- Drop the packet and send an ICMP host unreachable (or equivalent) to the source of the packet.
-    False_ack    (3)     -- Drop the packet and send a false acknowledgement that the packet was received [???].
+    none         (1),    -- Drop the packet and do not send a notification to the source of the packet.
+    reject       (2),    -- Drop the packet and send an ICMP host unreachable (or equivalent) to the source of the packet.
+    false_ack    (3)     -- Drop the traffic and send a false acknowledgement that the data was received by the destination.
 }
 
 Direction ::= ENUMERATED {
@@ -34,8 +30,15 @@ Direction ::= ENUMERATED {
     egress       (2)     -- Apply rule to outbound traffic only
 }
 
+Rule-ID ::= INTEGER    -- Immutable identifier assigned when an access rule is created.
+
+Specifiers ::= MAP {    -- SLPF actuator specifiers
+    hostname     [1] STRING OPTIONAL,    -- RFC 1123 hostname (can be a domain name or IP address) for a particular device with SLPF functionality
+    named_group  [2] STRING OPTIONAL,    -- User-defined collection of devices with SLPF functionality
+    asset_id     [3] STRING OPTIONAL,    -- Unique identifier for a particular SLPF
+    asset_tuple  [4] STRING OPTIONAL     -- Unique tuple identifier for a particular SLPF consisting of a list of up to 10 strings ***{'max': 10}
+}
+
 Results ::= MAP {    -- SLPF results
     rule         [1] Rule-ID OPTIONAL     -- Rule identifier returned from allow or deny command.
 }
-
-Rule-ID ::= INTEGER    -- Immutable identifier assigned when an access rule is created.
