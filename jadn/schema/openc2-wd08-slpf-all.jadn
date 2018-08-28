@@ -1,7 +1,7 @@
 {
  "meta": {
   "module": "oasis-open.org/openc2/v1.0/openc2-lang",
-  "patch": "wd08-slpf",
+  "patch": "wd08-slpf-all",
   "title": "OpenC2 Language Objects",
   "description": "OpenC2 Language content used by Stateless Packet Filters.  JADN and SLPF schemas included here, not imported.",
   "exports": ["OpenC2-Command", "OpenC2-Response"]

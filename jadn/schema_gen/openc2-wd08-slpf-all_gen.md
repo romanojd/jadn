@@ -1,10 +1,10 @@
-<!-- Generated from schema\openc2-wd08-slpf-all.jadn, Tue Aug 28 10:41:30 2018-->
+<!-- Generated from schema\openc2-wd08-slpf-all.jadn, Tue Aug 28 11:14:22 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
 | **title:** | OpenC2 Language Objects |
 | **module:** | oasis-open.org/openc2/v1.0/openc2-lang |
-| **patch:** | wd08-slpf |
+| **patch:** | wd08-slpf-all |
 | **description:** | OpenC2 Language content used by Stateless Packet Filters.  JADN and SLPF schemas included here, not imported. |
 | **exports:** | OpenC2-Command, OpenC2-Response |
 
@@ -106,7 +106,7 @@
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| OpenC2 | ArrayOf(Query-Item) ['max', 'min'] | A target used to query Actuator for its supported capabilities |
+| OpenC2 | ArrayOf(Query-Item) ['min', 'max'] | A target used to query Actuator for its supported capabilities |
 
 **_Type: Command-ID_**
 
@@ -343,7 +343,7 @@
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| jadn:Options | ArrayOf(jadn:Option) ['max', 'min'] | Options list may be empty but may not be omitted |
+| jadn:Options | ArrayOf(jadn:Option) ['min', 'max'] | Options list may be empty but may not be omitted |
 
 **_Type: jadn:Option_**
 

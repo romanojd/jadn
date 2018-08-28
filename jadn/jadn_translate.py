@@ -40,7 +40,8 @@ if __name__ == '__main__':
         sa.update({'module': schema['meta']['module'] + patch, 'exports': exports})
         print('\n'.join(['  ' + k + ': ' + str(sa[k]) for k in ('module', 'exports', 'unreferenced', 'undefined', 'cycles')]))
 
-        jadn_dump(jadn_strip(schema), dest + '.jadn', source)
+        jadn_dump(jadn_strip(schema), dest + '-strip.jadn')
+        jadn_dump(schema, dest + '.jadn')
         jas_dump(schema, dest + '.jas', source)
         table_dump(schema, dest + '.md', source, form='markdown')
         table_dump(schema, dest + '.html', source, form='html')
