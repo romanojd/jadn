@@ -10,7 +10,7 @@
   "types": [
 
     ["Target", "Choice", [], "SLPF targets", [
-        [1, "rule-number", "Rule-ID", [], "Uniquely identifies a rule associated with a previously-issued deny or allow."]]
+        [1, "rule_number", "Rule-ID", [], "Uniquely identifies a rule associated with a previously-issued deny or allow."]]
     ],
 
     ["Args", "Map", [], "SLPF command arguments", [
@@ -41,7 +41,7 @@
     ],
 
     ["Results", "Map", [], "SLPF results", [
-        [1, "rule", "Rule-ID", ["[0"], "Rule identifier returned from allow or deny command."]]
+        [1, "rule_number", "Rule-ID", ["[0"], "Rule identifier returned from allow or deny command."]]
     ]
   ]
 }

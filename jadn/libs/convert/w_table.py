@@ -1,5 +1,5 @@
 """
-Translate JADN to HTML property tables
+Translate JADN to HTML or Markdown property tables
 """
 
 from __future__ import unicode_literals
@@ -191,15 +191,15 @@ def sect_d(num, name):
 
 
 def meta_begin_d():
-    return ''
+    return '{\n  "meta: {\n'
 
 
 def meta_item_d(key, val):
-    return ''
+    return '  "' + key + '": ' + val + '\n'
 
 
 def meta_end_d():
-    return ''
+    return '  }\n'
 
 
 def type_begin_d(tname, ttype, topts, headers, cls):
@@ -371,7 +371,7 @@ wtab = {
 DEFAULT_SECTION = (3, 2)
 DEFAULT_FORMAT = 'html'
 
-def base_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
+def table_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
     """
     Translate JADN schema into other formats
 
@@ -476,8 +476,8 @@ def base_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
     return text
 
 
-def base_dump(jadn, fname, source='', form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
+def table_dump(jadn, fname, source='', form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
     with open(fname, 'w') as f:
         if source:
             f.write('<!-- Generated from ' + source + ', ' + datetime.ctime(datetime.now()) + '-->\n')
-        f.write(base_dumps(jadn, form, section))
+        f.write(table_dumps(jadn, form, section))

@@ -1,4 +1,4 @@
-<!-- Generated from schema\slpf-wd03.jadn, Fri Aug 24 16:29:42 2018-->
+<!-- Generated from schema\slpf-wd03.jadn, Tue Aug 28 10:41:31 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -12,7 +12,7 @@
 
 | ID | Name | Type | Description |
 | ---: | --- | :--- | :--- |
-| 1 | **rule-number** | Rule-ID | Uniquely identifies a rule associated with a previously-issued deny or allow. |
+| 1 | **rule_number** | Rule-ID | Uniquely identifies a rule associated with a previously-issued deny or allow. |
 
 **_Type: Args (Map)_**
 
@@ -57,4 +57,4 @@
 
 | ID | Name | Type | # | Description |
 | ---: | --- | :--- | ---: | :--- |
-| 1 | **rule** | Rule-ID | 0..1 | Rule identifier returned from allow or deny command. |
+| 1 | **rule_number** | Rule-ID | 0..1 | Rule identifier returned from allow or deny command. |

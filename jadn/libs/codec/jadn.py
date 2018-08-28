@@ -4,6 +4,7 @@ Load, validate, prettyprint, and dump JSON Abstract Encoding Notation (JADN) sch
 
 from __future__ import print_function, unicode_literals
 
+import copy
 import json
 import jsonschema
 import numbers
@@ -191,23 +192,36 @@ def topo_sort(items):
 
 
 def build_jadn_deps(schema):
-    def ns(name):   # Return namespace if present
-        return name.split(':')[0]
+    def ns(name, nsids):   # Return namespace if name has a known namespace, otherwise return full name
+        ns = name.split(':')[0]
+        return ns if ns in nsids else name
 
     imps = schema['meta']['imports'] if 'imports' in schema['meta'] else []
     items = [(n[0], []) for n in imps]
+    nsids = [n[0] for n in imps]
     for tdef in schema["types"]:
         deps = []
         if tdef[TTYPE] == "ArrayOf":
             rtype = topts_s2d(tdef[TOPTS])["rtype"]
             if not is_builtin(rtype):
-                deps.append(ns(rtype))
+                deps.append(ns(rtype, nsids))
         if len(tdef) > FIELDS and tdef[TTYPE] != "Enumerated":
             for f in tdef[FIELDS]:
                 if not is_builtin(f[FTYPE]):
-                    deps.append(ns(f[FTYPE]))
+                    deps.append(ns(f[FTYPE], nsids))
         items.append((tdef[TNAME], deps))
     return items
+
+
+def jadn_strip(schema):             # Strip comments from schema
+    sc = copy.deepcopy(schema)
+    for tdef in sc["types"]:
+        tdef[TDESC] = ''
+        if len(tdef) > FIELDS:
+            fd = EDESC if tdef[TTYPE] == 'Enumerated' else FDESC
+            for fdef in tdef[FIELDS]:
+                fdef[fd] = ''
+    return sc
 
 
 def jadn_analyze(schema):

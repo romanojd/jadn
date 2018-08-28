@@ -1,4 +1,4 @@
-<!-- Generated from schema\slpf-wd03.jadn, Fri Aug 24 16:29:42 2018-->
+<!-- Generated from schema\slpf-wd03.jadn, Tue Aug 28 10:41:31 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +17,7 @@
 </table>
 <h2>Types</h2>
 <table><caption>Target (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="b">rule-number</td><td class="s">Rule-ID</td><td class="s">Uniquely identifies a rule associated with a previously-issued deny or allow.</td></tr>
+<tr><td class="n">1</td><td class="b">rule_number</td><td class="s">Rule-ID</td><td class="s">Uniquely identifies a rule associated with a previously-issued deny or allow.</td></tr>
 </table>
 <table><caption>Args (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="b">drop_process</td><td class="s">Drop-Process</td><td class="n">0..1</td><td class="s">Specifies how to handle denied packets</td></tr>
@@ -44,6 +44,6 @@
 <tr><td class="n">4</td><td class="b">asset_tuple</td><td class="s">String</td><td class="n">0..10</td><td class="s">Unique tuple identifier for a particular SLPF consisting of a list of up to 10 strings</td></tr>
 </table>
 <table><caption>Results (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="b">rule</td><td class="s">Rule-ID</td><td class="n">0..1</td><td class="s">Rule identifier returned from allow or deny command.</td></tr>
+<tr><td class="n">1</td><td class="b">rule_number</td><td class="s">Rule-ID</td><td class="n">0..1</td><td class="s">Rule identifier returned from allow or deny command.</td></tr>
 </table>
 </body>

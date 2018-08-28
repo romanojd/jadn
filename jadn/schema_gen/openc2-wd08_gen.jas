@@ -1,13 +1,13 @@
--- Generated from schema\openc2-wd08.jadn, Thu Aug 23 15:09:22 2018
+-- Generated from schema\openc2-wd08.jadn, Tue Aug 28 10:41:30 2018
 
 /*
 module:        oasis-open.org/openc2/v1.0/openc2-lang
 title:         OpenC2 Language Objects
 description:   Datatypes that define the content of OpenC2 commands and
                responses.
-exports:       ['OpenC2-Command', 'OpenC2-Response']
 imports:       [['slpf', 'oasis-open.org/openc2/v1.0/ap-slpf'], ['jadn', 'oasis-open.org/openc2/v1.0/jadn']]
 patch:         wd08
+exports:       ['OpenC2-Command', 'OpenC2-Response']
 */
 
 OpenC2-Command ::= RECORD {
