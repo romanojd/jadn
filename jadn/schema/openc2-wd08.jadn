@@ -192,7 +192,7 @@
     [2, "url", "URI", [], "MUST be a valid URL that resolves to the un-encoded content"]]
   ],
 
-  ["Port", "String", ["@port"], "Service Name or Transport Protocol Port Number, RFC 6335"],
+  ["Port", "Integer", ["@port"], "Transport Protocol Port Number, RFC 6335"],
 
   ["Query-Item", "Enumerated", [], "Results to be included in response to query openc2 command", [
     [1, "versions", "OpenC2 language versions supported by this actuator"],

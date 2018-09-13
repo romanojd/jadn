@@ -99,8 +99,8 @@ def jadn_check(schema):
     valid_topts = {                         # TODO: comprehensive review of valid type and field options, plus unit tests
         'Binary': ['min', 'max'],
         'Boolean': [],
-        'Integer': ['min', 'max'],
-        'Number': ['min', 'max'],
+        'Integer': ['min', 'max', 'format'],
+        'Number': ['min', 'max', 'format'],
         'Null': [],
         'String': ['min', 'max', 'pattern', 'format'],
         'Array': ['min'],
@@ -113,8 +113,8 @@ def jadn_check(schema):
     valid_fopts = {
         'Binary': ['min', 'max'],
         'Boolean': ['min', 'max'],
-        'Integer': ['min', 'max'],
-        'Number': ['min', 'max'],
+        'Integer': ['min', 'max', 'format'],
+        'Number': ['min', 'max', 'format'],
         'Null': [],
         'String': ['min', 'max', 'pattern', 'format'],
         "Array": ['min', 'max', 'etype', 'atfield'],
@@ -167,6 +167,18 @@ def jadn_check(schema):
                 print("Type format error:", t[TNAME], "- missing items from compound type", tt)
     return schema
 
+
+def jadn_strip(schema):             # Strip comments from schema
+    sc = copy.deepcopy(schema)
+    for tdef in sc["types"]:
+        tdef[TDESC] = ''
+        if len(tdef) > FIELDS:
+            fd = EDESC if tdef[TTYPE] == 'Enumerated' else FDESC
+            for fdef in tdef[FIELDS]:
+                fdef[fd] = ''
+    return sc
+
+
 def topo_sort(items):
     """
     Topological sort with locality
@@ -211,17 +223,6 @@ def build_jadn_deps(schema):
                     deps.append(ns(f[FTYPE], nsids))
         items.append((tdef[TNAME], deps))
     return items
-
-
-def jadn_strip(schema):             # Strip comments from schema
-    sc = copy.deepcopy(schema)
-    for tdef in sc["types"]:
-        tdef[TDESC] = ''
-        if len(tdef) > FIELDS:
-            fd = EDESC if tdef[TTYPE] == 'Enumerated' else FDESC
-            for fdef in tdef[FIELDS]:
-                fdef[fd] = ''
-    return sc
 
 
 def jadn_analyze(schema):
