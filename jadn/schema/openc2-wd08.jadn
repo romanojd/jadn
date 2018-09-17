@@ -12,7 +12,6 @@
  },
 
  "types": [
-
   ["OpenC2-Command", "Record", [], "", [
     [1, "action", "Action", [], "The task or activity to be performed (i.e., the 'verb')."],
     [2, "target", "Target", [], "The object of the action. The action is performed on the target."],
@@ -136,7 +135,7 @@
     [1, "name", "String", ["[0"], "The name of the file as defined in the file system"],
     [2, "path", "String", ["[0"], "The absolute path to the location of the file in the file system"],
     [3, "hashes", "Hashes", ["[0"], "One or more cryptographic hash codes of the file contents"]]
-   ],
+  ],
 
   ["IP-Addr", "String", ["@ip"], "IPv4 or IPv6 address per RFC 2673 section 3.2, and RFC 4291 section 2.2"],
 
@@ -213,13 +212,13 @@
   ["Version", "String", [], "TBSL"],
 
   ["Results", "Map", [], "", [
-    [1, "strings", "String", ["[0","]0"], "Generic set of string values"],
-    [2, "ints", "Integer", ["[0","]0"], "Generic set of integer values"],
-    [3, "kvps", "KVP", ["[0","]0"], "Generic set of key:value pairs"],
-    [4, "versions", "Version", ["[0","]0"], "The list of OpenC2 language versions supported by this actuator"],
-    [5, "profiles", "jadn:Uname", ["[0","]0"], "The list of profiles supported by this actuator"],
-    [6, "schema", "jadn:Schema", ["[0","]0"], "Syntax of the OpenC2 language elements supported by this actuator"],
-    [7, "pairs", "ActionTargets", ["[0","]0"], "List of targets applicable to each supported action"],
+    [1, "strings", "String", ["[0", "]0"], "Generic set of string values"],
+    [2, "ints", "Integer", ["[0", "]0"], "Generic set of integer values"],
+    [3, "kvps", "KVP", ["[0", "]0"], "Generic set of key:value pairs"],
+    [4, "versions", "Version", ["[0", "]0"], "The list of OpenC2 language versions supported by this actuator"],
+    [5, "profiles", "jadn:Uname", ["[0", "]0"], "The list of profiles supported by this actuator"],
+    [6, "schema", "jadn:Schema", ["[0"], "Syntax of the OpenC2 language elements supported by this actuator"],
+    [7, "pairs", "ActionTargets", ["[0", "]0"], "List of targets applicable to each supported action"],
     [1000, "extension", "PE-Results", ["[0"], "Response data defined in a Private Enterprise profile"],
     [1024, "slpf", "slpf:Results", ["[0"], "Response data defined in the Stateless Packet Filter profile"]]
   ],

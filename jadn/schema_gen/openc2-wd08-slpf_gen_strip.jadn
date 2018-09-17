@@ -1,14 +1,14 @@
 {
  "meta": {
-  "description": "OpenC2 Language content used by Stateless Packet Filters.",
-  "exports": ["OpenC2-Command", "OpenC2-Response"],
-  "imports": [
-   ["slpf", "/oasis-open.org/openc2/v1.0/ap-slpf"],
-   ["jadn", "/oasis-open.org/openc2/v1.0/jadn"]]
-,
   "module": "oasis-open.org/openc2/v1.0/openc2-lang",
   "patch": "wd08-slpf",
-  "title": "OpenC2 Language Objects"
+  "title": "OpenC2 Language Objects",
+  "description": "OpenC2 Language content used by Stateless Packet Filters.",
+  "imports": [
+   ["slpf", "oasis-open.org/openc2/v1.0/ap-slpf"],
+   ["jadn", "oasis-open.org/openc2/v1.0/jadn"]]
+,
+  "exports": ["OpenC2-Command", "OpenC2-Response"]
  },
 
  "types": [
@@ -105,7 +105,7 @@
     [132, "sctp", ""]]
   ],
 
-  ["Port", "String", ["@port"], ""],
+  ["Port", "Integer", ["@port"], ""],
 
   ["Query-Item", "Enumerated", [], "", [
     [1, "versions", ""],
@@ -126,7 +126,7 @@
   ["Results", "Map", [], "", [
     [4, "versions", "Version", ["[0", "]0"], ""],
     [5, "profiles", "jadn:Uname", ["[0", "]0"], ""],
-    [6, "schema", "jadn:Schema", ["[0", "]0"], ""],
+    [6, "schema", "jadn:Schema", ["[0"], ""],
     [7, "pairs", "ActionTargets", ["[0", "]0"], ""],
     [1024, "slpf", "slpf:Results", ["[0", "]0"], ""]]
   ],

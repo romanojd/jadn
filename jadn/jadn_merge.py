@@ -6,7 +6,7 @@ from __future__ import print_function
 import os
 
 from libs.codec.jadn_defs import *
-from libs.codec.jadn import jadn_load, jadn_dump, jadn_analyze, jadn_strip
+from libs.codec.jadn import jadn_load, jadn_dump, jadn_analyze, jadn_strip, jadn_merge
 
 
 """
@@ -24,35 +24,24 @@ from libs.codec.jadn import jadn_load, jadn_dump, jadn_analyze, jadn_strip
     jadn_dump(schema, dest + '.jadn')
 """
 
-"""
-Merge an imported schema into a base schema
-"""
 
-def merge_import(base, imp, nsid):
-    types = base['types'][:]
-    print(len(types), 'types')
-    for t in imp['types']:
-        nt = [nsid + ':' + t[TNAME], t[TTYPE], t[TOPTS], t[TDESC]]
-        nf = []
-        if len(t) > FIELDS:
-            nf = t[FIELDS][:]
-            if t[TTYPE] != 'Enumerated':
-
-        types.append(nt + nf)
-    return {'meta': base['meta'], 'types': types}
-
-
-def jadn_merge(idir, base=None):
-    def _merge_imports(info, dest, files):
+def merge(idir):
+    def _merge_imports(info, files):
         base_schema = jadn_load(info['source'])
         for nsid, module in info['imports']:
             imp = [i for i in files.values() if i['module'] == module]
             patches = [i['patch'] for i in imp]
-            print(nsid, module, patches)
+            print('  ', nsid, module, patches)
             if len(imp) > 1:
                 raise ValueError('More than one matching import:', nsid, module, patches)
-            elif len(imp) == 1:
+            elif len(imp) < 1:
+                raise ValueError('Missing import:', nsid, module)
+            else:
                 imported_schema = jadn_load(imp[0]['source'])
+                base_schema = jadn_merge(base_schema, imported_schema, nsid)
+        base_schema['meta']['patch'] += '_merged'
+        del base_schema['meta']['imports']
+        jadn_dump(base_schema, info['dest'])
 
     def _meta(schema, item):
         return schema['meta'][item] if item in schema['meta'] else ''
@@ -63,7 +52,7 @@ def jadn_merge(idir, base=None):
     files = {}
     for fn in (f[0] for f in (os.path.splitext(i) for i in os.listdir(idir)) if f[1] == '.jadn'):
         source = os.path.join(idir, fn) + '.jadn'
-        dest = os.path.join(odir, fn) + '.jadn'
+        dest = os.path.join(odir, fn) + '_merged.jadn'
         schema = jadn_load(source)
         id = _meta(schema, 'module') + '/' + _meta(schema, 'patch')
         if id in files:
@@ -71,6 +60,7 @@ def jadn_merge(idir, base=None):
         else:
             files.update({id: {
                 'source': source,
+                'dest': dest,
                 'id': id,
                 'module': _meta(schema, 'module'),
                 'patch': _meta(schema, 'patch'),
@@ -81,8 +71,8 @@ def jadn_merge(idir, base=None):
     for k, v in files.items():
         if v['imports']:
             print(k, 'imports', v['imports'])
-            _merge_imports(v, dest, files)
+            _merge_imports(v, files)
 
 
 if __name__ == '__main__':
-    jadn_merge('schema', 'oasis-open.org/openc2/v1.0/openc2-lang/wd08-slpf')
+    merge('schema')

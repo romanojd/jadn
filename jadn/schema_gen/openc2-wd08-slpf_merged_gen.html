@@ -1,18 +1,18 @@
-<!-- Generated from schema\openc2-wd08-slpf-all.jadn, Tue Aug 28 11:14:22 2018-->
+<!-- Generated from schema\openc2-wd08-slpf_merged.jadn, Mon Sep 17 15:31:23 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="theme.css">
-<title>oasis-open.org/openc2/v1.0/openc2-lang v.wd08-slpf-all</title>
+<title>oasis-open.org/openc2/v1.0/openc2-lang v.wd08-slpf_merged</title>
 </head>
 <body>
 <h2>Schema</h2>
 <table>
 <tr><td class="h">title:</td><td class="s">OpenC2 Language Objects</td></tr>
 <tr><td class="h">module:</td><td class="s">oasis-open.org/openc2/v1.0/openc2-lang</td></tr>
-<tr><td class="h">patch:</td><td class="s">wd08-slpf-all</td></tr>
-<tr><td class="h">description:</td><td class="s">OpenC2 Language content used by Stateless Packet Filters.  JADN and SLPF schemas included here, not imported.</td></tr>
+<tr><td class="h">patch:</td><td class="s">wd08-slpf_merged</td></tr>
+<tr><td class="h">description:</td><td class="s">OpenC2 Language content used by Stateless Packet Filters.</td></tr>
 <tr><td class="h">exports:</td><td class="s">OpenC2-Command, OpenC2-Response</td></tr>
 </table>
 <h2>Types</h2>
@@ -104,7 +104,7 @@
 <tr><td class="n">132</td><td class="b">sctp</td><td class="s">Stream Control Transmission Protocol - RFC 4960</td></tr>
 </table>
 <table><caption>Port</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="s">Port</td><td class="s">String (port)</td><td class="s">Service Name or Transport Protocol Port Number, RFC 6335</td></tr>
+<tr><td class="s">Port</td><td class="s">Integer (port)</td><td class="s">Transport Protocol Port Number, RFC 6335</td></tr>
 </table>
 <table><caption>Query-Item (Enumerated)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="b">versions</td><td class="s">OpenC2 language versions supported by this actuator</td></tr>
@@ -124,7 +124,7 @@
 <table><caption>Results (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">4</td><td class="b">versions</td><td class="s">Version</td><td class="n">0..n</td><td class="s">Supported OpenC2 Language versions</td></tr>
 <tr><td class="n">5</td><td class="b">profiles</td><td class="s">jadn:Uname</td><td class="n">0..n</td><td class="s">Supported actuator profiles</td></tr>
-<tr><td class="n">6</td><td class="b">schema</td><td class="s">jadn:Schema</td><td class="n">0..n</td><td class="s">Schema supported by this actuator</td></tr>
+<tr><td class="n">6</td><td class="b">schema</td><td class="s">jadn:Schema</td><td class="n">0..1</td><td class="s">Schema supported by this actuator</td></tr>
 <tr><td class="n">7</td><td class="b">pairs</td><td class="s">ActionTargets</td><td class="n">0..n</td><td class="s">List of targets applicable to each supported action</td></tr>
 <tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Results</td><td class="n">0..n</td><td class="s">Results from Stateless Packet Filter profile</td></tr>
 </table>

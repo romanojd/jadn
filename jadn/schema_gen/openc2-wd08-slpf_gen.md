@@ -1,4 +1,4 @@
-<!-- Generated from schema\openc2-wd08-slpf.jadn, Tue Aug 28 10:41:30 2018-->
+<!-- Generated from schema\openc2-wd08-slpf.jadn, Mon Sep 17 15:31:23 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -7,7 +7,7 @@
 | **patch:** | wd08-slpf |
 | **description:** | OpenC2 Language content used by Stateless Packet Filters. |
 | **exports:** | OpenC2-Command, OpenC2-Response |
-| **imports:** | **slpf**:&nbsp;/oasis-open.org/openc2/v1.0/ap-slpf **jadn**:&nbsp;/oasis-open.org/openc2/v1.0/jadn |
+| **imports:** | **slpf**:&nbsp;oasis-open.org/openc2/v1.0/ap-slpf **jadn**:&nbsp;oasis-open.org/openc2/v1.0/jadn |
 
 **_Type: OpenC2-Command (Record)_**
 
@@ -107,7 +107,7 @@
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| OpenC2 | ArrayOf(Query-Item) ['max', 'min'] | A target used to query Actuator for its supported capabilities |
+| OpenC2 | ArrayOf(Query-Item) ['min', 'max'] | A target used to query Actuator for its supported capabilities |
 
 **_Type: Command-ID_**
 
@@ -148,7 +148,7 @@
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| Port | String (port) | Service Name or Transport Protocol Port Number, RFC 6335 |
+| Port | Integer (port) | Transport Protocol Port Number, RFC 6335 |
 
 **_Type: Query-Item (Enumerated)_**
 
@@ -180,7 +180,7 @@
 | ---: | --- | :--- | ---: | :--- |
 | 4 | **versions** | Version | 0..n | Supported OpenC2 Language versions |
 | 5 | **profiles** | jadn:Uname | 0..n | Supported actuator profiles |
-| 6 | **schema** | jadn:Schema | 0..n | Schema supported by this actuator |
+| 6 | **schema** | jadn:Schema | 0..1 | Schema supported by this actuator |
 | 7 | **pairs** | ActionTargets | 0..n | List of targets applicable to each supported action |
 | 1024 | **slpf** | slpf:Results | 0..n | Results from Stateless Packet Filter profile |
 

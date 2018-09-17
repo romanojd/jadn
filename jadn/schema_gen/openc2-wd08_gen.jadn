@@ -1,14 +1,14 @@
 {
  "meta": {
+  "module": "oasis-open.org/openc2/v1.0/openc2-lang",
+  "patch": "wd08",
+  "title": "OpenC2 Language Objects",
   "description": "Datatypes that define the content of OpenC2 commands and responses.",
-  "exports": ["OpenC2-Command", "OpenC2-Response"],
   "imports": [
    ["slpf", "oasis-open.org/openc2/v1.0/ap-slpf"],
    ["jadn", "oasis-open.org/openc2/v1.0/jadn"]]
 ,
-  "module": "oasis-open.org/openc2/v1.0/openc2-lang",
-  "patch": "wd08",
-  "title": "OpenC2 Language Objects"
+  "exports": ["OpenC2-Command", "OpenC2-Response"]
  },
 
  "types": [
@@ -191,7 +191,7 @@
     [2, "url", "URI", [], "MUST be a valid URL that resolves to the un-encoded content"]]
   ],
 
-  ["Port", "String", ["@port"], "Service Name or Transport Protocol Port Number, RFC 6335"],
+  ["Port", "Integer", ["@port"], "Transport Protocol Port Number, RFC 6335"],
 
   ["Query-Item", "Enumerated", [], "Results to be included in response to query openc2 command", [
     [1, "versions", "OpenC2 language versions supported by this actuator"],
@@ -217,7 +217,7 @@
     [3, "kvps", "KVP", ["[0", "]0"], "Generic set of key:value pairs"],
     [4, "versions", "Version", ["[0", "]0"], "The list of OpenC2 language versions supported by this actuator"],
     [5, "profiles", "jadn:Uname", ["[0", "]0"], "The list of profiles supported by this actuator"],
-    [6, "schema", "jadn:Schema", ["[0", "]0"], "Syntax of the OpenC2 language elements supported by this actuator"],
+    [6, "schema", "jadn:Schema", ["[0"], "Syntax of the OpenC2 language elements supported by this actuator"],
     [7, "pairs", "ActionTargets", ["[0", "]0"], "List of targets applicable to each supported action"],
     [1000, "extension", "PE-Results", ["[0"], "Response data defined in a Private Enterprise profile"],
     [1024, "slpf", "slpf:Results", ["[0"], "Response data defined in the Stateless Packet Filter profile"]]

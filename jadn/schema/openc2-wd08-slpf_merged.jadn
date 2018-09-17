@@ -1,10 +1,10 @@
 {
  "meta": {
-  "description": "OpenC2 Language content used by Stateless Packet Filters.  JADN and SLPF schemas included here, not imported.",
-  "exports": ["OpenC2-Command", "OpenC2-Response"],
   "module": "oasis-open.org/openc2/v1.0/openc2-lang",
-  "patch": "wd08-slpf-all",
-  "title": "OpenC2 Language Objects"
+  "patch": "wd08-slpf_merged",
+  "title": "OpenC2 Language Objects",
+  "description": "OpenC2 Language content used by Stateless Packet Filters.",
+  "exports": ["OpenC2-Command", "OpenC2-Response"]
  },
 
  "types": [
@@ -101,7 +101,7 @@
     [132, "sctp", "Stream Control Transmission Protocol - RFC 4960"]]
   ],
 
-  ["Port", "String", ["@port"], "Service Name or Transport Protocol Port Number, RFC 6335"],
+  ["Port", "Integer", ["@port"], "Transport Protocol Port Number, RFC 6335"],
 
   ["Query-Item", "Enumerated", [], "Results to be included in response to query openc2 command", [
     [1, "versions", "OpenC2 language versions supported by this actuator"],
@@ -122,7 +122,7 @@
   ["Results", "Map", [], "", [
     [4, "versions", "Version", ["[0", "]0"], "Supported OpenC2 Language versions"],
     [5, "profiles", "jadn:Uname", ["[0", "]0"], "Supported actuator profiles"],
-    [6, "schema", "jadn:Schema", ["[0", "]0"], "Schema supported by this actuator"],
+    [6, "schema", "jadn:Schema", ["[0"], "Schema supported by this actuator"],
     [7, "pairs", "ActionTargets", ["[0", "]0"], "List of targets applicable to each supported action"],
     [1024, "slpf", "slpf:Results", ["[0", "]0"], "Results from Stateless Packet Filter profile"]]
   ],
@@ -237,7 +237,7 @@
 
   ["jadn:Uname", "String", ["[1", "]100"], "Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes"],
 
-  ["jadn:Options", "ArrayOf", ["*jadn:Option", "[0", "]0"], "Options list may be empty but may not be omitted"],
+  ["jadn:Options", "ArrayOf", ["*jadn:Option", "[0", "]10"], "Options list may be empty but may not be omitted"],
 
   ["jadn:Option", "String", ["[1", "]100"], "Option string: 1st char = option id"]]
 

@@ -1,4 +1,4 @@
-<!-- Generated from schema\openc2-wd08.jadn, Tue Aug 28 10:41:30 2018-->
+<!-- Generated from schema\openc2-wd08.jadn, Mon Sep 17 15:31:23 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -190,7 +190,7 @@
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| OpenC2 | ArrayOf(Query-Item) ['max', 'min'] | A target used to query Actuator for its supported capabilities |
+| OpenC2 | ArrayOf(Query-Item) ['min', 'max'] | A target used to query Actuator for its supported capabilities |
 
 **_Type: Process (Map)_**
 
@@ -268,7 +268,7 @@
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| Port | String (port) | Service Name or Transport Protocol Port Number, RFC 6335 |
+| Port | Integer (port) | Transport Protocol Port Number, RFC 6335 |
 
 **_Type: Query-Item (Enumerated)_**
 
@@ -309,7 +309,7 @@
 | 3 | **kvps** | KVP | 0..n | Generic set of key:value pairs |
 | 4 | **versions** | Version | 0..n | The list of OpenC2 language versions supported by this actuator |
 | 5 | **profiles** | jadn:Uname | 0..n | The list of profiles supported by this actuator |
-| 6 | **schema** | jadn:Schema | 0..n | Syntax of the OpenC2 language elements supported by this actuator |
+| 6 | **schema** | jadn:Schema | 0..1 | Syntax of the OpenC2 language elements supported by this actuator |
 | 7 | **pairs** | ActionTargets | 0..n | List of targets applicable to each supported action |
 | 1000 | **extension** | PE-Results | 0..1 | Response data defined in a Private Enterprise profile |
 | 1024 | **slpf** | slpf:Results | 0..1 | Response data defined in the Stateless Packet Filter profile |

@@ -1,11 +1,11 @@
--- Generated from schema\jadn.jadn, Tue Aug 28 10:41:29 2018
+-- Generated from schema\jadn.jadn, Mon Sep 17 15:31:23 2018
 
 /*
 module:        oasis-open.org/openc2/v1.0/jadn
 title:         JADN Syntax
 description:   Syntax of a JSON Abstract Data Notation (JADN) module.
-patch:         wd01
 exports:       ['Schema', 'Uname']
+patch:         wd01
 */
 
 Schema ::= RECORD {    -- Definition of a JADN file

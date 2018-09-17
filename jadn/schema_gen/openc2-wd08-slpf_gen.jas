@@ -1,12 +1,12 @@
--- Generated from schema\openc2-wd08-slpf.jadn, Tue Aug 28 10:41:30 2018
+-- Generated from schema\openc2-wd08-slpf.jadn, Mon Sep 17 15:31:23 2018
 
 /*
 module:        oasis-open.org/openc2/v1.0/openc2-lang
 title:         OpenC2 Language Objects
 description:   OpenC2 Language content used by Stateless Packet Filters.
-imports:       [['slpf', '/oasis-open.org/openc2/v1.0/ap-slpf'], ['jadn', '/oasis-open.org/openc2/v1.0/jadn']]
-patch:         wd08-slpf
+imports:       [['slpf', 'oasis-open.org/openc2/v1.0/ap-slpf'], ['jadn', 'oasis-open.org/openc2/v1.0/jadn']]
 exports:       ['OpenC2-Command', 'OpenC2-Response']
+patch:         wd08-slpf
 */
 
 OpenC2-Command ::= RECORD {
@@ -102,7 +102,7 @@ L4-Protocol ::= ENUMERATED {    -- protocol (IPv4) or next header (IPv6) field -
     sctp         (132)     -- Stream Control Transmission Protocol - RFC 4960
 }
 
-Port ::= STRING    -- Service Name or Transport Protocol Port Number, RFC 6335
+Port ::= INTEGER    -- Transport Protocol Port Number, RFC 6335
 
 Query-Item ::= ENUMERATED {    -- Results to be included in response to query openc2 command
     versions     (1),    -- OpenC2 language versions supported by this actuator
@@ -123,7 +123,7 @@ Version ::= STRING    -- TBSL
 Results ::= MAP {
     versions     [4] Version OPTIONAL,    -- Supported OpenC2 Language versions ***{'max': 0}
     profiles     [5] jadn:Uname OPTIONAL,    -- Supported actuator profiles ***{'max': 0}
-    schema       [6] jadn:Schema OPTIONAL,    -- Schema supported by this actuator ***{'max': 0}
+    schema       [6] jadn:Schema OPTIONAL,    -- Schema supported by this actuator
     pairs        [7] ActionTargets OPTIONAL,    -- List of targets applicable to each supported action ***{'max': 0}
     slpf         [1024] slpf:Results OPTIONAL     -- Results from Stateless Packet Filter profile ***{'max': 0}
 }

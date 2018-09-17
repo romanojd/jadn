@@ -1,10 +1,10 @@
 {
  "meta": {
-  "description": "Data definitions for Stateless Packet Filtering (SLPF) functions",
-  "exports": ["Target", "Specifiers", "Args", "Results"],
   "module": "oasis-open.org/openc2/v1.0/ap-slpf",
   "patch": "wd03",
-  "title": "Stateless Packet Filtering"
+  "title": "Stateless Packet Filtering",
+  "description": "Data definitions for Stateless Packet Filtering (SLPF) functions",
+  "exports": ["Target", "Specifiers", "Args", "Results"]
  },
 
  "types": [

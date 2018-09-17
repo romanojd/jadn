@@ -1,14 +1,14 @@
 {
  "meta": {
+  "module": "oasis-open.org/openc2/v1.0/openc2-lang",
+  "patch": "wd08",
+  "title": "OpenC2 Language Objects",
   "description": "Datatypes that define the content of OpenC2 commands and responses.",
-  "exports": ["OpenC2-Command", "OpenC2-Response"],
   "imports": [
    ["slpf", "oasis-open.org/openc2/v1.0/ap-slpf"],
    ["jadn", "oasis-open.org/openc2/v1.0/jadn"]]
 ,
-  "module": "oasis-open.org/openc2/v1.0/openc2-lang",
-  "patch": "wd08",
-  "title": "OpenC2 Language Objects"
+  "exports": ["OpenC2-Command", "OpenC2-Response"]
  },
 
  "types": [
@@ -191,7 +191,7 @@
     [2, "url", "URI", [], ""]]
   ],
 
-  ["Port", "String", ["@port"], ""],
+  ["Port", "Integer", ["@port"], ""],
 
   ["Query-Item", "Enumerated", [], "", [
     [1, "versions", ""],
@@ -217,7 +217,7 @@
     [3, "kvps", "KVP", ["[0", "]0"], ""],
     [4, "versions", "Version", ["[0", "]0"], ""],
     [5, "profiles", "jadn:Uname", ["[0", "]0"], ""],
-    [6, "schema", "jadn:Schema", ["[0", "]0"], ""],
+    [6, "schema", "jadn:Schema", ["[0"], ""],
     [7, "pairs", "ActionTargets", ["[0", "]0"], ""],
     [1000, "extension", "PE-Results", ["[0"], ""],
     [1024, "slpf", "slpf:Results", ["[0"], ""]]
