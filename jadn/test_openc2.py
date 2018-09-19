@@ -48,7 +48,7 @@ class Language(unittest.TestCase):
 class SLPF(unittest.TestCase):
 
     def setUp(self):
-        fn = os.path.join('schema', 'openc2-wd08-slpf-all.jadn')
+        fn = os.path.join('schema', 'openc2-wd08-slpf_merged.jadn')
         schema = jadn_load(fn)
         sa = jadn_analyze(schema)
         if sa['undefined']:

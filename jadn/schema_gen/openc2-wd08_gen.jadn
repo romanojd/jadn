@@ -52,7 +52,7 @@
     [8, "email_addr", "Email-Addr", [], "A single email address."],
     [9, "email_message", "Email-Message", [], "An instance of an email message, corresponding to the internet message format described in RFC 5322 and related RFCs."],
     [10, "file", "File", [], "Properties of a file."],
-    [11, "ip_addr", "IP-Addr", [], "The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation."],
+    [11, "ip_addr", "IP-Addr", [], "The representation of one or more IP addresses (either version 4 or version 6)."],
     [13, "mac_addr", "Mac-Addr", [], "A single Media Access Control (MAC) address."],
     [15, "ip_connection", "IP-Connection", [], "A network connection that originates from a source and is addressed to a destination. Source and destination addresses may be either IPv4 or IPv6; both should be the same version."],
     [16, "openc2", "OpenC2", [], "A set of items used with the query action to determine an actuator's capabilities"],
@@ -83,9 +83,7 @@
     [1, "status", "Status-Code", [], "An integer status code"],
     [2, "status_text", "String", ["[0"], "A free-form human-readable description of the response status"],
     [3, "*", "Results", ["[0"], "Data or extended status information"],
-    [4, "id", "Command-ID", ["[0"], "ID of the response"],
-    [5, "id_ref", "Command-ID", ["[0"], "ID of the command that induced this response"],
-    [6, "actuator_id", "String", ["[0"], "ID of the actuator sending the response"]]
+    [4, "id_ref", "Command-ID", ["[0"], "ID of the command that induced this response"]]
   ],
 
   ["Status-Code", "Enumerated", ["="], "", [
@@ -230,7 +228,7 @@
 
   ["ActionTargets", "Array", [], "", [
     [1, "action", "Action", [], "An action supported by this actuator"],
-    [2, "targets", "Target.*", ["]0"], "List of targets applicable to this action"]]
+    [2, "targets", "Target", ["]0", "*"], "List of targets applicable to this action"]]
   ]]
 
 }

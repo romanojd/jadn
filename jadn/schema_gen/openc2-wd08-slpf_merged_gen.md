@@ -1,4 +1,4 @@
-<!-- Generated from schema\openc2-wd08-slpf_merged.jadn, Mon Sep 17 15:31:23 2018-->
+<!-- Generated from schema\openc2-wd08-slpf_merged.jadn, Wed Sep 19 17:56:45 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -30,19 +30,19 @@
 
 **_Type: Target (Choice)_**
 
-| ID | Name | Type | Description |
-| ---: | --- | :--- | :--- |
-| 10 | **file** | File | Properties of a file |
-| 11 | **ip_addr** | IP-Addr | The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation |
-| 15 | **ip_connection** | IP-Connection | A network connection that originates from a source and is addressed to a destination |
-| 16 | **openc2** | OpenC2 | A set of items used with the query action to determine an actuator's capabilities |
-| 1024 | **slpf** | slpf:Target | Targets defined in the Stateless Packet Filter profile |
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 10 | **file** | File | 1 | Properties of a file |
+| 11 | **ip_addr** | IP-Addr | 1 | The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation |
+| 15 | **ip_connection** | IP-Connection | 1 | A network connection that originates from a source and is addressed to a destination |
+| 16 | **openc2** | OpenC2 | 1 | A set of items used with the query action to determine an actuator's capabilities |
+| 1024 | **slpf** | slpf:Target | 1 | Targets defined in the Stateless Packet Filter profile |
 
 **_Type: Actuator (Choice)_**
 
-| ID | Name | Type | Description |
-| ---: | --- | :--- | :--- |
-| 1024 | **slpf** | slpf:Specifiers | Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01 |
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1024 | **slpf** | slpf:Specifiers | 1 | Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01 |
 
 **_Type: Args (Map)_**
 
@@ -106,7 +106,7 @@
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| OpenC2 | ArrayOf(Query-Item) ['min', 'max'] | A target used to query Actuator for its supported capabilities |
+| OpenC2 | ArrayOf(Query-Item) ['max', 'min'] | A target used to query Actuator for its supported capabilities |
 
 **_Type: Command-ID_**
 
@@ -192,9 +192,9 @@
 
 **_Type: slpf:Target (Choice)_**
 
-| ID | Name | Type | Description |
-| ---: | --- | :--- | :--- |
-| 1 | **rule_number** | slpf:Rule-ID | Uniquely identifies a rule associated with a previously-issued deny or allow. |
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **rule_number** | slpf:Rule-ID | 1 | Uniquely identifies a rule associated with a previously-issued deny or allow. |
 
 **_Type: slpf:Args (Map)_**
 
@@ -281,27 +281,27 @@
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |
 | 1 | jadn:Identifier | 1 | tname -- Name of this datatype |
-| 2 | jadn:JADN-Type | 1 | btype -- Base type.  Enumerated value derived from list of JADN data types |
+| 2 | jadn:JADN-Type.* | 1 | btype -- Base type.  Enumerated value derived from list of JADN data types |
 | 3 | jadn:Option | 1..n | opts -- Type options |
 | 4 | String | 1 | desc -- Description of this data type |
 | 5 | jadn:JADN-Type | 1..n | fields -- List of fields for compound types.  Not present for primitive types |
 
 **_Type: jadn:JADN-Type (Choice)_**
 
-| ID | Name | Type | Description |
-| ---: | --- | :--- | :--- |
-| 1 | **Binary** | Null | Octet (binary) string |
-| 2 | **Boolean** | Null | True or False |
-| 3 | **Integer** | Null | Whole number |
-| 4 | **Number** | Null | Real number |
-| 5 | **Null** | Null | Nothing |
-| 6 | **String** | Null | Character (text) string |
-| 7 | **Array** | jadn:FullField | Ordered list of unnamed fields |
-| 8 | **ArrayOf** | Null | Ordered list of fields of a specified type |
-| 9 | **Choice** | jadn:FullField | One of a set of named fields |
-| 10 | **Enumerated** | jadn:EnumField | One of a set of id:name pairs |
-| 11 | **Map** | jadn:FullField | Unordered set of named fields |
-| 12 | **Record** | jadn:FullField | Ordered list of named fields |
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **Binary** | Null | 1 | Octet (binary) string |
+| 2 | **Boolean** | Null | 1 | True or False |
+| 3 | **Integer** | Null | 1 | Whole number |
+| 4 | **Number** | Null | 1 | Real number |
+| 5 | **Null** | Null | 1 | Nothing |
+| 6 | **String** | Null | 1 | Character (text) string |
+| 7 | **Array** | jadn:FullField | 1..n | Ordered list of unnamed fields |
+| 8 | **ArrayOf** | Null | 1 | Ordered list of fields of a specified type |
+| 9 | **Choice** | jadn:FullField | 1..n | One of a set of named fields |
+| 10 | **Enumerated** | jadn:EnumField | 1..n | One of a set of id:name pairs |
+| 11 | **Map** | jadn:FullField | 1..n | Unordered set of named fields |
+| 12 | **Record** | jadn:FullField | 1..n | Ordered list of named fields |
 
 **_Type: jadn:EnumField (Array)_**
 
@@ -343,7 +343,7 @@
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| jadn:Options | ArrayOf(jadn:Option) ['min', 'max'] | Options list may be empty but may not be omitted |
+| jadn:Options | ArrayOf(jadn:Option) ['max', 'min'] | Options list may be empty but may not be omitted |
 
 **_Type: jadn:Option_**
 

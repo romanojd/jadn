@@ -1,4 +1,4 @@
-<!-- Generated from schema\slpf-wd03.jadn, Mon Sep 17 15:31:23 2018-->
+<!-- Generated from schema\slpf-wd03.jadn, Wed Sep 19 17:56:45 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -10,9 +10,9 @@
 
 **_Type: Target (Choice)_**
 
-| ID | Name | Type | Description |
-| ---: | --- | :--- | :--- |
-| 1 | **rule_number** | Rule-ID | Uniquely identifies a rule associated with a previously-issued deny or allow. |
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **rule_number** | Rule-ID | 1 | Uniquely identifies a rule associated with a previously-issued deny or allow. |
 
 **_Type: Args (Map)_**
 

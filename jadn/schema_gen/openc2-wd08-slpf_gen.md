@@ -1,4 +1,4 @@
-<!-- Generated from schema\openc2-wd08-slpf.jadn, Mon Sep 17 15:31:23 2018-->
+<!-- Generated from schema\openc2-wd08-slpf.jadn, Wed Sep 19 17:56:44 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -31,19 +31,19 @@
 
 **_Type: Target (Choice)_**
 
-| ID | Name | Type | Description |
-| ---: | --- | :--- | :--- |
-| 10 | **file** | File | Properties of a file |
-| 11 | **ip_addr** | IP-Addr | The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation |
-| 15 | **ip_connection** | IP-Connection | A network connection that originates from a source and is addressed to a destination |
-| 16 | **openc2** | OpenC2 | A set of items used with the query action to determine an actuator's capabilities |
-| 1024 | **slpf** | slpf:Target | Targets defined in the Stateless Packet Filter profile |
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 10 | **file** | File | 1 | Properties of a file |
+| 11 | **ip_addr** | IP-Addr | 1 | The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation |
+| 15 | **ip_connection** | IP-Connection | 1 | A network connection that originates from a source and is addressed to a destination |
+| 16 | **openc2** | OpenC2 | 1 | A set of items used with the query action to determine an actuator's capabilities |
+| 1024 | **slpf** | slpf:Target | 1 | Targets defined in the Stateless Packet Filter profile |
 
 **_Type: Actuator (Choice)_**
 
-| ID | Name | Type | Description |
-| ---: | --- | :--- | :--- |
-| 1024 | **slpf** | slpf:Specifiers | Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01 |
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1024 | **slpf** | slpf:Specifiers | 1 | Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01 |
 
 **_Type: Args (Map)_**
 
@@ -107,7 +107,7 @@
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| OpenC2 | ArrayOf(Query-Item) ['min', 'max'] | A target used to query Actuator for its supported capabilities |
+| OpenC2 | ArrayOf(Query-Item) ['max', 'min'] | A target used to query Actuator for its supported capabilities |
 
 **_Type: Command-ID_**
 

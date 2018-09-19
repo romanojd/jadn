@@ -1,9 +1,9 @@
-<!-- Generated from schema\slpf-wd03.jadn, Mon Sep 17 15:31:23 2018-->
+<!-- Generated from schema\slpf-wd03.jadn, Wed Sep 19 17:56:45 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="theme.css">
+<link rel="stylesheet" type="text/css" href="../../../schema_out/theme.css">
 <title>oasis-open.org/openc2/v1.0/ap-slpf v.wd03</title>
 </head>
 <body>
@@ -15,9 +15,8 @@
 <tr><td class="h">description:</td><td class="s">Data definitions for Stateless Packet Filtering (SLPF) functions</td></tr>
 <tr><td class="h">exports:</td><td class="s">Target, Specifiers, Args, Results</td></tr>
 </table>
-<h2>Types</h2>
-<table><caption>Target (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="b">rule_number</td><td class="s">Rule-ID</td><td class="s">Uniquely identifies a rule associated with a previously-issued deny or allow.</td></tr>
+<table><caption>Target (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">1</td><td class="b">rule_number</td><td class="s">Rule-ID</td><td class="n">1</td><td class="s">Uniquely identifies a rule associated with a previously-issued deny or allow.</td></tr>
 </table>
 <table><caption>Args (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="b">drop_process</td><td class="s">Drop-Process</td><td class="n">0..1</td><td class="s">Specifies how to handle denied packets</td></tr>

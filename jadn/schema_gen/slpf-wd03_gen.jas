@@ -1,11 +1,11 @@
--- Generated from schema\slpf-wd03.jadn, Mon Sep 17 15:31:23 2018
+-- Generated from schema\slpf-wd03.jadn, Wed Sep 19 17:56:45 2018
 
 /*
 module:        oasis-open.org/openc2/v1.0/ap-slpf
 title:         Stateless Packet Filtering
 description:   Data definitions for Stateless Packet Filtering (SLPF) functions
-exports:       ['Target', 'Specifiers', 'Args', 'Results']
 patch:         wd03
+exports:       ['Target', 'Specifiers', 'Args', 'Results']
 */
 
 Target ::= CHOICE {    -- SLPF targets

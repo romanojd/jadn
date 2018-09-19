@@ -42,7 +42,7 @@ PRIMITIVE_TYPES = (
 
 STRUCTURE_TYPES = (
     'Array',
-    'ArrayOf',  # Special case: instance is a structure but type definition has no fields
+    'ArrayOf',          # Special case: instance is a structure but type definition has no fields
     'Choice',
     'Enumerated',
     'Map',

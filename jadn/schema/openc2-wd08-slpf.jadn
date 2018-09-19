@@ -133,6 +133,6 @@
 
   ["ActionTargets", "Array", [], "", [
     [1, "action", "Action", [], "An action supported by this actuator"],
-    [2, "targets", "Target.*", ["]0"], "List of targets applicable to this action"]]
+    [2, "targets", "Target", ["]0", "*"], "List of targets applicable to this action"]]
   ]]
 }

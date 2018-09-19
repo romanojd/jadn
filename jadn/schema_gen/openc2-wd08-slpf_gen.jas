@@ -1,12 +1,12 @@
--- Generated from schema\openc2-wd08-slpf.jadn, Mon Sep 17 15:31:23 2018
+-- Generated from schema\openc2-wd08-slpf.jadn, Wed Sep 19 17:56:44 2018
 
 /*
 module:        oasis-open.org/openc2/v1.0/openc2-lang
 title:         OpenC2 Language Objects
 description:   OpenC2 Language content used by Stateless Packet Filters.
-imports:       [['slpf', 'oasis-open.org/openc2/v1.0/ap-slpf'], ['jadn', 'oasis-open.org/openc2/v1.0/jadn']]
 exports:       ['OpenC2-Command', 'OpenC2-Response']
 patch:         wd08-slpf
+imports:       [['slpf', 'oasis-open.org/openc2/v1.0/ap-slpf'], ['jadn', 'oasis-open.org/openc2/v1.0/jadn']]
 */
 
 OpenC2-Command ::= RECORD {
@@ -130,5 +130,5 @@ Results ::= MAP {
 
 ActionTargets ::= ARRAY {
     action       [1] Action,    -- An action supported by this actuator
-    targets      [2] Target.*     -- List of targets applicable to this action ***{'max': 0}
+    targets      [2] Target     -- List of targets applicable to this action ***{'max': 0, 'rtype': ''}
 }

@@ -1,9 +1,9 @@
-<!-- Generated from schema\openc2-wd08-slpf.jadn, Mon Sep 17 15:31:23 2018-->
+<!-- Generated from schema\openc2-wd08-slpf.jadn, Wed Sep 19 17:56:45 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="theme.css">
+<link rel="stylesheet" type="text/css" href="../../../schema_out/theme.css">
 <title>oasis-open.org/openc2/v1.0/openc2-lang v.wd08-slpf</title>
 </head>
 <body>
@@ -17,7 +17,6 @@
 <tr><td class="h">imports:</td><td class="s"><span class="b">slpf</span>:&nbsp;oasis-open.org/openc2/v1.0/ap-slpf<br>
 <span class="b">jadn</span>:&nbsp;oasis-open.org/openc2/v1.0/jadn</td></tr>
 </table>
-<h2>Types</h2>
 <table><caption>OpenC2-Command (Record)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="b">action</td><td class="s">Action</td><td class="n">1</td><td class="s">The task or activity to be performed (i.e., the 'verb').</td></tr>
 <tr><td class="n">2</td><td class="b">target</td><td class="s">Target</td><td class="n">1</td><td class="s">The object of the action. The action is performed on the target.</td></tr>
@@ -32,15 +31,15 @@
 <tr><td class="n">16</td><td class="b">update</td><td class="s">Instruct the actuator to update its configuration by retrieving and processing a configuration file and update.</td></tr>
 <tr><td class="n">20</td><td class="b">delete</td><td class="s">Remove a rule.</td></tr>
 </table>
-<table><caption>Target (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="n">10</td><td class="b">file</td><td class="s">File</td><td class="s">Properties of a file</td></tr>
-<tr><td class="n">11</td><td class="b">ip_addr</td><td class="s">IP-Addr</td><td class="s">The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation</td></tr>
-<tr><td class="n">15</td><td class="b">ip_connection</td><td class="s">IP-Connection</td><td class="s">A network connection that originates from a source and is addressed to a destination</td></tr>
-<tr><td class="n">16</td><td class="b">openc2</td><td class="s">OpenC2</td><td class="s">A set of items used with the query action to determine an actuator's capabilities</td></tr>
-<tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Target</td><td class="s">Targets defined in the Stateless Packet Filter profile</td></tr>
+<table><caption>Target (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">10</td><td class="b">file</td><td class="s">File</td><td class="n">1</td><td class="s">Properties of a file</td></tr>
+<tr><td class="n">11</td><td class="b">ip_addr</td><td class="s">IP-Addr</td><td class="n">1</td><td class="s">The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation</td></tr>
+<tr><td class="n">15</td><td class="b">ip_connection</td><td class="s">IP-Connection</td><td class="n">1</td><td class="s">A network connection that originates from a source and is addressed to a destination</td></tr>
+<tr><td class="n">16</td><td class="b">openc2</td><td class="s">OpenC2</td><td class="n">1</td><td class="s">A set of items used with the query action to determine an actuator's capabilities</td></tr>
+<tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Target</td><td class="n">1</td><td class="s">Targets defined in the Stateless Packet Filter profile</td></tr>
 </table>
-<table><caption>Actuator (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Specifiers</td><td class="s">Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01</td></tr>
+<table><caption>Actuator (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Specifiers</td><td class="n">1</td><td class="s">Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01</td></tr>
 </table>
 <table><caption>Args (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="b">start_time</td><td class="s">Date-Time</td><td class="n">0..1</td><td class="s">The specific date/time to initiate the action</td></tr>
@@ -83,7 +82,7 @@
 <tr><td class="n">5</td><td class="b">protocol</td><td class="s">L4-Protocol</td><td class="n">0..1</td><td class="s">Protocol (IPv4) / Next Header (IPv6)</td></tr>
 </table>
 <table><caption>OpenC2</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="s">OpenC2</td><td class="s">ArrayOf(Query-Item) ['min', 'max']</td><td class="s">A target used to query Actuator for its supported capabilities</td></tr>
+<tr><td class="s">OpenC2</td><td class="s">ArrayOf(Query-Item) ['max', 'min']</td><td class="s">A target used to query Actuator for its supported capabilities</td></tr>
 </table>
 <table><caption>Command-ID</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">Command-ID</td><td class="s">String</td><td class="s">Uniquely identifies a particular command</td></tr>

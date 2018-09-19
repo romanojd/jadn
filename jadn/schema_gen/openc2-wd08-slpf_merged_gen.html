@@ -1,9 +1,9 @@
-<!-- Generated from schema\openc2-wd08-slpf_merged.jadn, Mon Sep 17 15:31:23 2018-->
+<!-- Generated from schema\openc2-wd08-slpf_merged.jadn, Wed Sep 19 17:56:45 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="theme.css">
+<link rel="stylesheet" type="text/css" href="../../../schema_out/theme.css">
 <title>oasis-open.org/openc2/v1.0/openc2-lang v.wd08-slpf_merged</title>
 </head>
 <body>
@@ -15,7 +15,6 @@
 <tr><td class="h">description:</td><td class="s">OpenC2 Language content used by Stateless Packet Filters.</td></tr>
 <tr><td class="h">exports:</td><td class="s">OpenC2-Command, OpenC2-Response</td></tr>
 </table>
-<h2>Types</h2>
 <table><caption>OpenC2-Command (Record)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="b">action</td><td class="s">Action</td><td class="n">1</td><td class="s">The task or activity to be performed (i.e., the 'verb').</td></tr>
 <tr><td class="n">2</td><td class="b">target</td><td class="s">Target</td><td class="n">1</td><td class="s">The object of the action. The action is performed on the target.</td></tr>
@@ -30,15 +29,15 @@
 <tr><td class="n">16</td><td class="b">update</td><td class="s">Instruct the actuator to update its configuration by retrieving and processing a configuration file and update.</td></tr>
 <tr><td class="n">20</td><td class="b">delete</td><td class="s">Remove a rule.</td></tr>
 </table>
-<table><caption>Target (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="n">10</td><td class="b">file</td><td class="s">File</td><td class="s">Properties of a file</td></tr>
-<tr><td class="n">11</td><td class="b">ip_addr</td><td class="s">IP-Addr</td><td class="s">The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation</td></tr>
-<tr><td class="n">15</td><td class="b">ip_connection</td><td class="s">IP-Connection</td><td class="s">A network connection that originates from a source and is addressed to a destination</td></tr>
-<tr><td class="n">16</td><td class="b">openc2</td><td class="s">OpenC2</td><td class="s">A set of items used with the query action to determine an actuator's capabilities</td></tr>
-<tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Target</td><td class="s">Targets defined in the Stateless Packet Filter profile</td></tr>
+<table><caption>Target (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">10</td><td class="b">file</td><td class="s">File</td><td class="n">1</td><td class="s">Properties of a file</td></tr>
+<tr><td class="n">11</td><td class="b">ip_addr</td><td class="s">IP-Addr</td><td class="n">1</td><td class="s">The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation</td></tr>
+<tr><td class="n">15</td><td class="b">ip_connection</td><td class="s">IP-Connection</td><td class="n">1</td><td class="s">A network connection that originates from a source and is addressed to a destination</td></tr>
+<tr><td class="n">16</td><td class="b">openc2</td><td class="s">OpenC2</td><td class="n">1</td><td class="s">A set of items used with the query action to determine an actuator's capabilities</td></tr>
+<tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Target</td><td class="n">1</td><td class="s">Targets defined in the Stateless Packet Filter profile</td></tr>
 </table>
-<table><caption>Actuator (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Specifiers</td><td class="s">Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01</td></tr>
+<table><caption>Actuator (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Specifiers</td><td class="n">1</td><td class="s">Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01</td></tr>
 </table>
 <table><caption>Args (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="b">start_time</td><td class="s">Date-Time</td><td class="n">0..1</td><td class="s">The specific date/time to initiate the action</td></tr>
@@ -81,7 +80,7 @@
 <tr><td class="n">5</td><td class="b">protocol</td><td class="s">L4-Protocol</td><td class="n">0..1</td><td class="s">Protocol (IPv4) / Next Header (IPv6)</td></tr>
 </table>
 <table><caption>OpenC2</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="s">OpenC2</td><td class="s">ArrayOf(Query-Item) ['min', 'max']</td><td class="s">A target used to query Actuator for its supported capabilities</td></tr>
+<tr><td class="s">OpenC2</td><td class="s">ArrayOf(Query-Item) ['max', 'min']</td><td class="s">A target used to query Actuator for its supported capabilities</td></tr>
 </table>
 <table><caption>Command-ID</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">Command-ID</td><td class="s">String</td><td class="s">Uniquely identifies a particular command</td></tr>
@@ -132,8 +131,8 @@
 <tr><td class="n">1</td><td class="s">Action</td><td class="n">1</td><td class="s">action -- An action supported by this actuator</td></tr>
 <tr><td class="n">2</td><td class="s">Target.*</td><td class="n">1..n</td><td class="s">targets -- List of targets applicable to this action</td></tr>
 </table>
-<table><caption>slpf:Target (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="b">rule_number</td><td class="s">slpf:Rule-ID</td><td class="s">Uniquely identifies a rule associated with a previously-issued deny or allow.</td></tr>
+<table><caption>slpf:Target (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">1</td><td class="b">rule_number</td><td class="s">slpf:Rule-ID</td><td class="n">1</td><td class="s">Uniquely identifies a rule associated with a previously-issued deny or allow.</td></tr>
 </table>
 <table><caption>slpf:Args (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="b">drop_process</td><td class="s">slpf:Drop-Process</td><td class="n">0..1</td><td class="s">Specifies how to handle denied packets</td></tr>
@@ -187,24 +186,24 @@
 </table>
 <table><caption>jadn:Type (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">jadn:Identifier</td><td class="n">1</td><td class="s">tname -- Name of this datatype</td></tr>
-<tr><td class="n">2</td><td class="s">jadn:JADN-Type</td><td class="n">1</td><td class="s">btype -- Base type.  Enumerated value derived from list of JADN data types</td></tr>
+<tr><td class="n">2</td><td class="s">jadn:JADN-Type.*</td><td class="n">1</td><td class="s">btype -- Base type.  Enumerated value derived from list of JADN data types</td></tr>
 <tr><td class="n">3</td><td class="s">jadn:Option</td><td class="n">1..n</td><td class="s">opts -- Type options</td></tr>
 <tr><td class="n">4</td><td class="s">String</td><td class="n">1</td><td class="s">desc -- Description of this data type</td></tr>
 <tr><td class="n">5</td><td class="s">jadn:JADN-Type</td><td class="n">1..n</td><td class="s">fields -- List of fields for compound types.  Not present for primitive types</td></tr>
 </table>
-<table><caption>jadn:JADN-Type (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="b">Binary</td><td class="s">Null</td><td class="s">Octet (binary) string</td></tr>
-<tr><td class="n">2</td><td class="b">Boolean</td><td class="s">Null</td><td class="s">True or False</td></tr>
-<tr><td class="n">3</td><td class="b">Integer</td><td class="s">Null</td><td class="s">Whole number</td></tr>
-<tr><td class="n">4</td><td class="b">Number</td><td class="s">Null</td><td class="s">Real number</td></tr>
-<tr><td class="n">5</td><td class="b">Null</td><td class="s">Null</td><td class="s">Nothing</td></tr>
-<tr><td class="n">6</td><td class="b">String</td><td class="s">Null</td><td class="s">Character (text) string</td></tr>
-<tr><td class="n">7</td><td class="b">Array</td><td class="s">jadn:FullField</td><td class="s">Ordered list of unnamed fields</td></tr>
-<tr><td class="n">8</td><td class="b">ArrayOf</td><td class="s">Null</td><td class="s">Ordered list of fields of a specified type</td></tr>
-<tr><td class="n">9</td><td class="b">Choice</td><td class="s">jadn:FullField</td><td class="s">One of a set of named fields</td></tr>
-<tr><td class="n">10</td><td class="b">Enumerated</td><td class="s">jadn:EnumField</td><td class="s">One of a set of id:name pairs</td></tr>
-<tr><td class="n">11</td><td class="b">Map</td><td class="s">jadn:FullField</td><td class="s">Unordered set of named fields</td></tr>
-<tr><td class="n">12</td><td class="b">Record</td><td class="s">jadn:FullField</td><td class="s">Ordered list of named fields</td></tr>
+<table><caption>jadn:JADN-Type (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">1</td><td class="b">Binary</td><td class="s">Null</td><td class="n">1</td><td class="s">Octet (binary) string</td></tr>
+<tr><td class="n">2</td><td class="b">Boolean</td><td class="s">Null</td><td class="n">1</td><td class="s">True or False</td></tr>
+<tr><td class="n">3</td><td class="b">Integer</td><td class="s">Null</td><td class="n">1</td><td class="s">Whole number</td></tr>
+<tr><td class="n">4</td><td class="b">Number</td><td class="s">Null</td><td class="n">1</td><td class="s">Real number</td></tr>
+<tr><td class="n">5</td><td class="b">Null</td><td class="s">Null</td><td class="n">1</td><td class="s">Nothing</td></tr>
+<tr><td class="n">6</td><td class="b">String</td><td class="s">Null</td><td class="n">1</td><td class="s">Character (text) string</td></tr>
+<tr><td class="n">7</td><td class="b">Array</td><td class="s">jadn:FullField</td><td class="n">1..n</td><td class="s">Ordered list of unnamed fields</td></tr>
+<tr><td class="n">8</td><td class="b">ArrayOf</td><td class="s">Null</td><td class="n">1</td><td class="s">Ordered list of fields of a specified type</td></tr>
+<tr><td class="n">9</td><td class="b">Choice</td><td class="s">jadn:FullField</td><td class="n">1..n</td><td class="s">One of a set of named fields</td></tr>
+<tr><td class="n">10</td><td class="b">Enumerated</td><td class="s">jadn:EnumField</td><td class="n">1..n</td><td class="s">One of a set of id:name pairs</td></tr>
+<tr><td class="n">11</td><td class="b">Map</td><td class="s">jadn:FullField</td><td class="n">1..n</td><td class="s">Unordered set of named fields</td></tr>
+<tr><td class="n">12</td><td class="b">Record</td><td class="s">jadn:FullField</td><td class="n">1..n</td><td class="s">Ordered list of named fields</td></tr>
 </table>
 <table><caption>jadn:EnumField (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">Integer</td><td class="n">1</td><td class="s">Item ID</td></tr>
@@ -228,7 +227,7 @@
 <tr><td class="s">jadn:Uname</td><td class="s">String</td><td class="s">Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes</td></tr>
 </table>
 <table><caption>jadn:Options</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="s">jadn:Options</td><td class="s">ArrayOf(jadn:Option) ['min', 'max']</td><td class="s">Options list may be empty but may not be omitted</td></tr>
+<tr><td class="s">jadn:Options</td><td class="s">ArrayOf(jadn:Option) ['max', 'min']</td><td class="s">Options list may be empty but may not be omitted</td></tr>
 </table>
 <table><caption>jadn:Option</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">jadn:Option</td><td class="s">String</td><td class="s">Option string: 1st char = option id</td></tr>

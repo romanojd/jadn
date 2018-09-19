@@ -1,4 +1,4 @@
-<!-- Generated from schema\openc2-wd08.jadn, Mon Sep 17 15:31:23 2018-->
+<!-- Generated from schema\openc2-wd08.jadn, Wed Sep 19 17:56:45 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -46,34 +46,34 @@
 
 **_Type: Target (Choice)_**
 
-| ID | Name | Type | Description |
-| ---: | --- | :--- | :--- |
-| 1 | **artifact** | Artifact | An array of bytes representing a file-like object or a link to that object. |
-| 2 | **command** | Command-ID | A reference to a previously issued OpenC2 command. |
-| 3 | **device** | Device | The properties of a hardware device. |
-| 4 | **directory** | Directory | The properties common to a file system directory. |
-| 7 | **domain_name** | Domain-Name | A network domain name. |
-| 8 | **email_addr** | Email-Addr | A single email address. |
-| 9 | **email_message** | Email-Message | An instance of an email message, corresponding to the internet message format described in RFC 5322 and related RFCs. |
-| 10 | **file** | File | Properties of a file. |
-| 11 | **ip_addr** | IP-Addr | The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation. |
-| 13 | **mac_addr** | Mac-Addr | A single Media Access Control (MAC) address. |
-| 15 | **ip_connection** | IP-Connection | A network connection that originates from a source and is addressed to a destination. Source and destination addresses may be either IPv4 or IPv6; both should be the same version. |
-| 16 | **openc2** | OpenC2 | A set of items used with the query action to determine an actuator's capabilities |
-| 17 | **process** | Process | Common properties of an instance of a computer program as executed on an operating system. |
-| 25 | **property** | Property | Data attribute associated with an actuator |
-| 18 | **software** | Software | High-level properties associated with software, including software products. |
-| 19 | **uri** | URI | A uniform resource identifier (URI). |
-| 23 | **windows_registry_key** | Windows-Registry-Key | The properties of a Windows registry key. |
-| 1000 | **extension** | PE-Target | Targets defined in a Private Enterprise extension profile |
-| 1024 | **slpf** | slpf:Target | Targets defined in the Stateless Packet Filter profile. |
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **artifact** | Artifact | 1 | An array of bytes representing a file-like object or a link to that object. |
+| 2 | **command** | Command-ID | 1 | A reference to a previously issued OpenC2 command. |
+| 3 | **device** | Device | 1 | The properties of a hardware device. |
+| 4 | **directory** | Directory | 1 | The properties common to a file system directory. |
+| 7 | **domain_name** | Domain-Name | 1 | A network domain name. |
+| 8 | **email_addr** | Email-Addr | 1 | A single email address. |
+| 9 | **email_message** | Email-Message | 1 | An instance of an email message, corresponding to the internet message format described in RFC 5322 and related RFCs. |
+| 10 | **file** | File | 1 | Properties of a file. |
+| 11 | **ip_addr** | IP-Addr | 1 | The representation of one or more IP addresses (either version 4 or version 6). |
+| 13 | **mac_addr** | Mac-Addr | 1 | A single Media Access Control (MAC) address. |
+| 15 | **ip_connection** | IP-Connection | 1 | A network connection that originates from a source and is addressed to a destination. Source and destination addresses may be either IPv4 or IPv6; both should be the same version. |
+| 16 | **openc2** | OpenC2 | 1 | A set of items used with the query action to determine an actuator's capabilities |
+| 17 | **process** | Process | 1 | Common properties of an instance of a computer program as executed on an operating system. |
+| 25 | **property** | Property | 1 | Data attribute associated with an actuator |
+| 18 | **software** | Software | 1 | High-level properties associated with software, including software products. |
+| 19 | **uri** | URI | 1 | A uniform resource identifier (URI). |
+| 23 | **windows_registry_key** | Windows-Registry-Key | 1 | The properties of a Windows registry key. |
+| 1000 | **extension** | PE-Target | 1 | Targets defined in a Private Enterprise extension profile |
+| 1024 | **slpf** | slpf:Target | 1 | Targets defined in the Stateless Packet Filter profile. |
 
 **_Type: Actuator (Choice)_**
 
-| ID | Name | Type | Description |
-| ---: | --- | :--- | :--- |
-| 1000 | **extension** | PE-Specifiers | Specifiers defined in a Private Enterprise extension profile. |
-| 1024 | **slpf** | slpf:Specifiers | Actuator specifiers and options as defined in the Stateless Packet Filter profile. |
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1000 | **extension** | PE-Specifiers | 1 | Specifiers defined in a Private Enterprise extension profile. |
+| 1024 | **slpf** | slpf:Specifiers | 1 | Actuator specifiers and options as defined in the Stateless Packet Filter profile. |
 
 **_Type: Args (Map)_**
 
@@ -93,9 +93,7 @@
 | 1 | **status** | Status-Code | 1 | An integer status code |
 | 2 | **status_text** | String | 0..1 | A free-form human-readable description of the response status |
 | 3 | **\*** | Results | 0..1 | Data or extended status information |
-| 4 | **id** | Command-ID | 0..1 | ID of the response |
-| 5 | **id_ref** | Command-ID | 0..1 | ID of the command that induced this response |
-| 6 | **actuator_id** | String | 0..1 | ID of the actuator sending the response |
+| 4 | **id_ref** | Command-ID | 0..1 | ID of the command that induced this response |
 
 **_Type: Status-Code (Enumerated.ID)_**
 
@@ -112,15 +110,15 @@
 
 **_Type: PE-Target (Choice.ID)_**
 
-| ID | Type | Description |
-| ---: | :--- | :--- |
-| 32473 | 32473:Target | Example -- Targets defined in the Example Inc. extension profile |
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+| 32473 | 32473:Target | 1 | Example -- Targets defined in the Example Inc. extension profile |
 
 **_Type: PE-Specifiers (Choice.ID)_**
 
-| ID | Type | Description |
-| ---: | :--- | :--- |
-| 32473 | 32473:Specifiers | Example -- Specifiers defined in the Example Inc. extension profile |
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+| 32473 | 32473:Specifiers | 1 | Example -- Specifiers defined in the Example Inc. extension profile |
 
 **_Type: PE-Args (Map.ID)_**
 
@@ -190,7 +188,7 @@
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| OpenC2 | ArrayOf(Query-Item) ['min', 'max'] | A target used to query Actuator for its supported capabilities |
+| OpenC2 | ArrayOf(Query-Item) ['max', 'min'] | A target used to query Actuator for its supported capabilities |
 
 **_Type: Process (Map)_**
 
@@ -259,10 +257,10 @@
 
 **_Type: Payload (Choice)_**
 
-| ID | Name | Type | Description |
-| ---: | --- | :--- | :--- |
-| 1 | **payload_bin** | Binary | Specifies the data contained in the artifact. |
-| 2 | **url** | URI | MUST be a valid URL that resolves to the un-encoded content |
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **payload_bin** | Binary | 1 | Specifies the data contained in the artifact. |
+| 2 | **url** | URI | 1 | MUST be a valid URL that resolves to the un-encoded content |
 
 **_Type: Port_**
 

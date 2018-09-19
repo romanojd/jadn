@@ -368,10 +368,10 @@ wtab = {
     'jsonschema': (doc_begin_j, doc_end_j, sect_j, meta_begin_j, meta_item_j, meta_end_j, type_begin_j, type_item_j, type_end_j)
 }
 
-DEFAULT_SECTION = (3, 2)
 DEFAULT_FORMAT = 'html'
 
-def table_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
+
+def table_dumps(jadn, form=DEFAULT_FORMAT):
     """
     Translate JADN schema into other formats
 
@@ -417,15 +417,10 @@ def table_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
             text += meta_item(h, mh)
     text += meta_end()
 
-    sub = 1
-    sec = list(section)
-    text += sect(sec, 'Types')
     for td in jadn['types']:
         to = topts_s2d(td[TOPTS])
         tor = set(to)
         tos = ' ' + str([str(k) for k in tor]) if tor else ''
-        # text += sect(sec + [sub], td[TNAME])
-        # text += td[TDESC] + '\n'
         if td[TTYPE] in PRIMITIVE_TYPES:
             cls = ['s', 's', 's']
             text += type_begin(td[TNAME], None, None, ['Name', 'Type', 'Description'], cls)
@@ -448,36 +443,27 @@ def table_dumps(jadn, form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
                 text += _tbegin(to, td, ['ID', 'Name', 'Description'], cls)
                 for fd in td[FIELDS]:
                     text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[EDESC]], cls)
-        elif td[TTYPE] == 'Array':
-            cls = ['n', 's', 'n', 's']
-            text += _tbegin(to, td, ['ID', 'Type', '#', 'Description'], cls)
-            cls = ['n', 's', 's', 'n', 's']     # Don't print ".ID" in type name but display fields as compact
-            for fd in td[FIELDS]:
-                fo = {'min': 1, 'max': 1}
-                fo.update(fopts_s2d(fd[FOPTS]))
-                to.update({'compact': True})
-                text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[FTYPE], cardinality(fo['min'], fo['max']), fd[FDESC]], cls)
-        elif td[TTYPE] == 'Choice':            # same as Map/Record but without cardinality column
-            cls = ['n', 'b', 's', 's']
-            text += _tbegin(to, td, ['ID', 'Name', 'Type', 'Description'], cls)
-            for fd in td[FIELDS]:
-                text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[FTYPE], fd[FDESC]], cls)
-        else:                                   # Map, Record
+        else:                                   # Array, Choice, Map, Record
             cls = ['n', 'b', 's', 'n', 's']
-            text += _tbegin(to, td, ['ID', 'Name', 'Type', '#', 'Description'], cls)
+            if td[TTYPE] == 'Array':
+                cls2 = ['n', 's', 'n', 's']      # Don't print ".ID" in type name but display fields as compact
+                text += _tbegin(to, td, ['ID', 'Type', '#', 'Description'], cls2)
+                to.update({'compact': True})
+            else:
+                text += _tbegin(to, td, ['ID', 'Name', 'Type', '#', 'Description'], cls)
             for fd in td[FIELDS]:
                 fo = {'min': 1, 'max': 1}
                 fo.update(fopts_s2d(fd[FOPTS]))
-                text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[FTYPE], cardinality(fo['min'], fo['max']), fd[FDESC]], cls)
-        sub += 1
+                rtype = '.*' if 'rtype' in fo else ''
+                text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[FTYPE] + rtype, cardinality(fo['min'], fo['max']), fd[FDESC]], cls)
         text += type_end()
 
     text += doc_end()
     return text
 
 
-def table_dump(jadn, fname, source='', form=DEFAULT_FORMAT, section=DEFAULT_SECTION):
+def table_dump(jadn, fname, source='', form=DEFAULT_FORMAT):
     with open(fname, 'w') as f:
         if source:
             f.write('<!-- Generated from ' + source + ', ' + datetime.ctime(datetime.now()) + '-->\n')
-        f.write(table_dumps(jadn, form, section))
+        f.write(table_dumps(jadn, form))

@@ -133,7 +133,7 @@
 
   ["ActionTargets", "Array", [], "", [
     [1, "action", "Action", [], ""],
-    [2, "targets", "Target.*", ["]0"], ""]]
+    [2, "targets", "Target", ["]0", "*"], ""]]
   ]]
 
 }

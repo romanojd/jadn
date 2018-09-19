@@ -1,9 +1,9 @@
-<!-- Generated from schema\jadn.jadn, Mon Sep 17 15:31:23 2018-->
+<!-- Generated from schema\jadn.jadn, Wed Sep 19 17:56:44 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="theme.css">
+<link rel="stylesheet" type="text/css" href="../../../schema_out/theme.css">
 <title>oasis-open.org/openc2/v1.0/jadn v.wd01</title>
 </head>
 <body>
@@ -15,7 +15,6 @@
 <tr><td class="h">description:</td><td class="s">Syntax of a JSON Abstract Data Notation (JADN) module.</td></tr>
 <tr><td class="h">exports:</td><td class="s">Schema, Uname</td></tr>
 </table>
-<h2>Types</h2>
 <table><caption>Schema (Record)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="b">meta</td><td class="s">Meta</td><td class="n">1</td><td class="s">Information about this schema module</td></tr>
 <tr><td class="n">2</td><td class="b">types</td><td class="s">Type</td><td class="n">1..n</td><td class="s">Types defined in this schema module</td></tr>
@@ -41,24 +40,24 @@
 </table>
 <table><caption>Type (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">Identifier</td><td class="n">1</td><td class="s">tname -- Name of this datatype</td></tr>
-<tr><td class="n">2</td><td class="s">JADN-Type</td><td class="n">1</td><td class="s">btype -- Base type.  Enumerated value derived from list of JADN data types</td></tr>
+<tr><td class="n">2</td><td class="s">JADN-Type.*</td><td class="n">1</td><td class="s">btype -- Base type.  Enumerated value derived from list of JADN data types</td></tr>
 <tr><td class="n">3</td><td class="s">Option</td><td class="n">1..n</td><td class="s">opts -- Type options</td></tr>
 <tr><td class="n">4</td><td class="s">String</td><td class="n">1</td><td class="s">desc -- Description of this data type</td></tr>
 <tr><td class="n">5</td><td class="s">JADN-Type</td><td class="n">1..n</td><td class="s">fields -- List of fields for compound types.  Not present for primitive types</td></tr>
 </table>
-<table><caption>JADN-Type (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="n">1</td><td class="b">Binary</td><td class="s">Null</td><td class="s">Octet (binary) string</td></tr>
-<tr><td class="n">2</td><td class="b">Boolean</td><td class="s">Null</td><td class="s">True or False</td></tr>
-<tr><td class="n">3</td><td class="b">Integer</td><td class="s">Null</td><td class="s">Whole number</td></tr>
-<tr><td class="n">4</td><td class="b">Number</td><td class="s">Null</td><td class="s">Real number</td></tr>
-<tr><td class="n">5</td><td class="b">Null</td><td class="s">Null</td><td class="s">Nothing</td></tr>
-<tr><td class="n">6</td><td class="b">String</td><td class="s">Null</td><td class="s">Character (text) string</td></tr>
-<tr><td class="n">7</td><td class="b">Array</td><td class="s">FullField</td><td class="s">Ordered list of unnamed fields</td></tr>
-<tr><td class="n">8</td><td class="b">ArrayOf</td><td class="s">Null</td><td class="s">Ordered list of fields of a specified type</td></tr>
-<tr><td class="n">9</td><td class="b">Choice</td><td class="s">FullField</td><td class="s">One of a set of named fields</td></tr>
-<tr><td class="n">10</td><td class="b">Enumerated</td><td class="s">EnumField</td><td class="s">One of a set of id:name pairs</td></tr>
-<tr><td class="n">11</td><td class="b">Map</td><td class="s">FullField</td><td class="s">Unordered set of named fields</td></tr>
-<tr><td class="n">12</td><td class="b">Record</td><td class="s">FullField</td><td class="s">Ordered list of named fields</td></tr>
+<table><caption>JADN-Type (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
+<tr><td class="n">1</td><td class="b">Binary</td><td class="s">Null</td><td class="n">1</td><td class="s">Octet (binary) string</td></tr>
+<tr><td class="n">2</td><td class="b">Boolean</td><td class="s">Null</td><td class="n">1</td><td class="s">True or False</td></tr>
+<tr><td class="n">3</td><td class="b">Integer</td><td class="s">Null</td><td class="n">1</td><td class="s">Whole number</td></tr>
+<tr><td class="n">4</td><td class="b">Number</td><td class="s">Null</td><td class="n">1</td><td class="s">Real number</td></tr>
+<tr><td class="n">5</td><td class="b">Null</td><td class="s">Null</td><td class="n">1</td><td class="s">Nothing</td></tr>
+<tr><td class="n">6</td><td class="b">String</td><td class="s">Null</td><td class="n">1</td><td class="s">Character (text) string</td></tr>
+<tr><td class="n">7</td><td class="b">Array</td><td class="s">FullField</td><td class="n">1..n</td><td class="s">Ordered list of unnamed fields</td></tr>
+<tr><td class="n">8</td><td class="b">ArrayOf</td><td class="s">Null</td><td class="n">1</td><td class="s">Ordered list of fields of a specified type</td></tr>
+<tr><td class="n">9</td><td class="b">Choice</td><td class="s">FullField</td><td class="n">1..n</td><td class="s">One of a set of named fields</td></tr>
+<tr><td class="n">10</td><td class="b">Enumerated</td><td class="s">EnumField</td><td class="n">1..n</td><td class="s">One of a set of id:name pairs</td></tr>
+<tr><td class="n">11</td><td class="b">Map</td><td class="s">FullField</td><td class="n">1..n</td><td class="s">Unordered set of named fields</td></tr>
+<tr><td class="n">12</td><td class="b">Record</td><td class="s">FullField</td><td class="n">1..n</td><td class="s">Ordered list of named fields</td></tr>
 </table>
 <table><caption>EnumField (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="s">Description</th></tr>
 <tr><td class="n">1</td><td class="s">Integer</td><td class="n">1</td><td class="s">Item ID</td></tr>
@@ -82,7 +81,7 @@
 <tr><td class="s">Uname</td><td class="s">String</td><td class="s">Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes</td></tr>
 </table>
 <table><caption>Options</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
-<tr><td class="s">Options</td><td class="s">ArrayOf(Option) ['min', 'max']</td><td class="s">Options list may be empty but may not be omitted</td></tr>
+<tr><td class="s">Options</td><td class="s">ArrayOf(Option) ['max', 'min']</td><td class="s">Options list may be empty but may not be omitted</td></tr>
 </table>
 <table><caption>Option</caption><tr><th class="s">Name</th><th class="s">Type</th><th class="s">Description</th></tr>
 <tr><td class="s">Option</td><td class="s">String</td><td class="s">Option string: 1st char = option id</td></tr>
