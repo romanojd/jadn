@@ -44,6 +44,12 @@ caption {
 
 .s {
     text-align: left;
+    min-width: 5em;
+}
+
+.d {
+    text-align: left;
+    min-width: 30em;
 }
 
 .b {

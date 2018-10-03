@@ -15,9 +15,8 @@
   ["OpenC2-Command", "Record", [], "", [
     [1, "action", "Action", [], ""],
     [2, "target", "Target", [], ""],
-    [3, "actuator", "Actuator", ["[0"], ""],
-    [4, "args", "Args", ["[0"], ""],
-    [5, "id", "Command-ID", ["[0"], ""]]
+    [3, "args", "Args", ["[0"], ""],
+    [4, "actuator", "Actuator", ["[0"], ""]]
   ],
 
   ["Action", "Enumerated", [], "", [
@@ -32,7 +31,7 @@
     [10, "file", "File", [], ""],
     [11, "ip_addr", "IP-Addr", [], ""],
     [15, "ip_connection", "IP-Connection", [], ""],
-    [16, "openc2", "OpenC2", [], ""],
+    [16, "features", "Features", [], ""],
     [1024, "slpf", "slpf:Target", [], ""]]
   ],
 
@@ -51,10 +50,7 @@
   ["OpenC2-Response", "Record", [], "", [
     [1, "status", "Status-Code", [], ""],
     [2, "status_text", "String", ["[0"], ""],
-    [3, "*", "Results", ["[0"], ""],
-    [4, "id", "Command-ID", ["[0"], ""],
-    [5, "id_ref", "Command-ID", ["[0"], ""],
-    [6, "actuator_id", "String", ["[0"], ""]]
+    [3, "results", "Results", ["[0"], ""]]
   ],
 
   ["Status-Code", "Enumerated", ["="], "", [
@@ -84,9 +80,9 @@
     [5, "protocol", "L4-Protocol", ["[0"], ""]]
   ],
 
-  ["OpenC2", "ArrayOf", ["*Query-Item", "[0", "]3"], ""],
+  ["Features", "ArrayOf", ["*Feature", "[0", "]5"], ""],
 
-  ["Command-ID", "String", [], ""],
+  ["Request-Id", "Binary", [], ""],
 
   ["Date-Time", "Integer", [], ""],
 
@@ -107,11 +103,12 @@
 
   ["Port", "Integer", ["@port"], ""],
 
-  ["Query-Item", "Enumerated", [], "", [
+  ["Feature", "Enumerated", [], "", [
     [1, "versions", ""],
     [2, "profiles", ""],
     [3, "schema", ""],
-    [4, "pairs", ""]]
+    [4, "pairs", ""],
+    [5, "rate_limit", ""]]
   ],
 
   ["Response-Type", "Enumerated", [], "", [
@@ -128,7 +125,8 @@
     [5, "profiles", "jadn:Uname", ["[0", "]0"], ""],
     [6, "schema", "jadn:Schema", ["[0"], ""],
     [7, "pairs", "ActionTargets", ["[0", "]0"], ""],
-    [1024, "slpf", "slpf:Results", ["[0", "]0"], ""]]
+    [8, "rate_limit", "Number", ["[0"], ""],
+    [1024, "slpf", "slpf:Results", ["[0"], ""]]
   ],
 
   ["ActionTargets", "Array", [], "", [

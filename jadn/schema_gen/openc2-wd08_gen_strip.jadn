@@ -15,9 +15,8 @@
   ["OpenC2-Command", "Record", [], "", [
     [1, "action", "Action", [], ""],
     [2, "target", "Target", [], ""],
-    [3, "actuator", "Actuator", ["[0"], ""],
-    [4, "args", "Args", ["[0"], ""],
-    [5, "id", "Command-ID", ["[0"], ""]]
+    [3, "args", "Args", ["[0"], ""],
+    [4, "actuator", "Actuator", ["[0"], ""]]
   ],
 
   ["Action", "Enumerated", [], "", [
@@ -45,7 +44,7 @@
 
   ["Target", "Choice", [], "", [
     [1, "artifact", "Artifact", [], ""],
-    [2, "command", "Command-ID", [], ""],
+    [2, "command", "Request-Id", [], ""],
     [3, "device", "Device", [], ""],
     [4, "directory", "Directory", [], ""],
     [7, "domain_name", "Domain-Name", [], ""],
@@ -55,18 +54,20 @@
     [11, "ip_addr", "IP-Addr", [], ""],
     [13, "mac_addr", "Mac-Addr", [], ""],
     [15, "ip_connection", "IP-Connection", [], ""],
-    [16, "openc2", "OpenC2", [], ""],
+    [16, "features", "Features", [], ""],
     [17, "process", "Process", [], ""],
     [25, "property", "Property", [], ""],
     [18, "software", "Software", [], ""],
     [19, "uri", "URI", [], ""],
     [23, "windows_registry_key", "Windows-Registry-Key", [], ""],
     [1000, "extension", "PE-Target", [], ""],
+    [1001, "extension_unr", "Unr-Target", [], ""],
     [1024, "slpf", "slpf:Target", [], ""]]
   ],
 
   ["Actuator", "Choice", [], "", [
     [1000, "extension", "PE-Specifiers", [], ""],
+    [1001, "extension_unr", "Unr-Specifiers", [], ""],
     [1024, "slpf", "slpf:Specifiers", [], ""]]
   ],
 
@@ -76,14 +77,14 @@
     [3, "duration", "Duration", ["[0"], ""],
     [4, "response_requested", "Response-Type", ["[0"], ""],
     [1000, "extension", "PE-Args", ["[0"], ""],
+    [1001, "extension_unr", "Unr-Args", ["[0"], ""],
     [1024, "slpf", "slpf:Args", ["[0"], ""]]
   ],
 
   ["OpenC2-Response", "Record", [], "", [
     [1, "status", "Status-Code", [], ""],
     [2, "status_text", "String", ["[0"], ""],
-    [3, "*", "Results", ["[0"], ""],
-    [4, "id_ref", "Command-ID", ["[0"], ""]]
+    [3, "results", "Results", ["[0"], ""]]
   ],
 
   ["Status-Code", "Enumerated", ["="], "", [
@@ -93,8 +94,10 @@
     [400, "Bad Request", ""],
     [401, "Unauthorized", ""],
     [403, "Forbidden", ""],
+    [404, "Not Found", ""],
     [500, "Server Error", ""],
-    [501, "Not Implemented", ""]]
+    [501, "Not Implemented", ""],
+    [503, "Service Unavailable", ""]]
   ],
 
   ["PE-Target", "Choice", ["="], "", [
@@ -113,9 +116,17 @@
     [32473, "Example", "32473:Results", [], ""]]
   ],
 
+  ["Unr-Target", "Choice", ["="], "", []],
+
+  ["Unr-Specifiers", "Choice", ["="], "", []],
+
+  ["Unr-Args", "Map", ["="], "", []],
+
+  ["Unr-Results", "Map", ["="], "", []],
+
   ["Artifact", "Record", [], "", [
     [1, "mime_type", "String", ["[0"], ""],
-    [2, "*", "Payload", ["[0"], ""],
+    [2, "payload", "Payload", ["[0"], ""],
     [3, "hashes", "Hashes", ["[0"], ""]]
   ],
 
@@ -145,7 +156,7 @@
     [5, "protocol", "L4-Protocol", ["[0"], ""]]
   ],
 
-  ["OpenC2", "ArrayOf", ["*Query-Item", "[0", "]3"], ""],
+  ["Features", "ArrayOf", ["*Feature", "[0", "]5"], ""],
 
   ["Process", "Map", [], "", [
     [1, "pid", "Integer", ["[0"], ""],
@@ -161,7 +172,7 @@
     [2, "query_string", "String", [], ""]]
   ],
 
-  ["Command-ID", "String", [], ""],
+  ["Request-Id", "Binary", [], ""],
 
   ["Date-Time", "Integer", [], ""],
 
@@ -185,17 +196,18 @@
   ],
 
   ["Payload", "Choice", [], "", [
-    [1, "payload_bin", "Binary", [], ""],
+    [1, "bin", "Binary", [], ""],
     [2, "url", "URI", [], ""]]
   ],
 
   ["Port", "Integer", ["@port"], ""],
 
-  ["Query-Item", "Enumerated", [], "", [
+  ["Feature", "Enumerated", [], "", [
     [1, "versions", ""],
     [2, "profiles", ""],
     [3, "schema", ""],
-    [4, "pairs", ""]]
+    [4, "pairs", ""],
+    [5, "rate_limit", ""]]
   ],
 
   ["Response-Type", "Enumerated", [], "", [
@@ -217,7 +229,9 @@
     [5, "profiles", "jadn:Uname", ["[0", "]0"], ""],
     [6, "schema", "jadn:Schema", ["[0"], ""],
     [7, "pairs", "ActionTargets", ["[0", "]0"], ""],
+    [8, "rate_limit", "Number", ["[0"], ""],
     [1000, "extension", "PE-Results", ["[0"], ""],
+    [1001, "extension_unr", "Unr-Results", ["[0"], ""],
     [1024, "slpf", "slpf:Results", ["[0"], ""]]
   ],
 

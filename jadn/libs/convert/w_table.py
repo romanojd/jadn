@@ -9,8 +9,8 @@ from datetime import datetime
 
 
 def _fmt(s, f):
-    f1 = {'n': '', 's': '', 'b': '**', 'h': '**_'}
-    f2 = {'n': '', 's': '', 'b': '**', 'h': '_**'}
+    f1 = {'n': '', 's': '', 'd': '', 'b': '**', 'h': '**_'}
+    f2 = {'n': '', 's': '', 'd': '', 'b': '**', 'h': '_**'}
     ss = '\*' if s == '*' else s
     return f1[f] + ss + f2[f]
 
@@ -53,7 +53,7 @@ def meta_end_m():
 
 def type_begin_m(tname, ttype, topts, headers, cls):
     assert len(headers) == len(cls)
-    ch = {'n': '---:', 'h': '---:', 's': ':---'}
+    ch = {'n': '---:', 'h': '---:', 's': ':---', 'd': ':---'}
     clh = [ch[c] if c in ch else '---' for c in cls]
     to = ' (' + ttype + topts + ')' if ttype else ''
     tc = '\n**_Type: ' + tname + to + '_**' if tname else ''
@@ -380,6 +380,7 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
     h - meta header (bold, right aligned)
     s - string (left aligned)
     b - bold (bold, left aligned)
+    d - description (left aligned, extra width)
     """
 
     def _tbegin(to, td, head, cls):
@@ -422,13 +423,13 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
         tor = set(to)
         tos = ' ' + str([str(k) for k in tor]) if tor else ''
         if td[TTYPE] in PRIMITIVE_TYPES:
-            cls = ['s', 's', 's']
+            cls = ['s', 's', 'd']
             text += type_begin(td[TNAME], None, None, ['Name', 'Type', 'Description'], cls)
             rng = ''            # TODO: format min-max into string length or number range
             fmt = ' (' + to['format'] + ')' if 'format' in to else ''
             text += type_item([td[TNAME], td[TTYPE] + rng + fmt, td[TDESC]], cls)
         elif td[TTYPE] == 'ArrayOf':            # In STRUCTURE_TYPES but with no field definitions
-            cls = ['s', 's', 's']
+            cls = ['s', 's', 'd']
             text += type_begin(td[TNAME], None, None, ['Name', 'Type', 'Description'], cls)
             tor = set(to) - {'rtype', }
             tos = ' ' + str([str(k) for k in tor]) if tor else ''
@@ -439,14 +440,14 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
                 rtype = '.*' + to['rtype']
                 text += type_begin(td[TNAME], td[TTYPE] + rtype, tos, [], [])
             else:
-                cls = ['n', 'b', 's']
+                cls = ['n', 'b', 'd']
                 text += _tbegin(to, td, ['ID', 'Name', 'Description'], cls)
                 for fd in td[FIELDS]:
                     text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[EDESC]], cls)
         else:                                   # Array, Choice, Map, Record
-            cls = ['n', 'b', 's', 'n', 's']
+            cls = ['n', 'b', 's', 'n', 'd']
             if td[TTYPE] == 'Array':
-                cls2 = ['n', 's', 'n', 's']      # Don't print ".ID" in type name but display fields as compact
+                cls2 = ['n', 's', 'n', 'd']      # Don't print ".ID" in type name but display fields as compact
                 text += _tbegin(to, td, ['ID', 'Type', '#', 'Description'], cls2)
                 to.update({'compact': True})
             else:

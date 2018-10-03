@@ -1,4 +1,4 @@
-<!-- Generated from schema\openc2-wd08-slpf.jadn, Wed Sep 19 17:56:44 2018-->
+<!-- Generated from schema\openc2-wd08-slpf.jadn, Wed Oct  3 17:00:12 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -15,15 +15,14 @@
 | ---: | --- | :--- | ---: | :--- |
 | 1 | **action** | Action | 1 | The task or activity to be performed (i.e., the 'verb'). |
 | 2 | **target** | Target | 1 | The object of the action. The action is performed on the target. |
-| 3 | **actuator** | Actuator | 0..1 | The subject of the action. The actuator executes the action on the target. |
-| 4 | **args** | Args | 0..1 | Additional information that applies to the command. |
-| 5 | **id** | Command-ID | 0..1 | Identifier used to link responses to a command. |
+| 3 | **args** | Args | 0..1 | Additional information that applies to the command. |
+| 4 | **actuator** | Actuator | 0..1 | The subject of the action. The actuator executes the action on the target. |
 
 **_Type: Action (Enumerated)_**
 
 | ID | Name | Description |
 | ---: | --- | :--- |
-| 3 | **query** | Initiate a request for information. Used to communicate supported options and determine state or settings. |
+| 3 | **query** | Initiate a request for information. |
 | 6 | **deny** | Prevent traffic or access. |
 | 8 | **allow** | Permit traffic or access. |
 | 16 | **update** | Instruct the actuator to update its configuration by retrieving and processing a configuration file and update. |
@@ -33,17 +32,17 @@
 
 | ID | Name | Type | # | Description |
 | ---: | --- | :--- | ---: | :--- |
-| 10 | **file** | File | 1 | Properties of a file |
-| 11 | **ip_addr** | IP-Addr | 1 | The representation of one or more IP addresses (either version 4 or version 6) expressed using CIDER notation |
-| 15 | **ip_connection** | IP-Connection | 1 | A network connection that originates from a source and is addressed to a destination |
-| 16 | **openc2** | OpenC2 | 1 | A set of items used with the query action to determine an actuator's capabilities |
+| 10 | **file** | File | 1 | Properties of a file. |
+| 11 | **ip_addr** | IP-Addr | 1 | The representation of one or more IP addresses (either version 4 or version 6). |
+| 15 | **ip_connection** | IP-Connection | 1 | A network connection that originates from a source and is addressed to a destination. |
+| 16 | **features** | Features | 1 | A set of items used with the query action to determine an actuator's capabilities |
 | 1024 | **slpf** | slpf:Target | 1 | Targets defined in the Stateless Packet Filter profile |
 
 **_Type: Actuator (Choice)_**
 
 | ID | Name | Type | # | Description |
 | ---: | --- | :--- | ---: | :--- |
-| 1024 | **slpf** | slpf:Specifiers | 1 | Specifiers as defined in the Stateless Packet Filter profile, oasis-open.org/openc2/oc2ap-slpf/v1.0/csd01 |
+| 1024 | **slpf** | slpf:Specifiers | 1 | Actuator specifiers and options as defined in the Stateless Packet Filter profile |
 
 **_Type: Args (Map)_**
 
@@ -61,10 +60,7 @@
 | ---: | --- | :--- | ---: | :--- |
 | 1 | **status** | Status-Code | 1 | An integer status code |
 | 2 | **status_text** | String | 0..1 | A free-form human-readable description of the response status |
-| 3 | **\*** | Results | 0..1 | Data or extended status information that was requested from an OpenC2 command |
-| 4 | **id** | Command-ID | 0..1 | ID of the response |
-| 5 | **id_ref** | Command-ID | 0..1 | ID of the command that induced this response |
-| 6 | **actuator_id** | String | 0..1 | ID of the actuator sending the response |
+| 3 | **results** | Results | 0..1 | Data or extended status information |
 
 **_Type: Status-Code (Enumerated.ID)_**
 
@@ -103,17 +99,17 @@
 | 4 | **dst_port** | Port | 0..1 | destination TCP/UDP port number |
 | 5 | **protocol** | L4-Protocol | 0..1 | Protocol (IPv4) / Next Header (IPv6) |
 
-**_Type: OpenC2_**
+**_Type: Features_**
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| OpenC2 | ArrayOf(Query-Item) ['max', 'min'] | A target used to query Actuator for its supported capabilities |
+| Features | ArrayOf(Feature) ['max', 'min'] | A target used to query Actuator for its supported capabilities |
 
-**_Type: Command-ID_**
+**_Type: Request-Id_**
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| Command-ID | String | Uniquely identifies a particular command |
+| Request-Id | Binary | A value of up to 128 bits that uniquely identifies a particular command |
 
 **_Type: Date-Time_**
 
@@ -150,14 +146,15 @@
 | :--- | :--- | :--- |
 | Port | Integer (port) | Transport Protocol Port Number, RFC 6335 |
 
-**_Type: Query-Item (Enumerated)_**
+**_Type: Feature (Enumerated)_**
 
 | ID | Name | Description |
 | ---: | --- | :--- |
-| 1 | **versions** | OpenC2 language versions supported by this actuator |
+| 1 | **versions** | List of OpenC2 language versions supported by this actuator |
 | 2 | **profiles** | List of profiles supported by this actuator |
 | 3 | **schema** | Definition of the command syntax supported by this actuator |
 | 4 | **pairs** | List of supported actions and applicable targets |
+| 5 | **rate_limit** | Maximum number of supported requests per minute |
 
 **_Type: Response-Type (Enumerated)_**
 
@@ -179,10 +176,11 @@
 | ID | Name | Type | # | Description |
 | ---: | --- | :--- | ---: | :--- |
 | 4 | **versions** | Version | 0..n | Supported OpenC2 Language versions |
-| 5 | **profiles** | jadn:Uname | 0..n | Supported actuator profiles |
-| 6 | **schema** | jadn:Schema | 0..1 | Schema supported by this actuator |
+| 5 | **profiles** | jadn:Uname | 0..n | List of profiles supported by this actuator |
+| 6 | **schema** | jadn:Schema | 0..1 | Syntax of the OpenC2 language elements supported by this actuator |
 | 7 | **pairs** | ActionTargets | 0..n | List of targets applicable to each supported action |
-| 1024 | **slpf** | slpf:Results | 0..n | Results from Stateless Packet Filter profile |
+| 8 | **rate_limit** | Number | 0..1 | Maximum number of requests per minute supported by design or policy |
+| 1024 | **slpf** | slpf:Results | 0..1 | Response data defined in the Stateless Packet Filter profile |
 
 **_Type: ActionTargets (Array)_**
 

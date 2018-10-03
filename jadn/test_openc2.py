@@ -18,8 +18,8 @@ class Language(unittest.TestCase):
             print('Warning - undefined:', sa['undefined'])
         self.tc = Codec(schema, verbose_rec=True, verbose_str=True)
 
-    mq1 = {"action": "query", "target": {"openc2": ["versions"]}}
-    mq2 = {"action": "query", "target": {"openc2": ["profiles"]}}
+    mq1 = {"action": "query", "target": {"features": ["versions"]}}
+    mq2 = {"action": "query", "target": {"features": ["profiles"]}}
 
     def test_query_oc2(self):
         self.assertEqual(self.tc.encode("OpenC2-Command", self.mq1), self.mq1)
@@ -34,8 +34,7 @@ class Language(unittest.TestCase):
     mr1 = {"status": 200}
     mr2 = {"status": 200,
            "status_text": "The request has succeeded",
-           "results": {"version": ["foo"]},
-           "id": "017b53ed-0a59-4026-b071-092083314645"
+           "results": {"versions": ["foo"]}
         }
 
     def test_response_oc2(self):
@@ -66,7 +65,6 @@ class SLPF(unittest.TestCase):
           "dst_port": 80
         }
       },
-      "id": "fw17_8675309",
       "args": {
         "start_time": 1534775460000,
         "duration": 500,
@@ -83,8 +81,7 @@ class SLPF(unittest.TestCase):
     }
 
     mdeny1r = {
-      "status": 200,
-      "id_ref": "fw17_8675309"
+      "status": 200
     }
 
     mdeny2c = {
@@ -119,7 +116,6 @@ class SLPF(unittest.TestCase):
       "target": {
         "ip_addr": "1.2.3.4"
       },
-      "id": "fw17_8675309",
       "args": {
         "response_requested": "none",
         "slpf": {
@@ -142,7 +138,6 @@ class SLPF(unittest.TestCase):
           "src_port": 21
         }
       },
-      "id": "fw17_8675309",
       "actuator": {
         "slpf": {}
       }
@@ -154,8 +149,7 @@ class SLPF(unittest.TestCase):
         "slpf": {
           "rule_number": 1234
         }
-      },
-      "id_ref": "fw17_8675309"
+      }
     }
 
     mdelete1c = {
@@ -165,7 +159,6 @@ class SLPF(unittest.TestCase):
           "rule_number": 1234
         }
       },
-      "id": "fw17_8675309",
       "args": {
         "response_requested": "complete"
       },
@@ -202,7 +195,7 @@ class SLPF(unittest.TestCase):
     mquery1c = {
       "action": "query",
       "target": {
-        "openc2": []
+        "features": []
       }
     }
 
@@ -211,7 +204,7 @@ class SLPF(unittest.TestCase):
     mquery2c = {
       "action": "query",
       "target": {
-        "openc2": ["versions"]
+        "features": ["versions"]
       }
     }
 
@@ -223,7 +216,7 @@ class SLPF(unittest.TestCase):
     mquery3c = {
       "action": "query",
       "target": {
-        "openc2": ["versions", "profiles"]
+        "features": ["versions", "profiles"]
       }
     }
 
@@ -241,7 +234,7 @@ class SLPF(unittest.TestCase):
     mquery4c = {
       "action": "query",
       "target": {
-        "openc2": ["pairs"]
+        "features": ["pairs"]
       }
     }
 

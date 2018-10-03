@@ -1,4 +1,4 @@
-<!-- Generated from schema\openc2-wd08.jadn, Wed Sep 19 17:56:45 2018-->
+<!-- Generated from schema\openc2-wd08.jadn, Wed Oct  3 17:00:12 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -15,9 +15,8 @@
 | ---: | --- | :--- | ---: | :--- |
 | 1 | **action** | Action | 1 | The task or activity to be performed (i.e., the 'verb'). |
 | 2 | **target** | Target | 1 | The object of the action. The action is performed on the target. |
-| 3 | **actuator** | Actuator | 0..1 | The subject of the action. The actuator executes the action on the target. |
-| 4 | **args** | Args | 0..1 | Additional information that applies to the command. |
-| 5 | **id** | Command-ID | 0..1 | Identifier used to link responses to a command. |
+| 3 | **args** | Args | 0..1 | Additional information that applies to the command. |
+| 4 | **actuator** | Actuator | 0..1 | The subject of the action. The actuator executes the action on the target. |
 
 **_Type: Action (Enumerated)_**
 
@@ -49,7 +48,7 @@
 | ID | Name | Type | # | Description |
 | ---: | --- | :--- | ---: | :--- |
 | 1 | **artifact** | Artifact | 1 | An array of bytes representing a file-like object or a link to that object. |
-| 2 | **command** | Command-ID | 1 | A reference to a previously issued OpenC2 command. |
+| 2 | **command** | Request-Id | 1 | A reference to a previously issued OpenC2 command. |
 | 3 | **device** | Device | 1 | The properties of a hardware device. |
 | 4 | **directory** | Directory | 1 | The properties common to a file system directory. |
 | 7 | **domain_name** | Domain-Name | 1 | A network domain name. |
@@ -58,22 +57,24 @@
 | 10 | **file** | File | 1 | Properties of a file. |
 | 11 | **ip_addr** | IP-Addr | 1 | The representation of one or more IP addresses (either version 4 or version 6). |
 | 13 | **mac_addr** | Mac-Addr | 1 | A single Media Access Control (MAC) address. |
-| 15 | **ip_connection** | IP-Connection | 1 | A network connection that originates from a source and is addressed to a destination. Source and destination addresses may be either IPv4 or IPv6; both should be the same version. |
-| 16 | **openc2** | OpenC2 | 1 | A set of items used with the query action to determine an actuator's capabilities |
+| 15 | **ip_connection** | IP-Connection | 1 | A network connection that originates from a source and is addressed to a destination. |
+| 16 | **features** | Features | 1 | A set of items used with the query action to determine an actuator's capabilities |
 | 17 | **process** | Process | 1 | Common properties of an instance of a computer program as executed on an operating system. |
 | 25 | **property** | Property | 1 | Data attribute associated with an actuator |
 | 18 | **software** | Software | 1 | High-level properties associated with software, including software products. |
 | 19 | **uri** | URI | 1 | A uniform resource identifier (URI). |
 | 23 | **windows_registry_key** | Windows-Registry-Key | 1 | The properties of a Windows registry key. |
 | 1000 | **extension** | PE-Target | 1 | Targets defined in a Private Enterprise extension profile |
-| 1024 | **slpf** | slpf:Target | 1 | Targets defined in the Stateless Packet Filter profile. |
+| 1001 | **extension_unr** | Unr-Target | 1 | Targets defined in an unregistered extension profile |
+| 1024 | **slpf** | slpf:Target | 1 | Targets defined in the Stateless Packet Filter profile |
 
 **_Type: Actuator (Choice)_**
 
 | ID | Name | Type | # | Description |
 | ---: | --- | :--- | ---: | :--- |
 | 1000 | **extension** | PE-Specifiers | 1 | Specifiers defined in a Private Enterprise extension profile. |
-| 1024 | **slpf** | slpf:Specifiers | 1 | Actuator specifiers and options as defined in the Stateless Packet Filter profile. |
+| 1001 | **extension_unr** | Unr-Specifiers | 1 | Specifiers defined in an unregistered extension profile. |
+| 1024 | **slpf** | slpf:Specifiers | 1 | Actuator specifiers and options as defined in the Stateless Packet Filter profile |
 
 **_Type: Args (Map)_**
 
@@ -82,8 +83,9 @@
 | 1 | **start_time** | Date-Time | 0..1 | The specific date/time to initiate the action |
 | 2 | **stop_time** | Date-Time | 0..1 | The specific date/time to terminate the action |
 | 3 | **duration** | Duration | 0..1 | The length of time for an action to be in effect |
-| 4 | **response_requested** | Response-Type | 0..1 | The type of response required for the action: **none, ack, status, complete**. When not explicitly contained in an OpenC2 Command, a Consumer MUST responde the same as response type complete. |
+| 4 | **response_requested** | Response-Type | 0..1 | The type of response required for the action |
 | 1000 | **extension** | PE-Args | 0..1 | Command arguments defined in a Private Enterprise extension profile |
+| 1001 | **extension_unr** | Unr-Args | 0..1 | Command arguments defined in an unregistered extension profile |
 | 1024 | **slpf** | slpf:Args | 0..1 | Command arguments defined in the Stateless Packet Filter profile |
 
 **_Type: OpenC2-Response (Record)_**
@@ -92,8 +94,7 @@
 | ---: | --- | :--- | ---: | :--- |
 | 1 | **status** | Status-Code | 1 | An integer status code |
 | 2 | **status_text** | String | 0..1 | A free-form human-readable description of the response status |
-| 3 | **\*** | Results | 0..1 | Data or extended status information |
-| 4 | **id_ref** | Command-ID | 0..1 | ID of the command that induced this response |
+| 3 | **results** | Results | 0..1 | Data or extended status information |
 
 **_Type: Status-Code (Enumerated.ID)_**
 
@@ -105,8 +106,10 @@
 | 400 | Bad Request -- The server cannot process the request due to something that is perceived to be a client error (e.g., malformed request syntax.) |
 | 401 | Unauthorized -- The request lacks valid authentication credentials for the target resources or authorization has been refused for the submitted credentials. |
 | 403 | Forbidden -- The server understood the request but refuses to authorize it. |
+| 404 | Not Found -- The server has not found anything matching the request. |
 | 500 | Server Error -- The server encountered an unexpected condition that prevented it from fulfilling the request. |
 | 501 | Not Implemented -- The server does not support the functionality required to fulfill the request. |
+| 503 | Service Unavailable -- The server is currently unable to handle the request due to a temporary overloading or maintenance. |
 
 **_Type: PE-Target (Choice.ID)_**
 
@@ -132,12 +135,32 @@
 | ---: | :--- | ---: | :--- |
 | 32473 | 32473:Results | 1 | Example -- Results defined in the Example Inc. extension profile |
 
+**_Type: Unr-Target (Choice.ID)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+
+**_Type: Unr-Specifiers (Choice.ID)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+
+**_Type: Unr-Args (Map.ID)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+
+**_Type: Unr-Results (Map.ID)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+
 **_Type: Artifact (Record)_**
 
 | ID | Name | Type | # | Description |
 | ---: | --- | :--- | ---: | :--- |
 | 1 | **mime_type** | String | 0..1 | Permitted values specified in the IANA Media Types registry |
-| 2 | **\*** | Payload | 0..1 | choice of literal content or URL to obtain content |
+| 2 | **payload** | Payload | 0..1 | choice of literal content or URL to obtain content |
 | 3 | **hashes** | Hashes | 0..1 | Specifies a dictionary of hashes for the contents of the payload |
 
 **_Type: Device (Map)_**
@@ -184,11 +207,11 @@
 | 4 | **dst_port** | Port | 0..1 | destination TCP/UDP port number |
 | 5 | **protocol** | L4-Protocol | 0..1 | Protocol (IPv4) / Next Header (IPv6) |
 
-**_Type: OpenC2_**
+**_Type: Features_**
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| OpenC2 | ArrayOf(Query-Item) ['max', 'min'] | A target used to query Actuator for its supported capabilities |
+| Features | ArrayOf(Feature) ['max', 'min'] | A target used to query Actuator for its supported capabilities |
 
 **_Type: Process (Map)_**
 
@@ -208,11 +231,11 @@
 | 1 | **name** | String | 1 | The name that uniquely identifies a property of an actuator. |
 | 2 | **query_string** | String | 1 | A query string that identifies a single property of an actuator. The syntax of the query string is defined in the actuator profile |
 
-**_Type: Command-ID_**
+**_Type: Request-Id_**
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| Command-ID | String | Uniquely identifies a particular command |
+| Request-Id | Binary | A value of up to 128 bits that uniquely identifies a particular command |
 
 **_Type: Date-Time_**
 
@@ -259,7 +282,7 @@
 
 | ID | Name | Type | # | Description |
 | ---: | --- | :--- | ---: | :--- |
-| 1 | **payload_bin** | Binary | 1 | Specifies the data contained in the artifact. |
+| 1 | **bin** | Binary | 1 | Specifies the data contained in the artifact. |
 | 2 | **url** | URI | 1 | MUST be a valid URL that resolves to the un-encoded content |
 
 **_Type: Port_**
@@ -268,14 +291,15 @@
 | :--- | :--- | :--- |
 | Port | Integer (port) | Transport Protocol Port Number, RFC 6335 |
 
-**_Type: Query-Item (Enumerated)_**
+**_Type: Feature (Enumerated)_**
 
 | ID | Name | Description |
 | ---: | --- | :--- |
-| 1 | **versions** | OpenC2 language versions supported by this actuator |
+| 1 | **versions** | List of OpenC2 language versions supported by this actuator |
 | 2 | **profiles** | List of profiles supported by this actuator |
 | 3 | **schema** | Definition of the command syntax supported by this actuator |
 | 4 | **pairs** | List of supported actions and applicable targets |
+| 5 | **rate_limit** | Maximum number of supported requests per minute |
 
 **_Type: Response-Type (Enumerated)_**
 
@@ -305,11 +329,13 @@
 | 1 | **strings** | String | 0..n | Generic set of string values |
 | 2 | **ints** | Integer | 0..n | Generic set of integer values |
 | 3 | **kvps** | KVP | 0..n | Generic set of key:value pairs |
-| 4 | **versions** | Version | 0..n | The list of OpenC2 language versions supported by this actuator |
-| 5 | **profiles** | jadn:Uname | 0..n | The list of profiles supported by this actuator |
+| 4 | **versions** | Version | 0..n | Supported OpenC2 Language versions |
+| 5 | **profiles** | jadn:Uname | 0..n | List of profiles supported by this actuator |
 | 6 | **schema** | jadn:Schema | 0..1 | Syntax of the OpenC2 language elements supported by this actuator |
 | 7 | **pairs** | ActionTargets | 0..n | List of targets applicable to each supported action |
-| 1000 | **extension** | PE-Results | 0..1 | Response data defined in a Private Enterprise profile |
+| 8 | **rate_limit** | Number | 0..1 | Maximum number of requests per minute supported by design or policy |
+| 1000 | **extension** | PE-Results | 0..1 | Response data defined in a Private Enterprise extension profile |
+| 1001 | **extension_unr** | Unr-Results | 0..1 | Response data defined in an unregistered extension profile |
 | 1024 | **slpf** | slpf:Results | 0..1 | Response data defined in the Stateless Packet Filter profile |
 
 **_Type: KVP (Array)_**
