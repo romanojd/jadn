@@ -1,10 +1,10 @@
-<!-- Generated from schema\openc2-wd08.jadn, Wed Oct  3 17:00:12 2018-->
+<!-- Generated from schema\openc2-wd09.jadn, Fri Oct 12 17:09:13 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
 | **title:** | OpenC2 Language Objects |
 | **module:** | oasis-open.org/openc2/v1.0/openc2-lang |
-| **patch:** | wd08 |
+| **patch:** | wd09 |
 | **description:** | Datatypes that define the content of OpenC2 commands and responses. |
 | **exports:** | OpenC2-Command, OpenC2-Response |
 | **imports:** | **slpf**:&nbsp;oasis-open.org/openc2/v1.0/ap-slpf **jadn**:&nbsp;oasis-open.org/openc2/v1.0/jadn |
@@ -50,23 +50,19 @@
 | 1 | **artifact** | Artifact | 1 | An array of bytes representing a file-like object or a link to that object. |
 | 2 | **command** | Request-Id | 1 | A reference to a previously issued OpenC2 command. |
 | 3 | **device** | Device | 1 | The properties of a hardware device. |
-| 4 | **directory** | Directory | 1 | The properties common to a file system directory. |
 | 7 | **domain_name** | Domain-Name | 1 | A network domain name. |
 | 8 | **email_addr** | Email-Addr | 1 | A single email address. |
-| 9 | **email_message** | Email-Message | 1 | An instance of an email message, corresponding to the internet message format described in RFC 5322 and related RFCs. |
+| 16 | **features** | Features | 1 | A set of items used with the query action to determine an actuator's capabilities |
 | 10 | **file** | File | 1 | Properties of a file. |
 | 11 | **ip_addr** | IP-Addr | 1 | The representation of one or more IP addresses (either version 4 or version 6). |
-| 13 | **mac_addr** | Mac-Addr | 1 | A single Media Access Control (MAC) address. |
 | 15 | **ip_connection** | IP-Connection | 1 | A network connection that originates from a source and is addressed to a destination. |
-| 16 | **features** | Features | 1 | A set of items used with the query action to determine an actuator's capabilities |
+| 13 | **mac_addr** | MAC-Addr | 1 | A single Media Access Control (MAC) address. |
 | 17 | **process** | Process | 1 | Common properties of an instance of a computer program as executed on an operating system. |
-| 25 | **property** | Property | 1 | Data attribute associated with an actuator |
-| 18 | **software** | Software | 1 | High-level properties associated with software, including software products. |
+| 25 | **properties** | Properties | 1 | Data attribute associated with an actuator |
 | 19 | **uri** | URI | 1 | A uniform resource identifier (URI). |
-| 23 | **windows_registry_key** | Windows-Registry-Key | 1 | The properties of a Windows registry key. |
 | 1000 | **extension** | PE-Target | 1 | Targets defined in a Private Enterprise extension profile |
 | 1001 | **extension_unr** | Unr-Target | 1 | Targets defined in an unregistered extension profile |
-| 1024 | **slpf** | slpf:Target | 1 | Targets defined in the Stateless Packet Filter profile |
+| 1024 | **slpf** | slpf:Target | 1 | Targets defined in the Stateless Packet Filter Profile |
 
 **_Type: Actuator (Choice)_**
 
@@ -74,7 +70,6 @@
 | ---: | --- | :--- | ---: | :--- |
 | 1000 | **extension** | PE-Specifiers | 1 | Specifiers defined in a Private Enterprise extension profile. |
 | 1001 | **extension_unr** | Unr-Specifiers | 1 | Specifiers defined in an unregistered extension profile. |
-| 1024 | **slpf** | slpf:Specifiers | 1 | Actuator specifiers and options as defined in the Stateless Packet Filter profile |
 
 **_Type: Args (Map)_**
 
@@ -86,30 +81,38 @@
 | 4 | **response_requested** | Response-Type | 0..1 | The type of response required for the action |
 | 1000 | **extension** | PE-Args | 0..1 | Command arguments defined in a Private Enterprise extension profile |
 | 1001 | **extension_unr** | Unr-Args | 0..1 | Command arguments defined in an unregistered extension profile |
-| 1024 | **slpf** | slpf:Args | 0..1 | Command arguments defined in the Stateless Packet Filter profile |
 
-**_Type: OpenC2-Response (Record)_**
+**_Type: OpenC2-Response (Map)_**
 
 | ID | Name | Type | # | Description |
 | ---: | --- | :--- | ---: | :--- |
-| 1 | **status** | Status-Code | 1 | An integer status code |
+| 1 | **status** | Status-Code | 0..1 | An integer status code (Duplicates message status code) |
 | 2 | **status_text** | String | 0..1 | A free-form human-readable description of the response status |
-| 3 | **results** | Results | 0..1 | Data or extended status information |
+| 3 | **strings** | String | 0..n | Generic set of string values |
+| 4 | **ints** | Integer | 0..n | Generic set of integer values |
+| 5 | **kvps** | KVP | 0..n | Generic set of key:value pairs |
+| 6 | **versions** | Version | 0..n | Supported OpenC2 Language versions |
+| 7 | **profiles** | jadn:Uname | 0..n | List of profiles supported by this actuator |
+| 8 | **schema** | jadn:Schema | 0..1 | Syntax of the OpenC2 language elements supported by this actuator |
+| 9 | **pairs** | Action-Targets | 0..n | List of targets applicable to each supported action |
+| 10 | **rate_limit** | Number | 0..1 | Maximum number of requests per minute supported by design or policy |
+| 1000 | **extension** | PE-Results | 0..1 | Response data defined in a Private Enterprise extension profile |
+| 1001 | **extension_unr** | Unr-Results | 0..1 | Response data defined in an unregistered extension profile |
 
 **_Type: Status-Code (Enumerated.ID)_**
 
 | ID | Description |
 | ---: | :--- |
-| 102 | Processing -- An interim response used to inform the client that the server has accepted the request but not yet completed it. |
-| 200 | OK -- The request has succeeded. |
+| 102 | Processing -- an interim response used to inform the client that the server has accepted the request but not yet completed it. |
+| 200 | OK -- the request has succeeded. |
 | 301 | Moved Permanently -- The target resource has been assigned a new permanent URI |
-| 400 | Bad Request -- The server cannot process the request due to something that is perceived to be a client error (e.g., malformed request syntax.) |
-| 401 | Unauthorized -- The request lacks valid authentication credentials for the target resources or authorization has been refused for the submitted credentials. |
-| 403 | Forbidden -- The server understood the request but refuses to authorize it. |
-| 404 | Not Found -- The server has not found anything matching the request. |
-| 500 | Server Error -- The server encountered an unexpected condition that prevented it from fulfilling the request. |
-| 501 | Not Implemented -- The server does not support the functionality required to fulfill the request. |
-| 503 | Service Unavailable -- The server is currently unable to handle the request due to a temporary overloading or maintenance. |
+| 400 | Bad Request -- the consumer cannot process the request due to something that is perceived to be a client error (e.g., malformed request syntax.) |
+| 401 | Unauthorized -- the request lacks valid authentication credentials for the target resources or authorization has been refused for the submitted credentials. |
+| 403 | Forbidden -- the consumer understood the request but refuses to authorize it. |
+| 404 | Not Found -- the consumer has not found anything matching the request. |
+| 500 | Internal Error -- the consumer encountered an unexpected condition that prevented it from fulfilling the request. |
+| 501 | Not Implemented -- the consumer does not support the functionality required to fulfill the request. |
+| 503 | Service Unavailable -- the consumer is currently unable to handle the request due to a temporary overloading or maintenance. |
 
 **_Type: PE-Target (Choice.ID)_**
 
@@ -121,7 +124,7 @@
 
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |
-| 32473 | 32473:Specifiers | 1 | Example -- Specifiers defined in the Example Inc. extension profile |
+| 32473 | 32473:Specifiers | 1 | Example -- Actuator Specifiers defined in the Example Inc. extension profile |
 
 **_Type: PE-Args (Map.ID)_**
 
@@ -134,26 +137,6 @@
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |
 | 32473 | 32473:Results | 1 | Example -- Results defined in the Example Inc. extension profile |
-
-**_Type: Unr-Target (Choice.ID)_**
-
-| ID | Type | # | Description |
-| ---: | :--- | ---: | :--- |
-
-**_Type: Unr-Specifiers (Choice.ID)_**
-
-| ID | Type | # | Description |
-| ---: | :--- | ---: | :--- |
-
-**_Type: Unr-Args (Map.ID)_**
-
-| ID | Type | # | Description |
-| ---: | :--- | ---: | :--- |
-
-**_Type: Unr-Results (Map.ID)_**
-
-| ID | Type | # | Description |
-| ---: | :--- | ---: | :--- |
 
 **_Type: Artifact (Record)_**
 
@@ -173,15 +156,21 @@
 
 **_Type: Domain-Name_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | Domain-Name | String (hostname) | RFC 1034, section 3.5 |
 
 **_Type: Email-Addr_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | Email-Addr | String (email) | Email address, RFC 5322, section 3.4.1 |
+
+**_Type: Features_**
+
+| Type Name | Base Type | Description |
+| :--- | :--- | :--- |
+| Features | ArrayOf(Feature) ['min'] | A target used to query Actuator for its supported capabilities |
 
 **_Type: File (Map)_**
 
@@ -193,9 +182,9 @@
 
 **_Type: IP-Addr_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| IP-Addr | String (ip) | IPv4 or IPv6 address per RFC 2673 section 3.2, and RFC 4291 section 2.2 |
+| IP-Addr | Binary (ip-addr) | 32 bit IPv4 address or 128 bit IPv6 address |
 
 **_Type: IP-Connection (Record)_**
 
@@ -207,11 +196,11 @@
 | 4 | **dst_port** | Port | 0..1 | destination TCP/UDP port number |
 | 5 | **protocol** | L4-Protocol | 0..1 | Protocol (IPv4) / Next Header (IPv6) |
 
-**_Type: Features_**
+**_Type: MAC-Addr_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| Features | ArrayOf(Feature) ['max', 'min'] | A target used to query Actuator for its supported capabilities |
+| MAC-Addr | Binary | Media Access Code / Extended Unique Identifier - 48 or 64 bit address |
 
 **_Type: Process (Map)_**
 
@@ -224,28 +213,33 @@
 | 5 | **parent** | Process | 0..1 | Process that spawned this one |
 | 6 | **command_line** | String | 0..1 | The full command line invocation used to start this process, including all arguments |
 
-**_Type: Property (Record)_**
+**_Type: Properties_**
 
-| ID | Name | Type | # | Description |
-| ---: | --- | :--- | ---: | :--- |
-| 1 | **name** | String | 1 | The name that uniquely identifies a property of an actuator. |
-| 2 | **query_string** | String | 1 | A query string that identifies a single property of an actuator. The syntax of the query string is defined in the actuator profile |
+| Type Name | Base Type | Description |
+| :--- | :--- | :--- |
+| Properties | ArrayOf(String) | A list of names that uniquely identify properties of an actuator |
+
+**_Type: URI_**
+
+| Type Name | Base Type | Description |
+| :--- | :--- | :--- |
+| URI | String (uri) | Uniform Resource Identifier |
 
 **_Type: Request-Id_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | Request-Id | Binary | A value of up to 128 bits that uniquely identifies a particular command |
 
 **_Type: Date-Time_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | Date-Time | Integer | Milliseconds since 00:00:00 UTC, 1 January 1970. |
 
 **_Type: Duration_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | Duration | Integer | Milliseconds |
 
@@ -259,22 +253,16 @@
 
 **_Type: Hostname_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | Hostname | String | A legal Internet host name as specified in RFC 1123 |
-
-**_Type: Identifier_**
-
-| Name | Type | Description |
-| :--- | :--- | :--- |
-| Identifier | String | command--UUIDv4 - An identifier universally and uniquely identifies an OpenC2 command. Value SHOULD be a UUID generated according to RFC 4122. |
 
 **_Type: L4-Protocol (Enumerated)_**
 
 | ID | Name | Description |
 | ---: | --- | :--- |
 | 1 | **icmp** | Internet Control Message Protocol - RFC 792 |
-| 6 | **tcp** | Transmission Control Protocol - RFC 793 |
+| 6 | **tcp** | Transmission Control Protocol - RFC 793- |
 | 17 | **udp** | User Datagram Protocol - RFC 768 |
 | 132 | **sctp** | Stream Control Transmission Protocol - RFC 4960 |
 
@@ -287,9 +275,9 @@
 
 **_Type: Port_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| Port | Integer (port) | Transport Protocol Port Number, RFC 6335 |
+| Port | Integer | Transport Protocol Port Number, RFC 6335 |
 
 **_Type: Feature (Enumerated)_**
 
@@ -310,42 +298,20 @@
 | 2 | **status** | Respond with progress toward command completion |
 | 3 | **complete** | Respond when all aspects of command completed |
 
-**_Type: URI_**
-
-| Name | Type | Description |
-| :--- | :--- | :--- |
-| URI | String | Uniform Resource Identifier |
-
 **_Type: Version_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| Version | String | TBSL |
-
-**_Type: Results (Map)_**
-
-| ID | Name | Type | # | Description |
-| ---: | --- | :--- | ---: | :--- |
-| 1 | **strings** | String | 0..n | Generic set of string values |
-| 2 | **ints** | Integer | 0..n | Generic set of integer values |
-| 3 | **kvps** | KVP | 0..n | Generic set of key:value pairs |
-| 4 | **versions** | Version | 0..n | Supported OpenC2 Language versions |
-| 5 | **profiles** | jadn:Uname | 0..n | List of profiles supported by this actuator |
-| 6 | **schema** | jadn:Schema | 0..1 | Syntax of the OpenC2 language elements supported by this actuator |
-| 7 | **pairs** | ActionTargets | 0..n | List of targets applicable to each supported action |
-| 8 | **rate_limit** | Number | 0..1 | Maximum number of requests per minute supported by design or policy |
-| 1000 | **extension** | PE-Results | 0..1 | Response data defined in a Private Enterprise extension profile |
-| 1001 | **extension_unr** | Unr-Results | 0..1 | Response data defined in an unregistered extension profile |
-| 1024 | **slpf** | slpf:Results | 0..1 | Response data defined in the Stateless Packet Filter profile |
+| Version | String | Major.Minor version number |
 
 **_Type: KVP (Array)_**
 
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |
-| 1 | Identifier | 1 | key -- name of this item |
+| 1 | String | 1 | key -- name of this item |
 | 2 | String | 1 | value -- string value of this item |
 
-**_Type: ActionTargets (Array)_**
+**_Type: Action-Targets (Array)_**
 
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |

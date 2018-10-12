@@ -97,7 +97,7 @@ def jadn_check(schema):
 #        assert jc.encode('Schema', schema) == schema
 
     valid_topts = {                         # TODO: comprehensive review of valid type and field options, plus unit tests
-        'Binary': ['min', 'max'],
+        'Binary': ['min', 'max', 'format'],
         'Boolean': [],
         'Integer': ['min', 'max', 'format'],
         'Number': ['min', 'max', 'format'],
@@ -111,7 +111,7 @@ def jadn_check(schema):
         'Record': ['min'],
     }
     valid_fopts = {
-        'Binary': ['min', 'max'],
+        'Binary': ['min', 'max', 'format'],
         'Boolean': ['min', 'max'],
         'Integer': ['min', 'max', 'format'],
         'Number': ['min', 'max', 'format'],
@@ -133,19 +133,20 @@ def jadn_check(schema):
 
     for t in schema['types']:     # datatype definition: TNAME, TTYPE, TOPTS, TDESC, FIELDS
         tt = t[TTYPE]
-        if not is_builtin(tt):
-            print('Type error: Unknown type', tt, '(' + t[TNAME] + ')')       # TODO: handle if t[TNAME] doesn't exist
-
-        topts = topts_s2d(t[TOPTS])
-        vop = {k for k in topts} - {k for k in valid_topts[tt]}
-        if vop:
-            print('Error:', t[TNAME], 'type', tt, 'invalid type option', str(vop))
+        if is_builtin(tt):
+            topts = topts_s2d(t[TOPTS])
+            vop = {k for k in topts} - {k for k in valid_topts[tt]}
+            if vop:
+                print('Error:', t[TNAME], 'type', tt, 'invalid type option', str(vop))
+        else:
+            print('Error: Unknown Base Type:', tt, '(' + t[TNAME] + ')')       # TODO: handle if t[TNAME] doesn't exist
+            topts = {}
         if tt == 'ArrayOf' and 'rtype' not in topts:
             print('Error:', t[TNAME], '- Missing array element type')
         if is_primitive(tt) or tt == 'ArrayOf':
             if len(t) != 4:    # TODO: trace back to base type
                 print('Type format error:', t[TNAME], '- type', tt, 'cannot have items')
-        else:
+        elif is_builtin(tt):
             if len(t) == 5:
                 tags = set()
                 n = 3 if tt == 'Enumerated' else 5
@@ -271,6 +272,7 @@ def jadn_load(fname):
 def jadn_dumps(schema, level=0, indent=1):
     sp = level * indent * ' '
     sp2 = (level + 1) * indent * ' '
+    sp0 = (level - 1) * indent * ' '
     if isinstance(schema, dict):
         sep = ',\n' if level > 0 else ',\n\n'
         lines = []
@@ -281,14 +283,12 @@ def jadn_dumps(schema, level=0, indent=1):
         sep = ',\n' if level > 1 else ',\n\n'
         vals = []
         nest = schema and isinstance(schema[0], list)
-        sp4 = ''
         for v in schema:
             sp3 = sp2 if nest else ''
-            sp4 = sp if v and isinstance(v, list) else ''
             vals.append(sp3 + jadn_dumps(v, level + 1, indent))
         if nest:
-            return '[\n' + sep.join(vals) + ']\n'
-        return '[' + ', '.join(vals) + sp4 + ']'
+            return '[\n' + sep.join(vals) + '\n' + sp0 + ']'
+        return '[' + ', '.join(vals) + ']'
     elif isinstance(schema, (numbers.Number, type(''))):
         return json.dumps(schema)
     return '???'

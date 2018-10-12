@@ -1,7 +1,7 @@
 {
  "meta": {
   "module": "oasis-open.org/openc2/v1.0/openc2-lang",
-  "patch": "wd08",
+  "patch": "wd09",
   "title": "OpenC2 Language Objects",
   "description": "Datatypes that define the content of OpenC2 commands and responses.",
   "imports": [
@@ -48,16 +48,17 @@
     [3, "device", "Device", [], "The properties of a hardware device."],
     [7, "domain_name", "Domain-Name", [], "A network domain name."],
     [8, "email_addr", "Email-Addr", [], "A single email address."],
-    [16, "feature", "Features", [], "A set of items used with the query action to determine an actuator's capabilities"],
+    [16, "features", "Features", [], "A set of items used with the query action to determine an actuator's capabilities"],
     [10, "file", "File", [], "Properties of a file."],
     [11, "ip_addr", "IP-Addr", [], "The representation of one or more IP addresses (either version 4 or version 6)."],
     [15, "ip_connection", "IP-Connection", [], "A network connection that originates from a source and is addressed to a destination."],
     [13, "mac_addr", "MAC-Addr", [], "A single Media Access Control (MAC) address."],
     [17, "process", "Process", [], "Common properties of an instance of a computer program as executed on an operating system."],
-    [25, "property", "Property", [], "Data attribute associated with an actuator"],
+    [25, "properties", "Properties", [], "Data attribute associated with an actuator"],
     [19, "uri", "URI", [], "A uniform resource identifier (URI)."],
     [1000, "extension", "PE-Target", [], "Targets defined in a Private Enterprise extension profile"],
-    [1001, "extension_unr", "Unr-Target", [], "Targets defined in an unregistered extension profile"]
+    [1001, "extension_unr", "Unr-Target", [], "Targets defined in an unregistered extension profile"],
+    [1024, "slpf", "slpf:Target", [], "Targets defined in the Stateless Packet Filter Profile"]
   ]],
 
   ["Actuator", "Choice", [], "", [
@@ -74,10 +75,19 @@
     [1001, "extension_unr", "Unr-Args", ["[0"], "Command arguments defined in an unregistered extension profile"]
   ]],
 
-  ["OpenC2-Response", "Record", [], "", [
-    [1, "status", "Status-Code", [], "An integer status code"],
+  ["OpenC2-Response", "Map", [], "", [
+    [1, "status", "Status-Code", ["[0"], "An integer status code (Duplicates message status code)"],
     [2, "status_text", "String", ["[0"], "A free-form human-readable description of the response status"],
-    [3, "results", "Results", ["[0"], "Data or extended status information"]
+    [3, "strings", "String", ["[0", "]0"], "Generic set of string values"],
+    [4, "ints", "Integer", ["[0", "]0"], "Generic set of integer values"],
+    [5, "kvps", "KVP", ["[0", "]0"], "Generic set of key:value pairs"],
+    [6, "versions", "Version", ["[0", "]0"], "Supported OpenC2 Language versions"],
+    [7, "profiles", "jadn:Uname", ["[0", "]0"], "List of profiles supported by this actuator"],
+    [8, "schema", "jadn:Schema", ["[0"], "Syntax of the OpenC2 language elements supported by this actuator"],
+    [9, "pairs", "Action-Targets", ["[0", "]0"], "List of targets applicable to each supported action"],
+    [10, "rate_limit", "Number", ["[0"], "Maximum number of requests per minute supported by design or policy"],
+    [1000, "extension", "PE-Results", ["[0"], "Response data defined in a Private Enterprise extension profile"],
+    [1001, "extension_unr", "Unr-Results", ["[0"], "Response data defined in an unregistered extension profile"]
   ]],
 
   ["Status-Code", "Enumerated", ["="], "", [
@@ -88,7 +98,7 @@
     [401, "Unauthorized", "the request lacks valid authentication credentials for the target resources or authorization has been refused for the submitted credentials."],
     [403, "Forbidden", "the consumer understood the request but refuses to authorize it."],
     [404, "Not Found", "the consumer has not found anything matching the request."],
-    [500, "Consumer Error", "the consumer encountered an unexpected condition that prevented it from fulfilling the request."],
+    [500, "Internal Error", "the consumer encountered an unexpected condition that prevented it from fulfilling the request."],
     [501, "Not Implemented", "the consumer does not support the functionality required to fulfill the request."],
     [503, "Service Unavailable", "the consumer is currently unable to handle the request due to a temporary overloading or maintenance."]
   ]],
@@ -98,7 +108,7 @@
   ]],
 
   ["PE-Specifiers", "Choice", ["="], "", [
-    [32473, "Example", "32473:Specifiers", [], "Specifiers defined in the Example Inc. extension profile"]
+    [32473, "Example", "32473:Specifiers", [], "Actuator Specifiers defined in the Example Inc. extension profile"]
   ]],
 
   ["PE-Args", "Map", ["="], "", [
@@ -109,25 +119,11 @@
     [32473, "Example", "32473:Results", [], "Results defined in the Example Inc. extension profile"]
   ]],
 
-  ["Unr-Target", "Choice", ["="], "", [
-  ]],
-
-  ["Unr-Specifiers", "Choice", ["="], "", [
-  ]],
-
-  ["Unr-Args", "Map", ["="], "", [
-  ]],
-
-  ["Unr-Results", "Map", ["="], "", [
-  ]],
-
   ["Artifact", "Record", [], "", [
     [1, "mime_type", "String", ["[0"], "Permitted values specified in the IANA Media Types registry"],
     [2, "payload", "Payload", ["[0"], "choice of literal content or URL to obtain content"],
     [3, "hashes", "Hashes", ["[0"], "Specifies a dictionary of hashes for the contents of the payload"]
   ]],
-
-  ["Command", "Request-Id", [], "A reference to a previously issued OpenC2 command"],
 
   ["Device", "Map", [], "", [
     [1, "hostname", "Hostname", [], "A hostname that can be used to connect to this device over a network"],
@@ -139,7 +135,7 @@
 
   ["Email-Addr", "String", ["@email"], "Email address, RFC 5322, section 3.4.1"],
 
-  ["Features", "ArrayOf", ["*Feature"], "A target used to query Actuator for its supported capabilities"],
+  ["Features", "ArrayOf", ["*Feature", "[0"], "A target used to query Actuator for its supported capabilities"],
 
   ["File", "Map", [], "", [
     [1, "name", "String", ["[0"], "The name of the file as defined in the file system"],
@@ -168,9 +164,7 @@
     [6, "command_line", "String", ["[0"], "The full command line invocation used to start this process, including all arguments"]
   ]],
 
-  ["Property", "Record", [], "", [
-    [1, "name", "String", [], "The name that uniquely identifies a property of an actuator."]
-  ]],
+  ["Properties", "ArrayOf", ["*String"], "A list of names that uniquely identify properties of an actuator"],
 
   ["URI", "String", ["@uri"], "Uniform Resource Identifier"],
 
@@ -188,11 +182,9 @@
 
   ["Hostname", "String", [], "A legal Internet host name as specified in RFC 1123"],
 
-  ["Identifier", "String", [], "command--UUIDv4 - An identifier universally and uniquely identifies an OpenC2 command. Value SHOULD be a UUID generated according to RFC 4122."],
-
   ["L4-Protocol", "Enumerated", [], "protocol (IPv4) or next header (IPv6) field - any IANA value, RFC 5237", [
     [1, "icmp", "Internet Control Message Protocol - RFC 792"],
-    [6, "tcp", "Transmission Control Protocol - RFC 793"],
+    [6, "tcp", "Transmission Control Protocol - RFC 793-"],
     [17, "udp", "User Datagram Protocol - RFC 768"],
     [132, "sctp", "Stream Control Transmission Protocol - RFC 4960"]
   ]],
@@ -219,27 +211,14 @@
     [3, "complete", "Respond when all aspects of command completed"]
   ]],
 
-  ["Version", "String", [], "TBSL"],
-
-  ["Results", "Map", [], "", [
-    [1, "strings", "String", ["[0", "]0"], "Generic set of string values"],
-    [2, "ints", "Integer", ["[0", "]0"], "Generic set of integer values"],
-    [3, "kvps", "KVP", ["[0", "]0"], "Generic set of key:value pairs"],
-    [4, "versions", "Version", ["[0", "]0"], "Supported OpenC2 Language versions"],
-    [5, "profiles", "jadn:Uname", ["[0", "]0"], "List of profiles supported by this actuator"],
-    [6, "schema", "jadn:Schema", ["[0"], "Syntax of the OpenC2 language elements supported by this actuator"],
-    [7, "pairs", "ActionTargets", ["[0", "]0"], "List of targets applicable to each supported action"],
-    [8, "rate_limit", "Number", ["[0"], "Maximum number of requests per minute supported by design or policy"],
-    [1000, "extension", "PE-Results", ["[0"], "Response data defined in a Private Enterprise extension profile"],
-    [1001, "extension_unr", "Unr-Results", ["[0"], "Response data defined in an unregistered extension profile"]
-  ]],
+  ["Version", "String", [], "Major.Minor version number"],
 
   ["KVP", "Array", [], "", [
-    [1, "key", "Identifier", [], "name of this item"],
+    [1, "key", "String", [], "name of this item"],
     [2, "value", "String", [], "string value of this item"]
   ]],
 
-  ["ActionTargets", "Array", [], "", [
+  ["Action-Targets", "Array", [], "", [
     [1, "action", "Action", [], "An action supported by this actuator"],
     [2, "targets", "Target", ["]0", "*"], "List of targets applicable to this action"]
   ]]

@@ -1,4 +1,4 @@
-<!-- Generated from schema\jadn.jadn, Wed Oct  3 17:00:12 2018-->
+<!-- Generated from schema\jadn.jadn, Fri Oct 12 17:09:11 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -90,30 +90,30 @@
 
 **_Type: Identifier_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | Identifier | String | A string starting with an alpha char followed by zero or more alphanumeric / underscore / dash chars |
 
 **_Type: Nsid_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | Nsid | String | Namespace ID - a short identifier |
 
 **_Type: Uname_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | Uname | String | Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes |
 
 **_Type: Options_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | Options | ArrayOf(Option) ['max', 'min'] | Options list may be empty but may not be omitted |
 
 **_Type: Option_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | Option | String | Option string: 1st char = option id |

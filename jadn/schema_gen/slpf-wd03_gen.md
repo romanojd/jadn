@@ -1,4 +1,4 @@
-<!-- Generated from schema\slpf-wd03.jadn, Wed Oct  3 17:00:12 2018-->
+<!-- Generated from schema\slpf-wd03.jadn, Fri Oct 12 17:09:13 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -40,7 +40,7 @@
 
 **_Type: Rule-ID_**
 
-| Name | Type | Description |
+| Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | Rule-ID | Integer | Immutable identifier assigned when an access rule is created. |
 
