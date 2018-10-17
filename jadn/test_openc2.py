@@ -11,7 +11,7 @@ from libs.codec.jadn import jadn_load, jadn_analyze
 class Language(unittest.TestCase):
 
     def setUp(self):
-        fn = os.path.join('schema', 'openc2-wd09.jadn')
+        fn = os.path.join('schema', 'openc2-wd09_merged.jadn')
         schema = jadn_load(fn)
         sa = jadn_analyze(schema)
         if sa['undefined']:
@@ -45,24 +45,48 @@ class Language(unittest.TestCase):
         self.assertEqual(self.tc.encode('OpenC2-Response', self.mr2), self.mr2)
         self.assertEqual(self.tc.decode('OpenC2-Response', self.mr2), self.mr2)
 
-    mqp1c = {
+    mex2c = {
         'action': 'query',
         'target': {
             'properties': ['battery_percentage']
         }
     }
 
-    def test_properties_cmd(self):
-        self.assertEqual(self.tc.encode('OpenC2-Command', self.mqp1c), self.mqp1c)
-        self.assertEqual(self.tc.decode('OpenC2-Command', self.mqp1c), self.mqp1c)
-
-    mqp1r = {
+    mex2r = {
         'kvps': [['battery_percentage', '0.577216']]
     }
 
+    def test_properties_cmd(self):
+        self.assertEqual(self.tc.encode('OpenC2-Command', self.mex2c), self.mex2c)
+        self.assertEqual(self.tc.decode('OpenC2-Command', self.mex2c), self.mex2c)
+
     def test_properties_rsp(self):
-        self.assertEqual(self.tc.encode('OpenC2-Response', self.mqp1r), self.mqp1r)
-        self.assertEqual(self.tc.decode('OpenC2-Response', self.mqp1r), self.mqp1r)
+        self.assertEqual(self.tc.encode('OpenC2-Response', self.mex2r), self.mex2r)
+        self.assertEqual(self.tc.decode('OpenC2-Response', self.mex2r), self.mex2r)
+
+    mex3c = {
+        'action': 'query',
+        'target': {
+            'features': ['versions', 'profiles']
+        }
+    }
+
+    mex3r = {
+        "status_text": 'ACME Corp Stateless Packet Filter Appliance',
+        'versions': ['1.0'],
+        'profiles': [
+            'oasis-open.org/openc2/v1.0/ap-slpf'
+        ]
+    }
+
+    def test_features_cmd(self):
+        self.assertEqual(self.tc.encode('OpenC2-Command', self.mex3c), self.mex3c)
+        self.assertEqual(self.tc.decode('OpenC2-Command', self.mex3c), self.mex3c)
+
+    def test_features_rsp(self):
+        self.assertEqual(self.tc.encode('OpenC2-Response', self.mex3r), self.mex3r)
+        self.assertEqual(self.tc.decode('OpenC2-Response', self.mex3r), self.mex3r)
+
 
 class SLPF(unittest.TestCase):
 

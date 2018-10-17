@@ -1,4 +1,4 @@
-<!-- Generated from schema\openc2-wd09.jadn, Fri Oct 12 17:09:13 2018-->
+<!-- Generated from schema\openc2-wd09.jadn, Wed Oct 17 09:47:48 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -6,8 +6,21 @@
 | **module:** | oasis-open.org/openc2/v1.0/openc2-lang |
 | **patch:** | wd09 |
 | **description:** | Datatypes that define the content of OpenC2 commands and responses. |
-| **exports:** | OpenC2-Command, OpenC2-Response |
-| **imports:** | **slpf**:&nbsp;oasis-open.org/openc2/v1.0/ap-slpf **jadn**:&nbsp;oasis-open.org/openc2/v1.0/jadn |
+| **exports:** | OpenC2-Command, OpenC2-Response, Message-Type, Status-Code, Request-Id, Date-Time |
+| **imports:** | **jadn**:&nbsp;oasis-open.org/openc2/v1.0/jadn |
+
+**_Type: Message (Array)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+| 1 | Message-Type | 1 | msg_type -- message element |
+| 2 | String | 1 | content_type -- message element |
+| 3 | Null | 1 | content -- message element |
+| 4 | Status-Code | 0..1 | status -- message element |
+| 5 | Request-Id | 0..1 | request_id -- message element |
+| 6 | String | 0..n | to -- message element |
+| 7 | String | 0..1 | from -- message element |
+| 8 | Date-Time | 0..1 | created -- message element |
 
 **_Type: OpenC2-Command (Record)_**
 
@@ -224,6 +237,14 @@
 | Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | URI | String (uri) | Uniform Resource Identifier |
+
+**_Type: Message-Type (Enumerated)_**
+
+| ID | Name | Description |
+| ---: | --- | :--- |
+| 0 | **notification** | A message that does not solicit a response |
+| 1 | **request** | A message for which a response is requested |
+| 2 | **response** | A message containing a response to a request |
 
 **_Type: Request-Id_**
 

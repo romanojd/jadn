@@ -5,13 +5,23 @@
   "title": "OpenC2 Language Objects",
   "description": "Datatypes that define the content of OpenC2 commands and responses.",
   "imports": [
-    ["slpf", "oasis-open.org/openc2/v1.0/ap-slpf"],
     ["jadn", "oasis-open.org/openc2/v1.0/jadn"]
   ],
-  "exports": ["OpenC2-Command", "OpenC2-Response"]
+  "exports": ["OpenC2-Command", "OpenC2-Response", "Message-Type", "Status-Code", "Request-Id", "Date-Time"]
  },
 
  "types": [
+  ["Message", "Array", [], "Example structure that lists message elements", [
+    [1, "msg_type", "Message-Type", [], "message element"],
+    [2, "content_type", "String", [], "message element"],
+    [3, "content", "Null", [], "message element"],
+    [4, "status", "Status-Code", ["[0"], "message element"],
+    [5, "request_id", "Request-Id", ["[0"], "message element"],
+    [6, "to", "String", ["[0", "]0"], "message element"],
+    [7, "from", "String", ["[0"], "message element"],
+    [8, "created", "Date-Time", ["[0"], "message element"]
+  ]],
+
   ["OpenC2-Command", "Record", [], "", [
     [1, "action", "Action", [], "The task or activity to be performed (i.e., the 'verb')."],
     [2, "target", "Target", [], "The object of the action. The action is performed on the target."],
@@ -167,6 +177,12 @@
   ["Properties", "ArrayOf", ["*String"], "A list of names that uniquely identify properties of an actuator"],
 
   ["URI", "String", ["@uri"], "Uniform Resource Identifier"],
+
+  ["Message-Type", "Enumerated", [], "", [
+    [0, "notification", "A message that does not solicit a response"],
+    [1, "request", "A message for which a response is requested"],
+    [2, "response", "A message containing a response to a request"]
+  ]],
 
   ["Request-Id", "Binary", [], "A value of up to 128 bits that uniquely identifies a particular command"],
 

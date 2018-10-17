@@ -5,13 +5,23 @@
   "title": "OpenC2 Language Objects",
   "description": "Datatypes that define the content of OpenC2 commands and responses.",
   "imports": [
-   ["slpf", "oasis-open.org/openc2/v1.0/ap-slpf"],
    ["jadn", "oasis-open.org/openc2/v1.0/jadn"]
  ],
-  "exports": ["OpenC2-Command", "OpenC2-Response"]
+  "exports": ["OpenC2-Command", "OpenC2-Response", "Message-Type", "Status-Code", "Request-Id", "Date-Time"]
  },
 
  "types": [
+  ["Message", "Array", [], "", [
+    [1, "msg_type", "Message-Type", [], ""],
+    [2, "content_type", "String", [], ""],
+    [3, "content", "Null", [], ""],
+    [4, "status", "Status-Code", ["[0"], ""],
+    [5, "request_id", "Request-Id", ["[0"], ""],
+    [6, "to", "String", ["[0", "]0"], ""],
+    [7, "from", "String", ["[0"], ""],
+    [8, "created", "Date-Time", ["[0"], ""]
+  ]],
+
   ["OpenC2-Command", "Record", [], "", [
     [1, "action", "Action", [], ""],
     [2, "target", "Target", [], ""],
@@ -167,6 +177,12 @@
   ["Properties", "ArrayOf", ["*String"], ""],
 
   ["URI", "String", ["@uri"], ""],
+
+  ["Message-Type", "Enumerated", [], "", [
+    [0, "notification", ""],
+    [1, "request", ""],
+    [2, "response", ""]
+  ]],
 
   ["Request-Id", "Binary", [], ""],
 

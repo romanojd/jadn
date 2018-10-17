@@ -1,4 +1,4 @@
-<!-- Generated from schema\openc2-wd09.jadn, Fri Oct 12 17:09:13 2018-->
+<!-- Generated from schema\openc2-wd09.jadn, Wed Oct 17 09:47:48 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,9 +13,18 @@
 <tr><td class="h">module:</td><td class="s">oasis-open.org/openc2/v1.0/openc2-lang</td></tr>
 <tr><td class="h">patch:</td><td class="s">wd09</td></tr>
 <tr><td class="h">description:</td><td class="s">Datatypes that define the content of OpenC2 commands and responses.</td></tr>
-<tr><td class="h">exports:</td><td class="s">OpenC2-Command, OpenC2-Response</td></tr>
-<tr><td class="h">imports:</td><td class="s"><span class="b">slpf</span>:&nbsp;oasis-open.org/openc2/v1.0/ap-slpf<br>
-<span class="b">jadn</span>:&nbsp;oasis-open.org/openc2/v1.0/jadn</td></tr>
+<tr><td class="h">exports:</td><td class="s">OpenC2-Command, OpenC2-Response, Message-Type, Status-Code, Request-Id, Date-Time</td></tr>
+<tr><td class="h">imports:</td><td class="s"><span class="b">jadn</span>:&nbsp;oasis-open.org/openc2/v1.0/jadn</td></tr>
+</table>
+<table><caption>Message (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
+<tr><td class="n">1</td><td class="s">Message-Type</td><td class="n">1</td><td class="d">msg_type -- message element</td></tr>
+<tr><td class="n">2</td><td class="s">String</td><td class="n">1</td><td class="d">content_type -- message element</td></tr>
+<tr><td class="n">3</td><td class="s">Null</td><td class="n">1</td><td class="d">content -- message element</td></tr>
+<tr><td class="n">4</td><td class="s">Status-Code</td><td class="n">0..1</td><td class="d">status -- message element</td></tr>
+<tr><td class="n">5</td><td class="s">Request-Id</td><td class="n">0..1</td><td class="d">request_id -- message element</td></tr>
+<tr><td class="n">6</td><td class="s">String</td><td class="n">0..n</td><td class="d">to -- message element</td></tr>
+<tr><td class="n">7</td><td class="s">String</td><td class="n">0..1</td><td class="d">from -- message element</td></tr>
+<tr><td class="n">8</td><td class="s">Date-Time</td><td class="n">0..1</td><td class="d">created -- message element</td></tr>
 </table>
 <table><caption>OpenC2-Command (Record)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
 <tr><td class="n">1</td><td class="b">action</td><td class="s">Action</td><td class="n">1</td><td class="d">The task or activity to be performed (i.e., the 'verb').</td></tr>
@@ -163,6 +172,11 @@
 </table>
 <table><caption>URI</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
 <tr><td class="s">URI</td><td class="s">String (uri)</td><td class="d">Uniform Resource Identifier</td></tr>
+</table>
+<table><caption>Message-Type (Enumerated)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="d">Description</th></tr>
+<tr><td class="n">0</td><td class="b">notification</td><td class="d">A message that does not solicit a response</td></tr>
+<tr><td class="n">1</td><td class="b">request</td><td class="d">A message for which a response is requested</td></tr>
+<tr><td class="n">2</td><td class="b">response</td><td class="d">A message containing a response to a request</td></tr>
 </table>
 <table><caption>Request-Id</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
 <tr><td class="s">Request-Id</td><td class="s">Binary</td><td class="d">A value of up to 128 bits that uniquely identifies a particular command</td></tr>

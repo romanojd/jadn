@@ -1,14 +1,25 @@
--- Generated from schema\openc2-wd09.jadn, Fri Oct 12 17:09:12 2018
+-- Generated from schema\openc2-wd09.jadn, Wed Oct 17 09:47:48 2018
 
 /*
 module:        oasis-open.org/openc2/v1.0/openc2-lang
 title:         OpenC2 Language Objects
 description:   Datatypes that define the content of OpenC2 commands and
                responses.
-imports:       [['slpf', 'oasis-open.org/openc2/v1.0/ap-slpf'], ['jadn', 'oasis-open.org/openc2/v1.0/jadn']]
 patch:         wd09
-exports:       ['OpenC2-Command', 'OpenC2-Response']
+exports:       ['OpenC2-Command', 'OpenC2-Response', 'Message-Type', 'Status-Code', 'Request-Id', 'Date-Time']
+imports:       [['jadn', 'oasis-open.org/openc2/v1.0/jadn']]
 */
+
+Message ::= ARRAY {    -- Example structure that lists message elements
+    msg_type      [1] Message-Type,    -- message element
+    content_type  [2] STRING,    -- message element
+    content       [3] NULL,    -- message element
+    status        [4] Status-Code OPTIONAL,    -- message element
+    request_id    [5] Request-Id OPTIONAL,    -- message element
+    to            [6] STRING OPTIONAL,    -- message element ***{'max': 0}
+    from          [7] STRING OPTIONAL,    -- message element
+    created       [8] Date-Time OPTIONAL     -- message element
+}
 
 OpenC2-Command ::= RECORD {
     action       Action,    -- The task or activity to be performed (i.e., the 'verb').
@@ -165,6 +176,12 @@ Process ::= MAP {
 Properties ::= ARRAY_OF    -- A list of names that uniquely identify properties of an actuator
 
 URI ::= STRING    -- Uniform Resource Identifier
+
+Message-Type ::= ENUMERATED {
+    notification  (0),    -- A message that does not solicit a response
+    request       (1),    -- A message for which a response is requested
+    response      (2)     -- A message containing a response to a request
+}
 
 Request-Id ::= BINARY    -- A value of up to 128 bits that uniquely identifies a particular command
 
