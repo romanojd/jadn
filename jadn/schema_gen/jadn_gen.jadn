@@ -1,6 +1,6 @@
 {
  "meta": {
-  "module": "oasis-open.org/openc2/v1.0/jadn",
+  "module": "oasis-open.org/openc2/jadn/v1.0/jadn-v1.0",
   "patch": "wd01",
   "title": "JADN Syntax",
   "description": "Syntax of a JSON Abstract Data Notation (JADN) module.",

@@ -1,6 +1,6 @@
     {
      "meta": {
-      "module": "oasis-open.org/openc2/v1.0/openc2-lang",
+      "module": "oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0",
       "patch": "wd09_example",
       "title": "OpenC2 Language Objects",
       "description": "Example Actuator",

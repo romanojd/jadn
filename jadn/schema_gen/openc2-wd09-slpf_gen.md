@@ -1,13 +1,13 @@
-<!-- Generated from schema\openc2-wd09-slpf.jadn, Wed Oct 17 09:47:48 2018-->
+<!-- Generated from schema\openc2-wd09-slpf.jadn, Fri Oct 19 14:14:36 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
 | **title:** | OpenC2 Language Objects |
-| **module:** | oasis-open.org/openc2/v1.0/openc2-lang |
+| **module:** | oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0 |
 | **patch:** | wd09-slpf |
 | **description:** | OpenC2 Language content used by Stateless Packet Filters. |
-| **exports:** | OpenC2-Command, OpenC2-Response |
-| **imports:** | **slpf**:&nbsp;oasis-open.org/openc2/v1.0/ap-slpf **jadn**:&nbsp;oasis-open.org/openc2/v1.0/jadn |
+| **exports:** | OpenC2-Command, OpenC2-Response, Message-Type, Status-Code, Request-Id, Date-Time |
+| **imports:** | **slpf**:&nbsp;oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0 **jadn**:&nbsp;oasis-open.org/openc2/jadn/v1.0/jadn-v1.0 |
 
 **_Type: OpenC2-Command (Record)_**
 
@@ -111,6 +111,14 @@
 | 3 | **dst_addr** | IP-Addr | 0..1 | destination address |
 | 4 | **dst_port** | Port | 0..1 | destination TCP/UDP port number |
 | 5 | **protocol** | L4-Protocol | 0..1 | Protocol (IPv4) / Next Header (IPv6) |
+
+**_Type: Message-Type (Enumerated)_**
+
+| ID | Name | Description |
+| ---: | --- | :--- |
+| 0 | **notification** | A message that does not solicit a response |
+| 1 | **request** | A message for which a response is requested |
+| 2 | **response** | A message containing a response to a request |
 
 **_Type: Request-Id_**
 

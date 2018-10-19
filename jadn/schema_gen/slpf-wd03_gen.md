@@ -1,9 +1,9 @@
-<!-- Generated from schema\slpf-wd03.jadn, Wed Oct 17 09:47:49 2018-->
+<!-- Generated from schema\slpf-wd03.jadn, Fri Oct 19 14:14:37 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
 | **title:** | Stateless Packet Filtering |
-| **module:** | oasis-open.org/openc2/v1.0/ap-slpf |
+| **module:** | oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0 |
 | **patch:** | wd03 |
 | **description:** | Data definitions for Stateless Packet Filtering (SLPF) functions |
 | **exports:** | Target, Specifiers, Args, Results |

@@ -1,14 +1,14 @@
 {
  "meta": {
-  "module": "oasis-open.org/openc2/v1.0/openc2-lang",
+  "module": "oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0",
   "patch": "wd09-slpf",
   "title": "OpenC2 Language Objects",
   "description": "OpenC2 Language content used by Stateless Packet Filters.",
   "imports": [
-   ["slpf", "oasis-open.org/openc2/v1.0/ap-slpf"],
-   ["jadn", "oasis-open.org/openc2/v1.0/jadn"]
+   ["slpf", "oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0"],
+   ["jadn", "oasis-open.org/openc2/jadn/v1.0/jadn-v1.0"]
  ],
-  "exports": ["OpenC2-Command", "OpenC2-Response"]
+  "exports": ["OpenC2-Command", "OpenC2-Response", "Message-Type", "Status-Code", "Request-Id", "Date-Time"]
  },
 
  "types": [
@@ -87,6 +87,12 @@
     [3, "dst_addr", "IP-Addr", ["[0"], "destination address"],
     [4, "dst_port", "Port", ["[0"], "destination TCP/UDP port number"],
     [5, "protocol", "L4-Protocol", ["[0"], "Protocol (IPv4) / Next Header (IPv6)"]
+  ]],
+
+  ["Message-Type", "Enumerated", [], "", [
+    [0, "notification", "A message that does not solicit a response"],
+    [1, "request", "A message for which a response is requested"],
+    [2, "response", "A message containing a response to a request"]
   ]],
 
   ["Request-Id", "Binary", [], "A value of up to 128 bits that uniquely identifies a particular command"],

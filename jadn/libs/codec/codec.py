@@ -217,12 +217,13 @@ def _encode_array_of(ts, val, codec):
 
 def _decode_binary(ts, val, codec):
     codec._check_type(ts, val, type(''))
-    return base64.urlsafe_b64decode(val.encode(encoding='UTF-8'))
+    v = val + ((4 - len(val)%4)%4)*'='
+    return base64.b64decode(v.encode(encoding='UTF-8'), altchars='-_', validate=True)
 
 
 def _encode_binary(ts, val, codec):
     codec._check_type(ts, val, bytes)
-    return base64.urlsafe_b64encode(val).decode(encoding='UTF-8')
+    return base64.urlsafe_b64encode(val).decode(encoding='UTF-8').rstrip('=')
 
 
 def _decode_boolean(ts, val, codec):

@@ -1,9 +1,9 @@
-<!-- Generated from schema\jadn.jadn, Wed Oct 17 09:47:47 2018-->
+<!-- Generated from schema\jadn.jadn, Fri Oct 19 14:14:36 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
 | **title:** | JADN Syntax |
-| **module:** | oasis-open.org/openc2/v1.0/jadn |
+| **module:** | oasis-open.org/openc2/jadn/v1.0/jadn-v1.0 |
 | **patch:** | wd01 |
 | **description:** | Syntax of a JSON Abstract Data Notation (JADN) module. |
 | **exports:** | Schema, Uname |
@@ -110,7 +110,7 @@
 
 | Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| Options | ArrayOf(Option) ['max', 'min'] | Options list may be empty but may not be omitted |
+| Options | ArrayOf(Option) ['min', 'max'] | Options list may be empty but may not be omitted |
 
 **_Type: Option_**
 

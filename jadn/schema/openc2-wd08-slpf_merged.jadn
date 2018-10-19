@@ -1,6 +1,6 @@
 {
  "meta": {
-  "module": "oasis-open.org/openc2/v1.0/openc2-lang",
+  "module": "oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0",
   "patch": "wd08-slpf_merged",
   "title": "OpenC2 Language Objects",
   "description": "OpenC2 Language content used by Stateless Packet Filters.",

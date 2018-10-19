@@ -1,11 +1,12 @@
 # This Python file uses the following encoding: utf-8
 from __future__ import unicode_literals
 
+import os
 import binascii
 import unittest
 
 from libs.codec.codec import Codec
-from libs.codec.jadn import jadn_check
+from libs.codec.jadn import jadn_load, jadn_check, jadn_analyze
 
 schema_basic = {                # JADN schema for datatypes used in Basic Types tests
     "meta": {"module": "unittests-BasicTypes"},
@@ -144,9 +145,9 @@ class BasicTypes(unittest.TestCase):            # TODO: Test Array
     B1b = b"data to be encoded"
     B1s = "ZGF0YSB0byBiZSBlbmNvZGVk"
     B2b = "data\nto be ëncoded 旅程".encode(encoding="UTF-8")
-    B2s = "ZGF0YQp0byBiZSDDq25jb2RlZCDml4XnqIs="
+    B2s = "ZGF0YQp0byBiZSDDq25jb2RlZCDml4XnqIs"
     B3b = binascii.a2b_hex("18e0c9987b8f32417ca6744f544b815ad2a6b4adca69d2c310bd033c57d363e3")
-    B3s = "GODJmHuPMkF8pnRPVEuBWtKmtK3KadLDEL0DPFfTY+M="
+    B3s = "GODJmHuPMkF8pnRPVEuBWtKmtK3KadLDEL0DPFfTY-M"
     B_bad1b = "string"
     B_bad2b = 394
     B_bad3b = True
@@ -1237,6 +1238,23 @@ class Bounds(unittest.TestCase):        # TODO: check max and min string length,
     def setUp(self):
         jadn_check(schema_bounds)
         self.tc = Codec(schema_bounds)
+
+
+class JADN(unittest.TestCase):
+
+    def setUp(self):
+        fn = os.path.join('schema', 'jadn.jadn')
+        schema = jadn_load(fn)
+        self.schema = schema
+        sa = jadn_analyze(schema)
+        if sa['undefined']:
+            print('Warning - undefined:', sa['undefined'])
+        self.tc = Codec(schema, verbose_rec=True, verbose_str=True)
+
+    def test_jadn_self(self):
+
+        self.assertDictEqual(self.tc.encode("Schema", self.schema), self.schema)
+        self.assertDictEqual(self.tc.decode("Schema", self.schema), self.schema)
 
 
 if __name__ == "__main__":
