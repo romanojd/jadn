@@ -585,8 +585,8 @@ class BasicTypes(unittest.TestCase):            # TODO: Test Array
 
 
     Arr1 = [True, 3, 2.71828, "Red"]
-    Arr2 = [None, 3, 2.71828]
-    Arr3 = [True, 3, 2.71828, "Red", [1, "Blue"], [2, 3]]
+    Arr2 = [None, 3, 2]
+    Arr3 = [True, 3, 2, "Red", [1, "Blue"], [2, 3]]
     Arr4 = [True, 3, 2.71828, None, [1, "Blue"], [2, 3]]
     Arr_bad1 = [True, 3, None, "Red"]
     Arr_bad2 = [True, 3, False, "Red"]

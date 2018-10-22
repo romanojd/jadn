@@ -13,8 +13,10 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 from __future__ import unicode_literals
 import base64
+import numbers
 from .jadn_defs import *
 from .codec_utils import topts_s2d, fopts_s2d
+from .codec_format import get_format_function
 
 __version__ = '0.2'
 
@@ -30,11 +32,12 @@ C_ETYPE = 2     # Encoded type
 S_TDEF = 0      # JADN type definition
 S_CODEC = 1     # CODEC table entry for this type
 S_STYPE = 2     # Encoded identifier type (string or tag)
-S_TOPT = 3      # Type Options (dict format)
-S_VSTR = 4      # Verbose_str
-S_FLD = 5       # Field entries (definition and decoded options)
-S_DMAP = 5      # Enum Encoded Val to Name
-S_EMAP = 6      # Enum Name to Encoded Val
+S_FORMAT = 3    # Function to check value constraints
+S_TOPT = 4      # Type Options (dict format)
+S_VSTR = 5      # Verbose_str
+S_FLD = 6       # Field entries (definition and decoded options)
+S_DMAP = 6      # Enum Encoded Val to Name
+S_EMAP = 7      # Enum Name to Encoded Val
 
 # Symbol Table Field Definition fields
 S_FDEF = 0      # JADN field definition
@@ -87,12 +90,18 @@ class Codec:
 #    def _base_type(self, ftype):
 #        return ftype if is_builtin(ftype) else self.types[ftype][TTYPE]
 
-    def _check_type(self, ts, val, vtype):
+    def _check_type(self, ts, val, vtype, fail=False):      # fail forces rejection of boolean vals for number types
         if vtype is not None:
-            if type(val) != vtype:
+            if fail or not isinstance(val, vtype):
                 td = ts[S_TDEF]
                 tn =  ('%s(%s)' % (td[TNAME], td[TTYPE]) if td else 'Primitive')
                 raise TypeError('%s: %s is not %s' % (tn, val, vtype))
+
+    def _check_format(self, ts, val, vtype):
+        if not ts[S_FORMAT][1](val):
+            td = ts[S_TDEF]
+            tn = ('%s(%s)' % (td[TNAME], td[TTYPE]) if td else 'Primitive')
+            raise TypeError('%s: %s is not a valid %s' % (tn, val, ts[S_FORMAT][0]))
 
     def _check_array_len(self, ts, val):
         op = ts[S_TOPT]
@@ -127,7 +136,13 @@ class Codec:
                 amin = opts['min'] if 'min' in opts and opts['min'] > 1 else 1      # Array cannot be empty
                 amax = opts['max'] if opts['max'] > 0 else self.max_array           # Inherit max length if 0
                 aa = ['', 'ArrayOf', [], '']                        # Dynamic type definition
-                aas = [aa, enctab['ArrayOf'], list, {'rtype': fs[S_FDEF][FTYPE], 'min': amin, 'max': amax}]
+                aas = [
+                    aa,                             # 0: S_TDEF:  JADN type definition
+                    enctab['ArrayOf'],              # 1: S_CODEC: Decoder, Encoder, Encoded type
+                    list,                           # 2: S_STYPE: Encoded string type (str or tag)
+                    ('', _format_ok),               # 3: S_FORMAT: Function that checks value constraints
+                    {'rtype': fs[S_FDEF][FTYPE], 'min': amin, 'max': amax}  # 4: S_TOPT:  Type Options (dict)
+                ]
                 aa[TNAME] = _add_dtype(fs, aas)                     # Add to list of dynamically generated types
             return fs
 
@@ -136,10 +151,11 @@ class Codec:
                 t,                                  # 0: S_TDEF:  JADN type definition
                 enctab[t[TTYPE]],                   # 1: S_CODEC: Decoder, Encoder, Encoded type
                 type('') if verbose_str else int,   # 2: S_STYPE: Encoded string type (str or tag)
-                topts_s2d(t[TOPTS]),                # 3: S_TOPT:  Type Options (dict)
-                verbose_str,                        # 4: S_VSTR:  Verbose String Identifiers
-                {},                                 # 5: S_FLD/S_DMAP: Field list / Enum Val to Name
-                {}                                  # 6: S_EMAP:  Enum Name to Val
+                ('', _format_ok),                   # 3: S_FORMAT: Function that checks value constraints
+                topts_s2d(t[TOPTS]),                # 4: S_TOPT:  Type Options (dict)
+                verbose_str,                        # 5: S_VSTR:  Verbose String Identifiers
+                {},                                 # 6: S_FLD/S_DMAP: Field list / Enum Val to Name
+                {}                                  # 7: S_EMAP:  Enum Name to Val
             ]
             if t[TTYPE] == 'Record':
                 rtype = dict if verbose_rec else list
@@ -152,31 +168,34 @@ class Codec:
             elif t[TTYPE] in ['Choice', 'Map', 'Record']:
                 symval[S_FLD] = {f[fx]: symf(f) for f in t[FIELDS]}
                 symval[S_EMAP] = {f[FNAME]: f[fx] for f in t[FIELDS]}
-#                symval[S_FLD] = {str(f[fx]): symf(f) for f in t[FIELDS]}
-#                symval[S_EMAP] = {f[FNAME]: str(f[fx]) for f in t[FIELDS]}
             elif t[TTYPE] == 'Array':
                 symval[S_FLD] = {f[FTAG]: symf(f) for f in t[FIELDS]}
-#                symval[S_FLD] = {str(f[FTAG]): symf(f) for f in t[FIELDS]}
             elif t[TTYPE] == 'ArrayOf':
                 opts = symval[S_TOPT]
                 amin = opts['min'] if 'min' in opts else 1
                 amax = opts['max'] if 'max' in opts and opts['max'] > 0 else self.max_array
                 opts.update({'min': amin, 'max': amax})
+            elif 'format' in symval[S_TOPT]:
+                symval[S_FORMAT] = get_format_function(symval[S_TOPT]['format'], t[TTYPE])
             return symval
                         # TODO: Add string and binary min and max
 
         self.arrays = {}
         self.types = {t[TNAME]: t for t in self.schema['types']}    # pre-index types to allow symtab forward refs
         self.symtab = {t[TNAME]: sym(t) for t in self.schema['types']}
-        for t in self.symtab.values():        # TODO: Check for wildcard name collisions
-            for f in t[S_FLD].values():
-                if type(f) == list and f[S_FDEF][FNAME] == '*':
-                    t = self.symtab[f[S_FDEF][FTYPE]][S_TDEF]
-                    assert(t[TTYPE] in ['Map', 'Choice'])
-                    f[S_FNAMES] = [c[FNAME] for c in t[FIELDS]]
+#        for t in self.symtab.values():        # TODO: Check for wildcard name collisions
+#            for f in t[S_FLD].values():
+#                if type(f) == list and f[S_FDEF][FNAME] == '*':
+#                    t = self.symtab[f[S_FDEF][FTYPE]][S_TDEF]
+#                    assert(t[TTYPE] in ['Map', 'Choice'])
+#                    f[S_FNAMES] = [c[FNAME] for c in t[FIELDS]]
 
         self.symtab.update(self.arrays)         # Add anonymous arrays to symbol table
-        self.symtab.update({t: [None, enctab[t], enctab[t][C_ETYPE]] for t in PRIMITIVE_TYPES})
+        self.symtab.update({t: [None, enctab[t], enctab[t][C_ETYPE], ('', _format_ok]) for t in PRIMITIVE_TYPES})
+
+
+def _format_ok(val):      # No value constraints on this type
+    return True
 
 
 def _bad_index(ts, k, val):
@@ -218,11 +237,14 @@ def _encode_array_of(ts, val, codec):
 def _decode_binary(ts, val, codec):
     codec._check_type(ts, val, type(''))
     v = val + ((4 - len(val)%4)%4)*'='
-    return base64.b64decode(v.encode(encoding='UTF-8'), altchars='-_', validate=True)
+    v2 = base64.b64decode(v.encode(encoding='UTF-8'), altchars='-_', validate=True)
+    codec._check_format(ts, v2, bytes)
+    return v2
 
 
 def _encode_binary(ts, val, codec):
     codec._check_type(ts, val, bytes)
+    codec._check_format(ts, val, bytes)
     return base64.urlsafe_b64encode(val).decode(encoding='UTF-8').rstrip('=')
 
 
@@ -293,24 +315,22 @@ def _encode_enumerated(ts, val, codec):
 
 
 def _decode_integer(ts, val, codec):
-    codec._check_type(ts, val, int)
+    codec._check_type(ts, val, numbers.Integral, isinstance(val, bool))
     return val
 
 
 def _encode_integer(ts, val, codec):
-    codec._check_type(ts, val, int)
+    codec._check_type(ts, val, numbers.Integral, isinstance(val, bool))
     return val
 
 
 def _decode_number(ts, val, codec):
-    val = float(val) if type(val) == int else val
-    codec._check_type(ts, val, float)
+    codec._check_type(ts, val, numbers.Real, isinstance(val, bool))
     return val
 
 
 def _encode_number(ts, val, codec):
-    val = float(val) if type(val) == int else val
-    codec._check_type(ts, val, float)
+    codec._check_type(ts, val, numbers.Real, isinstance(val, bool))
     return val
 
 
