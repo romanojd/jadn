@@ -1239,6 +1239,34 @@ class Bounds(unittest.TestCase):        # TODO: check max and min string length,
         jadn_check(schema_bounds)
         self.tc = Codec(schema_bounds)
 
+schema_format = {  # JADN schema for value constraint tests
+    "meta": {"module": "unittests-Format"},
+    "types": [
+        ["t_ipaddr", "Binary", [], ""],
+        ["t_ipaddr_s", "String", [], ""],
+        ["t_ipaddrs", "ArraryOf", ["*t_ipaddr"], ""]
+    ]
+}
+
+class Format(unittest.TestCase):
+
+    def setUp(self):
+        jadn_analyze(schema_format)
+        self.tc = Codec(schema_format, verbose_rec=True, verbose_str=True)
+
+    ip1b = binascii.a2b_hex("c6020304")
+    ip1s = 'AQIF2B'
+    ip1b = binascii.a2b_hex("c6020304")
+    ip1s = 'AQIF2B'
+    ip1b = binascii.a2b_hex("c6020304")
+    ip1s = 'AQIF2B'
+    ip1b = binascii.a2b_hex("c6020304")
+    ip1s = 'AQIF2B'
+
+    def test_ip_addr(self):
+        self.assertDictEqual(self.tc.encode("t_ipaddr", self.ip1b), self.ip1s)
+        self.assertDictEqual(self.tc.decode("t_ipaddr", self.ip1s), self.ip1b)
+
 
 class JADN(unittest.TestCase):
 

@@ -14,6 +14,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 from __future__ import unicode_literals
 import base64
 import numbers
+import string
 from .jadn_defs import *
 from .codec_utils import topts_s2d, fopts_s2d
 from .codec_format import get_format_function
@@ -191,7 +192,7 @@ class Codec:
 #                    f[S_FNAMES] = [c[FNAME] for c in t[FIELDS]]
 
         self.symtab.update(self.arrays)         # Add anonymous arrays to symbol table
-        self.symtab.update({t: [None, enctab[t], enctab[t][C_ETYPE], ('', _format_ok]) for t in PRIMITIVE_TYPES})
+        self.symtab.update({t: [None, enctab[t], enctab[t][C_ETYPE], ('', _format_ok)] for t in PRIMITIVE_TYPES})
 
 
 def _format_ok(val):      # No value constraints on this type
@@ -237,7 +238,9 @@ def _encode_array_of(ts, val, codec):
 def _decode_binary(ts, val, codec):
     codec._check_type(ts, val, type(''))
     v = val + ((4 - len(val)%4)%4)*'='
-    v2 = base64.b64decode(v.encode(encoding='UTF-8'), altchars='-_', validate=True)
+    if set(v) - set(string.ascii_letters + string.digits + '-_='):  # Python 2 doesn't support Validate
+        raise TypeError('base64decode: bad character')
+    v2 = base64.b64decode(v.encode(encoding='UTF-8'), altchars='-_')
     codec._check_format(ts, v2, bytes)
     return v2
 
