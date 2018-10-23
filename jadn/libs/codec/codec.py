@@ -98,11 +98,11 @@ class Codec:
                 tn =  ('%s(%s)' % (td[TNAME], td[TTYPE]) if td else 'Primitive')
                 raise TypeError('%s: %s is not %s' % (tn, val, vtype))
 
-    def _check_format(self, ts, val, vtype):
+    def _check_format(self, ts, val):
         if not ts[S_FORMAT][1](val):
             td = ts[S_TDEF]
             tn = ('%s(%s)' % (td[TNAME], td[TTYPE]) if td else 'Primitive')
-            raise TypeError('%s: %s is not a valid %s' % (tn, val, ts[S_FORMAT][0]))
+            raise ValueError('%s: %s is not a valid %s' % (tn, val, ts[S_FORMAT][0]))
 
     def _check_array_len(self, ts, val):
         op = ts[S_TOPT]
@@ -177,7 +177,8 @@ class Codec:
                 amax = opts['max'] if 'max' in opts and opts['max'] > 0 else self.max_array
                 opts.update({'min': amin, 'max': amax})
             elif 'format' in symval[S_TOPT]:
-                symval[S_FORMAT] = get_format_function(symval[S_TOPT]['format'], t[TTYPE])
+                ff = get_format_function(symval[S_TOPT]['format'], t[TTYPE])
+                symval[S_FORMAT] = ff if ff[1] else ('', _format_ok)
             return symval
                         # TODO: Add string and binary min and max
 
@@ -241,13 +242,13 @@ def _decode_binary(ts, val, codec):
     if set(v) - set(string.ascii_letters + string.digits + '-_='):  # Python 2 doesn't support Validate
         raise TypeError('base64decode: bad character')
     v2 = base64.b64decode(v.encode(encoding='UTF-8'), altchars='-_')
-    codec._check_format(ts, v2, bytes)
+    codec._check_format(ts, v2)
     return v2
 
 
 def _encode_binary(ts, val, codec):
     codec._check_type(ts, val, bytes)
-    codec._check_format(ts, val, bytes)
+    codec._check_format(ts, val)
     return base64.urlsafe_b64encode(val).decode(encoding='UTF-8').rstrip('=')
 
 
@@ -481,11 +482,13 @@ def _encode_null(ts, val, codec):
 
 def _decode_string(ts, val, codec):
     codec._check_type(ts, val, type(''))
+    codec._check_format(ts, val)
     return val
 
 
 def _encode_string(ts, val, codec):
     codec._check_type(ts, val, type(''))
+    codec._check_format(ts, val)
     return val
 
 

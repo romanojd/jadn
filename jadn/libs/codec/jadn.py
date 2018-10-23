@@ -12,6 +12,7 @@ import os
 from datetime import datetime
 from .codec import is_builtin, is_primitive, Codec
 from .codec_utils import topts_s2d, fopts_s2d
+from .codec_format import get_format_function
 from .jadn_defs import *
 
 # TODO: convert prints to ValidationError exception
@@ -111,12 +112,12 @@ def jadn_check(schema):
         'Record': ['min'],
     }
     valid_fopts = {
-        'Binary': ['min', 'max', 'format'],
+        'Binary': ['min', 'max'],
         'Boolean': ['min', 'max'],
-        'Integer': ['min', 'max', 'format'],
-        'Number': ['min', 'max', 'format'],
+        'Integer': ['min', 'max'],
+        'Number': ['min', 'max'],
         'Null': [],
-        'String': ['min', 'max', 'pattern', 'format'],
+        'String': ['min', 'max', 'pattern'],
         'Array': ['min', 'max', 'etype', 'atfield'],
         'ArrayOf': ['min', 'max', 'rtype'],
         'Choice': ['min', 'max', 'etype'],
@@ -143,6 +144,9 @@ def jadn_check(schema):
             topts = {}
         if tt == 'ArrayOf' and 'rtype' not in topts:
             print('Error:', t[TNAME], '- Missing array element type')
+        if 'format' in topts:
+            if not get_format_function(topts['format'], tt)[1]:
+                print('Unsupported value constraint', '"' + topts['format'] + '" on', tt + ':',  t[TNAME])
         if is_primitive(tt) or tt == 'ArrayOf':
             if len(t) != 4:    # TODO: trace back to base type
                 print('Type format error:', t[TNAME], '- type', tt, 'cannot have items')
