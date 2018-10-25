@@ -6,7 +6,7 @@
   "description": "Datatypes that define the content of OpenC2 commands and responses.",
   "imports": [
     ["slpf", "oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0"],
-    ["jadn", "oasis-open.org/openc2/jadn/v1.0/jadn-v1.0"]
+    ["jadn", "oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0"]
   ],
   "exports": ["OpenC2-Command", "OpenC2-Response"]
  },

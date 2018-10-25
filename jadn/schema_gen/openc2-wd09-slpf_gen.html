@@ -1,21 +1,21 @@
-<!-- Generated from schema\openc2-wd09-slpf.jadn, Fri Oct 19 14:14:36 2018-->
+<!-- Generated from schema\openc2-wd09-slpf.jadn, Thu Oct 25 11:21:34 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="theme.css">
-<title>oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0 v.wd09-slpf</title>
+<title>oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0 v.0+slpf</title>
 </head>
 <body>
 <h2>Schema</h2>
 <table>
 <tr><td class="h">title:</td><td class="s">OpenC2 Language Objects</td></tr>
 <tr><td class="h">module:</td><td class="s">oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0</td></tr>
-<tr><td class="h">patch:</td><td class="s">wd09-slpf</td></tr>
+<tr><td class="h">patch:</td><td class="s">0+slpf</td></tr>
 <tr><td class="h">description:</td><td class="s">OpenC2 Language content used by Stateless Packet Filters.</td></tr>
 <tr><td class="h">exports:</td><td class="s">OpenC2-Command, OpenC2-Response, Message-Type, Status-Code, Request-Id, Date-Time</td></tr>
 <tr><td class="h">imports:</td><td class="s"><span class="b">slpf</span>:&nbsp;oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0<br>
-<span class="b">jadn</span>:&nbsp;oasis-open.org/openc2/jadn/v1.0/jadn-v1.0</td></tr>
+<span class="b">jadn</span>:&nbsp;oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0</td></tr>
 </table>
 <table><caption>OpenC2-Command (Record)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
 <tr><td class="n">1</td><td class="b">action</td><td class="s">Action</td><td class="n">1</td><td class="d">The task or activity to be performed (i.e., the 'verb').</td></tr>
@@ -60,14 +60,9 @@
 <table><caption>Status-Code (Enumerated.ID)</caption><tr><th class="n">ID</th><th class="d">Description</th></tr>
 <tr><td class="n">102</td><td class="d">Processing -- an interim response used to inform the client that the server has accepted the request but not yet completed it.</td></tr>
 <tr><td class="n">200</td><td class="d">OK -- the request has succeeded.</td></tr>
-<tr><td class="n">301</td><td class="d">Moved Permanently -- The target resource has been assigned a new permanent URI</td></tr>
 <tr><td class="n">400</td><td class="d">Bad Request -- the consumer cannot process the request due to something that is perceived to be a client error (e.g., malformed request syntax.)</td></tr>
-<tr><td class="n">401</td><td class="d">Unauthorized -- the request lacks valid authentication credentials for the target resources or authorization has been refused for the submitted credentials.</td></tr>
-<tr><td class="n">403</td><td class="d">Forbidden -- the consumer understood the request but refuses to authorize it.</td></tr>
-<tr><td class="n">404</td><td class="d">Not Found -- the consumer has not found anything matching the request.</td></tr>
 <tr><td class="n">500</td><td class="d">Internal Error -- the consumer encountered an unexpected condition that prevented it from fulfilling the request.</td></tr>
 <tr><td class="n">501</td><td class="d">Not Implemented -- the consumer does not support the functionality required to fulfill the request.</td></tr>
-<tr><td class="n">503</td><td class="d">Service Unavailable -- the consumer is currently unable to handle the request due to a temporary overloading or maintenance.</td></tr>
 </table>
 <table><caption>Features</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
 <tr><td class="s">Features</td><td class="s">ArrayOf(Feature) ['min']</td><td class="d">A target used to query Actuator for its supported capabilities</td></tr>

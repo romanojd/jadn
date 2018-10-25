@@ -23,7 +23,7 @@ from libs.convert.w_table import table_dump
 if __name__ == '__main__':
     cdir = os.path.dirname(os.path.realpath('__file__'))    # Current directory
     idir = 'schema'
-    odir = os.path.normpath(os.path.join(cdir, '..', '..', 'schema_out'))     # Put generated schemas outside of the repo
+    odir = os.path.normpath(os.path.join(cdir, '..', 'schema_out'))     # Put generated schemas outside of the repo
     print('Translating schemas from', os.path.realpath(idir), 'to', odir)
     for fn in (f[0] for f in (os.path.splitext(i) for i in os.listdir(idir)) if f[1] == '.jadn'):
         print('**', fn)

@@ -1,13 +1,13 @@
-<!-- Generated from schema\openc2-wd09.jadn, Fri Oct 19 14:14:37 2018-->
+<!-- Generated from schema\openc2-wd09.jadn, Thu Oct 25 11:21:34 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
 | **title:** | OpenC2 Language Objects |
 | **module:** | oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0 |
-| **patch:** | wd09 |
+| **patch:** | 0 |
 | **description:** | Datatypes that define the content of OpenC2 commands and responses. |
 | **exports:** | OpenC2-Command, OpenC2-Response, Message-Type, Status-Code, Request-Id, Date-Time |
-| **imports:** | **jadn**:&nbsp;oasis-open.org/openc2/jadn/v1.0/jadn-v1.0 |
+| **imports:** | **jadn**:&nbsp;oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0 |
 
 **_Type: Message (Array)_**
 

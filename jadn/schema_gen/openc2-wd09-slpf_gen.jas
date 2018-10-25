@@ -1,12 +1,12 @@
--- Generated from schema\openc2-wd09-slpf.jadn, Fri Oct 19 14:14:36 2018
+-- Generated from schema\openc2-wd09-slpf.jadn, Thu Oct 25 11:21:34 2018
 
 /*
 module:        oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0
 title:         OpenC2 Language Objects
 description:   OpenC2 Language content used by Stateless Packet Filters.
+imports:       [['slpf', 'oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0'], ['jadn', 'oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0']]
 exports:       ['OpenC2-Command', 'OpenC2-Response', 'Message-Type', 'Status-Code', 'Request-Id', 'Date-Time']
-patch:         wd09-slpf
-imports:       [['slpf', 'oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0'], ['jadn', 'oasis-open.org/openc2/jadn/v1.0/jadn-v1.0']]
+patch:         0+slpf
 */
 
 OpenC2-Command ::= RECORD {
@@ -56,16 +56,11 @@ OpenC2-Response ::= MAP {
 }
 
 Status-Code ::= ENUMERATED {
-    Processing           (102),    -- an interim response used to inform the client that the server has accepted the request but not yet completed it.
-    OK                   (200),    -- the request has succeeded.
-    Moved Permanently    (301),    -- The target resource has been assigned a new permanent URI
-    Bad Request          (400),    -- the consumer cannot process the request due to something that is perceived to be a client error (e.g., malformed request syntax.)
-    Unauthorized         (401),    -- the request lacks valid authentication credentials for the target resources or authorization has been refused for the submitted credentials.
-    Forbidden            (403),    -- the consumer understood the request but refuses to authorize it.
-    Not Found            (404),    -- the consumer has not found anything matching the request.
-    Internal Error       (500),    -- the consumer encountered an unexpected condition that prevented it from fulfilling the request.
-    Not Implemented      (501),    -- the consumer does not support the functionality required to fulfill the request.
-    Service Unavailable  (503)     -- the consumer is currently unable to handle the request due to a temporary overloading or maintenance.
+    Processing       (102),    -- an interim response used to inform the client that the server has accepted the request but not yet completed it.
+    OK               (200),    -- the request has succeeded.
+    Bad Request      (400),    -- the consumer cannot process the request due to something that is perceived to be a client error (e.g., malformed request syntax.)
+    Internal Error   (500),    -- the consumer encountered an unexpected condition that prevented it from fulfilling the request.
+    Not Implemented  (501)     -- the consumer does not support the functionality required to fulfill the request.
 }
 
 Features ::= ARRAY_OF    -- A target used to query Actuator for its supported capabilities
