@@ -1,13 +1,13 @@
-<!-- Generated from schema\openc2-wd09-slpf.jadn, Fri Oct 19 14:14:36 2018-->
+<!-- Generated from schema\openc2-wd09-slpf.jadn, Thu Oct 25 11:21:34 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
 | **title:** | OpenC2 Language Objects |
 | **module:** | oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0 |
-| **patch:** | wd09-slpf |
+| **patch:** | 0+slpf |
 | **description:** | OpenC2 Language content used by Stateless Packet Filters. |
 | **exports:** | OpenC2-Command, OpenC2-Response, Message-Type, Status-Code, Request-Id, Date-Time |
-| **imports:** | **slpf**:&nbsp;oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0 **jadn**:&nbsp;oasis-open.org/openc2/jadn/v1.0/jadn-v1.0 |
+| **imports:** | **slpf**:&nbsp;oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0 **jadn**:&nbsp;oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0 |
 
 **_Type: OpenC2-Command (Record)_**
 
@@ -73,14 +73,9 @@
 | ---: | :--- |
 | 102 | Processing -- an interim response used to inform the client that the server has accepted the request but not yet completed it. |
 | 200 | OK -- the request has succeeded. |
-| 301 | Moved Permanently -- The target resource has been assigned a new permanent URI |
 | 400 | Bad Request -- the consumer cannot process the request due to something that is perceived to be a client error (e.g., malformed request syntax.) |
-| 401 | Unauthorized -- the request lacks valid authentication credentials for the target resources or authorization has been refused for the submitted credentials. |
-| 403 | Forbidden -- the consumer understood the request but refuses to authorize it. |
-| 404 | Not Found -- the consumer has not found anything matching the request. |
 | 500 | Internal Error -- the consumer encountered an unexpected condition that prevented it from fulfilling the request. |
 | 501 | Not Implemented -- the consumer does not support the functionality required to fulfill the request. |
-| 503 | Service Unavailable -- the consumer is currently unable to handle the request due to a temporary overloading or maintenance. |
 
 **_Type: Features_**
 

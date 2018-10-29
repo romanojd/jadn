@@ -1,12 +1,12 @@
 {
  "meta": {
   "module": "oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0",
-  "patch": "wd09-slpf",
+  "patch": "0+slpf",
   "title": "OpenC2 Language Objects",
   "description": "OpenC2 Language content used by Stateless Packet Filters.",
   "imports": [
    ["slpf", "oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0"],
-   ["jadn", "oasis-open.org/openc2/jadn/v1.0/jadn-v1.0"]
+   ["jadn", "oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0"]
  ],
   "exports": ["OpenC2-Command", "OpenC2-Response", "Message-Type", "Status-Code", "Request-Id", "Date-Time"]
  },
@@ -61,14 +61,9 @@
   ["Status-Code", "Enumerated", ["="], "", [
     [102, "Processing", ""],
     [200, "OK", ""],
-    [301, "Moved Permanently", ""],
     [400, "Bad Request", ""],
-    [401, "Unauthorized", ""],
-    [403, "Forbidden", ""],
-    [404, "Not Found", ""],
     [500, "Internal Error", ""],
-    [501, "Not Implemented", ""],
-    [503, "Service Unavailable", ""]
+    [501, "Not Implemented", ""]
   ]],
 
   ["Features", "ArrayOf", ["*Feature", "[0"], ""],

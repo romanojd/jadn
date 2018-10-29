@@ -1,13 +1,13 @@
--- Generated from schema\openc2-wd09.jadn, Fri Oct 19 14:14:37 2018
+-- Generated from schema\openc2-wd09.jadn, Thu Oct 25 11:21:34 2018
 
 /*
 module:        oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0
 title:         OpenC2 Language Objects
 description:   Datatypes that define the content of OpenC2 commands and
                responses.
+imports:       [['jadn', 'oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0']]
 exports:       ['OpenC2-Command', 'OpenC2-Response', 'Message-Type', 'Status-Code', 'Request-Id', 'Date-Time']
-patch:         wd09
-imports:       [['jadn', 'oasis-open.org/openc2/jadn/v1.0/jadn-v1.0']]
+patch:         0
 */
 
 Message ::= ARRAY {    -- Example structure that lists message elements

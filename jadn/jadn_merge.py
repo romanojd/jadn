@@ -9,22 +9,6 @@ from libs.codec.jadn_defs import *
 from libs.codec.jadn import jadn_load, jadn_dump, jadn_analyze, jadn_strip, jadn_merge
 
 
-"""
-    # Prettyprint JADN, and convert to other formats
-
-    schema = jadn_load(source)
-    sa = jadn_analyze(schema)
-
-    patch = ', ' + schema['meta']['patch'] if 'patch' in schema['meta'] else ''
-    exports = ', '.join(schema['meta']['exports']) if 'exports' in schema['meta'] else ''
-    sa.update({'module': schema['meta']['module'] + patch, 'exports': exports})
-    print('\n'.join(['  ' + k + ': ' + str(sa[k]) for k in ('module', 'exports', 'unreferenced', 'undefined', 'cycles')]))
-
-    jadn_dump(jadn_strip(schema), dest + '-strip.jadn')
-    jadn_dump(schema, dest + '.jadn')
-"""
-
-
 def merge(idir):
     def _merge_imports(info, files):
         base_schema = jadn_load(info['source'])
@@ -39,7 +23,8 @@ def merge(idir):
             else:
                 imported_schema = jadn_load(imp[0]['source'])
                 base_schema = jadn_merge(base_schema, imported_schema, nsid)
-        base_schema['meta']['patch'] += '_merged'
+        joinchar = '.' if '+' in base_schema['meta']['patch'] else '+'
+        base_schema['meta']['patch'] += joinchar + 'merged'
         del base_schema['meta']['imports']
         jadn_dump(base_schema, info['dest'])
 
@@ -47,7 +32,7 @@ def merge(idir):
         return schema['meta'][item] if item in schema['meta'] else ''
 
     cdir = os.path.dirname(os.path.realpath('__file__'))    # Current directory
-    odir = os.path.normpath(os.path.join(cdir, '..', '..', 'schema_out'))     # Put generated schemas outside of the repo
+    odir = os.path.normpath(os.path.join(cdir, '..', 'schema_out'))     # Put generated schemas outside of the repo
     print('Merging imported schemas from', os.path.realpath(idir), 'to', odir)
     files = {}
     for fn in (f[0] for f in (os.path.splitext(i) for i in os.listdir(idir)) if f[1] == '.jadn'):
