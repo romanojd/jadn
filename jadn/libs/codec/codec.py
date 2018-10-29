@@ -57,10 +57,10 @@ class Codec:
 
     Encoding modes: rec,   str     Record Encoding
     --------------  -----  -----  -----------
-        'Verbose' = True,  True    Dict, Name
-        'Concise' = False, True    List, Name
-       'Minified' = False, False   List, Tag
-         not used = True,  False   Dict, Tag
+        'Verbose'  = True,  True    Dict, Name
+        'M2M'      = False, False   List, Tag
+    unused concise = False, True    List, Name
+         unused    = True,  False   Dict, Tag
     """
 
     def __init__(self, schema, verbose_rec=False, verbose_str=False):
@@ -90,28 +90,6 @@ class Codec:
 
 #    def _base_type(self, ftype):
 #        return ftype if is_builtin(ftype) else self.types[ftype][TTYPE]
-
-    def _check_type(self, ts, val, vtype, fail=False):      # fail forces rejection of boolean vals for number types
-        if vtype is not None:
-            if fail or not isinstance(val, vtype):
-                td = ts[S_TDEF]
-                tn =  ('%s(%s)' % (td[TNAME], td[TTYPE]) if td else 'Primitive')
-                raise TypeError('%s: %s is not %s' % (tn, val, vtype))
-
-    def _check_format(self, ts, val):
-        if not ts[S_FORMAT][1](val):
-            td = ts[S_TDEF]
-            tn = ('%s(%s)' % (td[TNAME], td[TTYPE]) if td else 'Primitive')
-            raise ValueError('%s: %s is not a valid %s' % (tn, val, ts[S_FORMAT][0]))
-
-    def _check_array_len(self, ts, val):
-        op = ts[S_TOPT]
-        tn = ts[S_TDEF][TNAME]
-        if len(val) < op['min']:
-            raise ValueError('%s: length %s < minimum %s' % (tn, len(val), op['min']))
-        if len(val) > op['max']:
-            raise ValueError('%s: length %s > maximum %s' % (tn, len(val), op['max']))
-
     def set_mode(self, verbose_rec=False, verbose_str=False):
         def _add_dtype(fs, newfs):          # Create datatype needed by a field
             dname = '$' + str(len(self.arrays))
@@ -197,7 +175,7 @@ class Codec:
 
 
 def _format_ok(val):      # No value constraints on this type
-    return True
+    return val
 
 
 def _bad_index(ts, k, val):
@@ -219,53 +197,86 @@ def _bad_value(ts, val, fld=None):
         raise ValueError('%s(%s): bad value: %s' % (td[TNAME], td[TTYPE], v))
 
 
+def _check_type(ts, val, vtype, fail=False):      # fail forces rejection of boolean vals for number types
+    if vtype is not None:
+        if fail or not isinstance(val, vtype):
+            td = ts[S_TDEF]
+            tn =  ('%s(%s)' % (td[TNAME], td[TTYPE]) if td else 'Primitive')
+            raise TypeError('%s: %s is not %s' % (tn, val, vtype))
+
+
+def _format(ts, val):
+    try:
+        return ts[S_FORMAT][1](val)
+    except ValueError:
+        td = ts[S_TDEF]
+        tn = ('%s(%s)' % (td[TNAME], td[TTYPE]) if td else 'Primitive')
+        raise ValueError('%s: %s is not a valid %s' % (tn, val, ts[S_FORMAT][0]))
+
+
+def _check_array_len(ts, val):
+    op = ts[S_TOPT]
+    tn = ts[S_TDEF][TNAME]
+    if len(val) < op['min']:
+        raise ValueError('%s: length %s < minimum %s' % (tn, len(val), op['min']))
+    if len(val) > op['max']:
+        raise ValueError('%s: length %s > maximum %s' % (tn, len(val), op['max']))
+
+
 def _extra_value(ts, val, fld):
     td = ts[S_TDEF]
     raise ValueError('%s(%s): unexpected field: %s not in %s:' % (td[TNAME], td[TTYPE], val, fld))
 
 
 def _decode_array_of(ts, val, codec):
-    codec._check_type(ts, val, list)
-    codec._check_array_len(ts, val)
+    _check_type(ts, val, list)
+    _check_array_len(ts, val)
     return [codec.decode(ts[S_TOPT]['rtype'], v) for v in val]
 
 
 def _encode_array_of(ts, val, codec):
-    codec._check_type(ts, val, list)
-    codec._check_array_len(ts, val)
+    _check_type(ts, val, list)
+    _check_array_len(ts, val)
     return [codec.encode(ts[S_TOPT]['rtype'], v) for v in val]
 
 
-def _decode_binary(ts, val, codec):
-    codec._check_type(ts, val, type(''))
-    v = val + ((4 - len(val)%4)%4)*'='
+def _decode_binary_b64(ts, val, codec):     # Decode base64url ASCII string to bytes
+    _check_type(ts, val, type(''))
+    v = val + ((4 - len(val)%4)%4)*'='          # Pad b64 string out to a multiple of 4 characters
     if set(v) - set(string.ascii_letters + string.digits + '-_='):  # Python 2 doesn't support Validate
         raise TypeError('base64decode: bad character')
-    v2 = base64.b64decode(v.encode(encoding='UTF-8'), altchars='-_')
-    codec._check_format(ts, v2)
-    return v2
+    return _format(ts, base64.b64decode(v, altchars='-_'))
 
 
-def _encode_binary(ts, val, codec):
-    codec._check_type(ts, val, bytes)
-    codec._check_format(ts, val)
-    return base64.urlsafe_b64encode(val).decode(encoding='UTF-8').rstrip('=')
+def _decode_binary_hex(ts, val, codec):     # Decode hex ASCII string to bytes
+    _check_type(ts, val, type(''))
+    return _format(ts, base64.b16decode(val))
+
+
+def _encode_binary_b64(ts, val, codec):     # Encode bytes to base64url string
+    _check_type(ts, val, bytes)
+    return base64.urlsafe_b64encode(_format(ts, val)).decode(encoding='UTF-8').rstrip('=')
+
+
+def _encode_binary_hex(ts, val, codec):     # Encode bytes to hex string
+    _check_type(ts, val, bytes)
+    return base64.b16encode(_format(ts, val)).decode(encoding='UTF-8')
 
 
 def _decode_boolean(ts, val, codec):
-    codec._check_type(ts, val, bool)
+    _check_type(ts, val, bool)
     return val
 
 
 def _encode_boolean(ts, val, codec):
-    codec._check_type(ts, val, bool)
+    _check_type(ts, val, bool)
     return val
 
 
 def _decode_achoice(ts, val, codec):        # Array Choice: val == [tag, value]
     assert type(val) == list                # TODO: Write encoder, match tags
     k, aval = val
-    codec.check_type(ts, aval, list)
+    _check_type(ts, aval, list)
     if k < 1 or k > len(ts[S_FLD]) or k > len(aval):
         _bad_index(ts, k, aval)
     f = ts[S_FLD][k][S_FDEF]
@@ -274,7 +285,7 @@ def _decode_achoice(ts, val, codec):        # Array Choice: val == [tag, value]
 
 
 def _decode_choice(ts, val, codec):         # Map Choice:  val == {key: value}
-    codec._check_type(ts, val, dict)
+    _check_type(ts, val, dict)
     if len(val) != 1:
         _bad_choice(ts, val)
     k, v = next(iter(val.items()))
@@ -285,7 +296,7 @@ def _decode_choice(ts, val, codec):         # Map Choice:  val == {key: value}
 
 
 def _encode_choice(ts, val, codec):         # TODO: bad schema - verify * field has only Choice type
-    codec._check_type(ts, val, dict)
+    _check_type(ts, val, dict)
     if len(val) != 1:
         _bad_choice(ts, val)
     k, v = next(iter(val.items()))
@@ -300,7 +311,7 @@ def _encode_choice(ts, val, codec):         # TODO: bad schema - verify * field 
 
 def _decode_enumerated(ts, val, codec):
     etype = int if 'compact' in ts[S_TOPT] else ts[S_STYPE]
-    codec._check_type(ts, val, etype)
+    _check_type(ts, val, etype)
     if val in ts[S_DMAP]:
         return ts[S_DMAP][val]
     else:
@@ -310,7 +321,7 @@ def _decode_enumerated(ts, val, codec):
 
 def _encode_enumerated(ts, val, codec):
     etype = int if 'compact' in ts[S_TOPT] else type('')
-    codec._check_type(ts, val, etype)
+    _check_type(ts, val, etype)
     if val in ts[S_EMAP]:
         return ts[S_EMAP][val]
     else:
@@ -319,27 +330,27 @@ def _encode_enumerated(ts, val, codec):
 
 
 def _decode_integer(ts, val, codec):
-    codec._check_type(ts, val, numbers.Integral, isinstance(val, bool))
-    return val
+    _check_type(ts, val, numbers.Integral, isinstance(val, bool))
+    return _format(ts, val)
 
 
 def _encode_integer(ts, val, codec):
-    codec._check_type(ts, val, numbers.Integral, isinstance(val, bool))
-    return val
+    _check_type(ts, val, numbers.Integral, isinstance(val, bool))
+    return _format(ts, val)
 
 
 def _decode_number(ts, val, codec):
-    codec._check_type(ts, val, numbers.Real, isinstance(val, bool))
-    return val
+    _check_type(ts, val, numbers.Real, isinstance(val, bool))
+    return _format(ts, val)
 
 
 def _encode_number(ts, val, codec):
-    codec._check_type(ts, val, numbers.Real, isinstance(val, bool))
-    return val
+    _check_type(ts, val, numbers.Real, isinstance(val, bool))
+    return _format(ts, val)
 
 
 def _decode_maprec(ts, val, codec):
-    codec._check_type(ts, val, ts[S_CODEC][C_ETYPE])
+    _check_type(ts, val, ts[S_CODEC][C_ETYPE])
     apival = dict()
     fx = FNAME if ts[S_VSTR] else FTAG    # Verbose or minified identifier strings
     fnames = [str(k) for k in ts[S_FLD]]
@@ -374,7 +385,7 @@ def _decode_maprec(ts, val, codec):
 
 
 def _encode_maprec(ts, val, codec):
-    codec._check_type(ts, val, dict)
+    _check_type(ts, val, dict)
     encval = ts[S_CODEC][C_ETYPE]()
     assert type(encval) in (list, dict)
     fx = FNAME if ts[S_VSTR] else FTAG    # Verbose or minified identifier strings
@@ -411,7 +422,7 @@ def _encode_maprec(ts, val, codec):
 
 
 def _decode_array(ts, val, codec):          # Ordered list of types, returned as a list
-    codec._check_type(ts, val, list)
+    _check_type(ts, val, list)
     apival = list()
     extra = len(val) > len(ts[S_FLD])
     if extra:
@@ -439,7 +450,7 @@ def _decode_array(ts, val, codec):          # Ordered list of types, returned as
 
 
 def _encode_array(ts, val, codec):
-    codec._check_type(ts, val, list)
+    _check_type(ts, val, list)
     encval = list()
     extra = len(val) > len(ts[S_FLD])
     if extra:
@@ -467,29 +478,27 @@ def _encode_array(ts, val, codec):
 
 
 def _decode_null(ts, val, codec):
-    codec._check_type(ts, val, type(''))
+    _check_type(ts, val, type(''))
     if val:
         _bad_value(ts, val)
     return val
 
 
 def _encode_null(ts, val, codec):
-    codec._check_type(ts, val, type(''))
+    _check_type(ts, val, type(''))
     if val:
         _bad_value(ts, val)
     return val
 
 
 def _decode_string(ts, val, codec):
-    codec._check_type(ts, val, type(''))
-    codec._check_format(ts, val)
-    return val
+    _check_type(ts, val, type(''))
+    return _format(ts, val)
 
 
 def _encode_string(ts, val, codec):
-    codec._check_type(ts, val, type(''))
-    codec._check_format(ts, val)
-    return val
+    _check_type(ts, val, type(''))
+    return _format(ts, val)
 
 
 def is_primitive(vtype):
@@ -501,7 +510,7 @@ def is_builtin(vtype):
 
 
 enctab = {  # decode, encode, min encoded type
-    'Binary': (_decode_binary, _encode_binary, str),
+    'Binary': (_decode_binary_b64, _encode_binary_b64, str),    # TODO: dynamic select b64 or hex
     'Boolean': (_decode_boolean, _encode_boolean, bool),
     'Integer': (_decode_integer, _encode_integer, int),
     'Number': (_decode_number, _encode_number, float),
