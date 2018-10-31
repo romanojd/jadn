@@ -42,6 +42,6 @@ if __name__ == '__main__':
 
         jadn_dump(jadn_strip(schema), dest + '_strip.jadn')
         jadn_dump(schema, dest + '.jadn')
-        jas_dump(schema, dest + '.jas', source)
+        jas_dump(schema, dest + '.jas')
         table_dump(schema, dest + '.md', source, form='markdown')
         table_dump(schema, dest + '.html', source, form='html')

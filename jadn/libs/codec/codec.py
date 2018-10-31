@@ -17,7 +17,7 @@ import numbers
 import string
 from .jadn_defs import *
 from .codec_utils import topts_s2d, fopts_s2d
-from .codec_format import get_format_function
+from .codec_format import get_format_function, get_format_convert_function
 
 __version__ = '0.2'
 

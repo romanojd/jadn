@@ -5,9 +5,9 @@
   "title": "OpenC2 Language Objects",
   "description": "Datatypes that define the content of OpenC2 commands and responses.",
   "imports": [
-    ["slpf", "oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0"],
-    ["jadn", "oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0"]
-  ],
+   ["slpf", "oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0"],
+   ["jadn", "oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0"]
+ ],
   "exports": ["OpenC2-Command", "OpenC2-Response"]
  },
 
@@ -109,17 +109,13 @@
     [32473, "Example", "32473:Results", [], "Results defined in the Example Inc. extension profile"]
   ]],
 
-  ["Unr-Target", "Choice", ["="], "", [
-  ]],
+  ["Unr-Target", "Choice", ["="], "", []],
 
-  ["Unr-Specifiers", "Choice", ["="], "", [
-  ]],
+  ["Unr-Specifiers", "Choice", ["="], "", []],
 
-  ["Unr-Args", "Map", ["="], "", [
-  ]],
+  ["Unr-Args", "Map", ["="], "", []],
 
-  ["Unr-Results", "Map", ["="], "", [
-  ]],
+  ["Unr-Results", "Map", ["="], "", []],
 
   ["Artifact", "Record", [], "", [
     [1, "mime_type", "String", ["[0"], "Permitted values specified in the IANA Media Types registry"],
@@ -202,7 +198,7 @@
     [2, "url", "URI", [], "MUST be a valid URL that resolves to the un-encoded content"]
   ]],
 
-  ["Port", "Integer", ["[0","]65535"], "Transport Protocol Port Number, RFC 6335"],
+  ["Port", "Integer", ["[0", "]65535"], "Transport Protocol Port Number, RFC 6335"],
 
   ["Feature", "Enumerated", [], "Results to be included in response to query features command", [
     [1, "versions", "List of OpenC2 language versions supported by this actuator"],
@@ -243,4 +239,5 @@
     [1, "action", "Action", [], "An action supported by this actuator"],
     [2, "targets", "Target", ["]0", "*"], "List of targets applicable to this action"]
   ]]
-]}
+ ]
+}

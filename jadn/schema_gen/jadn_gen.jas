@@ -1,16 +1,14 @@
--- Generated from schema\jadn.jadn, Thu Oct 25 11:21:33 2018
-
 /*
 module:        oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0
+patch:         0
 title:         JADN Syntax
 description:   Syntax of a JSON Abstract Data Notation (JADN) module.
 exports:       ['Schema', 'Uname']
-patch:         0
 */
 
 Schema ::= RECORD {    -- Definition of a JADN file
     meta         Meta,    -- Information about this schema module
-    types        Type     -- Types defined in this schema module ***{'max': 0}
+    types        Type     -- Types defined in this schema module %{'max': 0}
 }
 
 Meta ::= MAP {    -- Meta-information about this schema
@@ -18,8 +16,8 @@ Meta ::= MAP {    -- Meta-information about this schema
     patch        [2] STRING OPTIONAL,    -- Patch version
     title        [3] STRING OPTIONAL,    -- Title
     description  [4] STRING OPTIONAL,    -- Description
-    imports      [5] Import OPTIONAL,    -- Imported schema modules ***{'max': 0}
-    exports      [6] Identifier OPTIONAL,    -- Data types exported by this module ***{'max': 0}
+    imports      [5] Import OPTIONAL,    -- Imported schema modules %{'max': 0}
+    exports      [6] Identifier OPTIONAL,    -- Data types exported by this module %{'max': 0}
     bounds       [7] Bounds OPTIONAL     -- Schema-wide upper bounds
 }
 
@@ -37,10 +35,10 @@ Bounds ::= ARRAY {    -- Schema-wide default upper bounds.  Overrides codec defa
 
 Type ::= ARRAY {
     tname        [1] Identifier,    -- Name of this datatype
-    btype        [2] JADN-Type,    -- Base type.  Enumerated value derived from list of JADN data types ***{'rtype': ''}
-    opts         [3] Option,    -- Type options ***{'max': 0}
+    btype        [2] JADN-Type.*,    -- Base type.  Enumerated value derived from list of JADN data types
+    opts         [3] Option,    -- Type options %{'max': 0}
     desc         [4] STRING,    -- Description of this data type
-    fields       [5] JADN-Type.&btype     -- List of fields for compound types.  Not present for primitive types ***{'max': 0}
+    fields       [5] JADN-Type.&btype     -- List of fields for compound types.  Not present for primitive types %{'max': 0}
 }
 
 JADN-Type ::= CHOICE {
@@ -50,12 +48,12 @@ JADN-Type ::= CHOICE {
     Number       [4] NULL,    -- Real number
     Null         [5] NULL,    -- Nothing
     String       [6] NULL,    -- Character (text) string
-    Array        [7] FullField,    -- Ordered list of unnamed fields ***{'max': 0}
+    Array        [7] FullField,    -- Ordered list of unnamed fields %{'max': 0}
     ArrayOf      [8] NULL,    -- Ordered list of fields of a specified type
-    Choice       [9] FullField,    -- One of a set of named fields ***{'max': 0}
-    Enumerated   [10] EnumField,    -- One of a set of id:name pairs ***{'max': 0}
-    Map          [11] FullField,    -- Unordered set of named fields ***{'max': 0}
-    Record       [12] FullField     -- Ordered list of named fields ***{'max': 0}
+    Choice       [9] FullField,    -- One of a set of named fields %{'max': 0}
+    Enumerated   [10] EnumField,    -- One of a set of id:name pairs %{'max': 0}
+    Map          [11] FullField,    -- Unordered set of named fields %{'max': 0}
+    Record       [12] FullField     -- Ordered list of named fields %{'max': 0}
 }
 
 EnumField ::= ARRAY {    -- Item definition for Enumerated types
@@ -72,12 +70,12 @@ FullField ::= ARRAY {    -- Field definition for other compound types
                  [5] STRING     -- Field description
 }
 
-Identifier ::= STRING(PATTERN "^[a-zA-Z][\w-]*$")    -- A string starting with an alpha char followed by zero or more alphanumeric / underscore / dash chars
+Identifier ::= STRING(PATTERN '^[a-zA-Z][\w-]*$') %min: 1% %max: 32%    -- A string starting with an alpha char followed by zero or more alphanumeric / underscore / dash chars
 
-Nsid ::= STRING(PATTERN "^[a-zA-Z][\w-]*$")    -- Namespace ID - a short identifier
+Nsid ::= STRING(PATTERN '^[a-zA-Z][\w-]*$') %min: 1% %max: 8%    -- Namespace ID - a short identifier
 
-Uname ::= STRING    -- Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes
+Uname ::= STRING %min: 1% %max: 100%    -- Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes
 
-Options ::= ARRAY_OF    -- Options list may be empty but may not be omitted
+Options ::= ARRAY_OF(Option) %min: 0% %max: 10%    -- Options list may be empty but may not be omitted
 
-Option ::= STRING    -- Option string: 1st char = option id
+Option ::= STRING %min: 1% %max: 100%    -- Option string: 1st char = option id

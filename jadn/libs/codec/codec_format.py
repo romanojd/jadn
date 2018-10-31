@@ -41,6 +41,9 @@ def b_ip_addr(bval):        # Length of IP addr must be 32 or 128 bits
     raise ValueError
 
 
+def b_ip_subnet(bval):      # CIDR IP Address Range = base address + network prefix length
+    raise ValueError        # TODO: write it
+
 def s2b_ip_addr(sval):      # Convert IP addr from string to binary
     try:
         return socket.inet_pton(AF_INET, sval)
@@ -53,6 +56,14 @@ def b2s_ip_addr(bval):      # Convert IP addr from binary to string
         return socket.inet_ntop(AF_INET, bval)
     except OSError:
         raise ValueError
+
+
+def s2b_ip_subnet(sval):
+    raise ValueError        # TODO: write it
+
+
+def b2s_ip_subnet(bval):
+    raise ValueError
 
 
 def b_mac_addr(bval):       # Length of MAC addr must be 48 or 64 bits
@@ -74,21 +85,31 @@ def s_uri(sval):            # Check if valid URI
 def get_format_function(name, type):
     try:
         col = {'String': 0, 'Binary': 1, 'Number': 2}[type]
-        return name, FORMAT_FUNCTIONS[name][col]
+        return name, FORMAT_CHECK_FUNCTIONS[name][col]
     except KeyError:
         return '', None
 
 
-FORMAT_FUNCTIONS = {
-    'hostname': [s_hostname, None, None],       # Domain-Name
-    'email':    [s_email, None, None],          # Email-Addr
-    'ip-addr':  [None, b_ip_addr, None],        # IP-Addr
-    'mac-addr': [None, b_mac_addr, None],       # MAC-Addr
-    'uri':      [s_uri, None, None]             # URI
+def get_format_convert_function(name, direction):
+    try:
+        col = {'b2s': 0, 's2b': 1}[direction]
+        return name, FORMAT_CONVERT_FUNCTIONS[name][col]
+    except KeyError:
+        return '', None
+
+
+FORMAT_CHECK_FUNCTIONS = {
+    'hostname':     [s_hostname, None, None],       # Domain-Name
+    'email':        [s_email, None, None],          # Email-Addr
+    'ip-addr':      [None, b_ip_addr, None],        # IP-Addr
+    'ip-subnet':    [None, b_ip_subnet, None],      # IP-Subnet
+    'mac-addr':     [None, b_mac_addr, None],       # MAC-Addr
+    'uri':          [s_uri, None, None]             # URI
 }
 
-SERIALIZE_FUNCTIONS = {
-    'ip-addr':  (b2s_ip_addr, s2b_ip_addr)      # IP Address
+FORMAT_CONVERT_FUNCTIONS = {
+    'ip-addr':  (b2s_ip_addr, s2b_ip_addr),     # IP Address
+    'ip-subnet': (b2s_ip_subnet, s2b_ip_subnet) # IP Subnet Address with CIDR prefix length
 }
 
 # May not need functions for:

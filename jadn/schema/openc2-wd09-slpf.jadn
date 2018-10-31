@@ -5,9 +5,9 @@
   "title": "OpenC2 Language Objects",
   "description": "OpenC2 Language content used by Stateless Packet Filters.",
   "imports": [
-    ["slpf", "oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0"],
-    ["jadn", "oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0"]
-  ],
+   ["slpf", "oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0"],
+   ["jadn", "oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0"]
+ ],
   "exports": ["OpenC2-Command", "OpenC2-Response", "Message-Type", "Status-Code", "Request-Id", "Date-Time"]
  },
 
@@ -109,7 +109,7 @@
     [132, "sctp", "Stream Control Transmission Protocol - RFC 4960"]
   ]],
 
-  ["Port", "Integer", ["[0","]65535"], "Transport Protocol Port Number, RFC 6335"],
+  ["Port", "Integer", ["[0", "]65535"], "Transport Protocol Port Number, RFC 6335"],
 
   ["Feature", "Enumerated", [], "Results to be included in response to query features command", [
     [1, "versions", "List of OpenC2 language versions supported by this actuator"],
@@ -132,4 +132,5 @@
     [1, "action", "Action", [], "An action supported by this actuator"],
     [2, "targets", "Target", ["]0", "*"], "List of targets applicable to this action"]
   ]]
-]}
+ ]
+}

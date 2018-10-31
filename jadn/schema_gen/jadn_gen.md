@@ -1,4 +1,4 @@
-<!-- Generated from schema\jadn.jadn, Thu Oct 25 11:21:33 2018-->
+<!-- Generated from schema\jadn.jadn, Wed Oct 31 16:26:29 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -110,7 +110,7 @@
 
 | Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| Options | ArrayOf(Option) ['min', 'max'] | Options list may be empty but may not be omitted |
+| Options | ArrayOf(Option) ['max', 'min'] | Options list may be empty but may not be omitted |
 
 **_Type: Option_**
 

@@ -1,4 +1,4 @@
-<!-- Generated from schema\openc2-wd09-slpf_merged.jadn, Thu Oct 25 11:21:34 2018-->
+<!-- Generated from schema\openc2-wd09-slpf_merged.jadn, Wed Oct 31 16:26:30 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -340,7 +340,7 @@
 
 | Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| jadn:Options | ArrayOf(jadn:Option) ['min', 'max'] | Options list may be empty but may not be omitted |
+| jadn:Options | ArrayOf(jadn:Option) ['max', 'min'] | Options list may be empty but may not be omitted |
 
 **_Type: jadn:Option_**
 
