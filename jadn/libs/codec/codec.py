@@ -18,6 +18,7 @@ import string
 from .jadn_defs import *
 from .codec_utils import topts_s2d, fopts_s2d
 from .codec_format import get_format_function, get_format_convert_function
+from .codec_format import FMT_NAME, FMT_CHECK, FMT_B2S, FMT_S2B
 
 __version__ = '0.2'
 
@@ -155,8 +156,7 @@ class Codec:
                 amax = opts['max'] if 'max' in opts and opts['max'] > 0 else self.max_array
                 opts.update({'min': amin, 'max': amax})
             elif 'format' in symval[S_TOPT]:
-                ff = get_format_function(symval[S_TOPT]['format'], t[TTYPE])
-                symval[S_FORMAT] = ff if ff[1] else ('', _format_ok)
+                symval[S_FORMAT] = get_format_function(symval[S_TOPT]['format'], t[TTYPE])
             return symval
                         # TODO: Add string and binary min and max
 
@@ -205,13 +205,13 @@ def _check_type(ts, val, vtype, fail=False):      # fail forces rejection of boo
             raise TypeError('%s: %s is not %s' % (tn, val, vtype))
 
 
-def _format(ts, val):
+def _format(ts, val, fmtop):
     try:
-        return ts[S_FORMAT][1](val)
+        return ts[S_FORMAT][fmtop](val)         # fmtop selects function to check, serialize or deserialize
     except ValueError:
         td = ts[S_TDEF]
         tn = ('%s(%s)' % (td[TNAME], td[TTYPE]) if td else 'Primitive')
-        raise ValueError('%s: %s is not a valid %s' % (tn, val, ts[S_FORMAT][0]))
+        raise ValueError('%s: %s is not a valid %s' % (tn, val, ts[S_FORMAT][FMT_NAME]))
 
 
 def _check_array_len(ts, val):
@@ -245,22 +245,32 @@ def _decode_binary_b64(ts, val, codec):     # Decode base64url ASCII string to b
     v = val + ((4 - len(val)%4)%4)*'='          # Pad b64 string out to a multiple of 4 characters
     if set(v) - set(string.ascii_letters + string.digits + '-_='):  # Python 2 doesn't support Validate
         raise TypeError('base64decode: bad character')
-    return _format(ts, base64.b64decode(v, altchars='-_'))
+    return _format(ts, base64.b64decode(str(v), altchars='-_'), FMT_CHECK)
 
 
 def _decode_binary_hex(ts, val, codec):     # Decode hex ASCII string to bytes
     _check_type(ts, val, type(''))
-    return _format(ts, base64.b16decode(val))
+    return _format(ts, base64.b16decode(val), FMT_CHECK)
+
+
+def _decode_binary_str(ts, val, codec):     # Decode format-specific string to bytes
+    _check_type(ts, val, type(''))
+    return _format(ts, val, FMT_S2B)
 
 
 def _encode_binary_b64(ts, val, codec):     # Encode bytes to base64url string
     _check_type(ts, val, bytes)
-    return base64.urlsafe_b64encode(_format(ts, val)).decode(encoding='UTF-8').rstrip('=')
+    return base64.urlsafe_b64encode(_format(ts, val, FMT_CHECK)).decode(encoding='UTF-8').rstrip('=')
 
 
 def _encode_binary_hex(ts, val, codec):     # Encode bytes to hex string
     _check_type(ts, val, bytes)
-    return base64.b16encode(_format(ts, val)).decode(encoding='UTF-8')
+    return base64.b16encode(_format(ts, val, FMT_CHECK)).decode(encoding='UTF-8')
+
+
+def _encode_binary_str(ts, val, codec):     # Encode format-specific bytes to string
+    _check_type(ts, val, bytes)
+    return _format(ts, val, FMT_B2S)
 
 
 def _decode_boolean(ts, val, codec):
@@ -331,22 +341,22 @@ def _encode_enumerated(ts, val, codec):
 
 def _decode_integer(ts, val, codec):
     _check_type(ts, val, numbers.Integral, isinstance(val, bool))
-    return _format(ts, val)
+    return _format(ts, val, FMT_CHECK)
 
 
 def _encode_integer(ts, val, codec):
     _check_type(ts, val, numbers.Integral, isinstance(val, bool))
-    return _format(ts, val)
+    return _format(ts, val, FMT_CHECK)
 
 
 def _decode_number(ts, val, codec):
     _check_type(ts, val, numbers.Real, isinstance(val, bool))
-    return _format(ts, val)
+    return _format(ts, val, FMT_CHECK)
 
 
 def _encode_number(ts, val, codec):
     _check_type(ts, val, numbers.Real, isinstance(val, bool))
-    return _format(ts, val)
+    return _format(ts, val, FMT_CHECK)
 
 
 def _decode_maprec(ts, val, codec):
@@ -493,12 +503,12 @@ def _encode_null(ts, val, codec):
 
 def _decode_string(ts, val, codec):
     _check_type(ts, val, type(''))
-    return _format(ts, val)
+    return _format(ts, val, FMT_CHECK)
 
 
 def _encode_string(ts, val, codec):
     _check_type(ts, val, type(''))
-    return _format(ts, val)
+    return _format(ts, val, FMT_CHECK)
 
 
 def is_primitive(vtype):

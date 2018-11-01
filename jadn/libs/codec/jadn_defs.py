@@ -28,7 +28,6 @@ FTYPE = 2       # Datatype of field
 FOPTS = 3       # Field options
 FDESC = 4       # Field Description
 
-
 # JADN built-in datatypes
 
 PRIMITIVE_TYPES = (

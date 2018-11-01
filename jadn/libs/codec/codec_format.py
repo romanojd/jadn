@@ -1,6 +1,14 @@
+from __future__ import unicode_literals
 import re
 import socket
 from socket import AF_INET, AF_INET6
+
+# Format Operations
+FMT_NAME = 0  # Name of format option
+FMT_CHECK = 1 # Function to check if value is valid (String, Binary, or Integer/Number types)
+FMT_S2B = 2   # Function to convert string to binary (decode / deserialize Binary types)
+FMT_B2S = 3   # Function to convert binary to string (encode / serialize Binary types)
+
 
 # From https://stackoverflow.com/questions/2532053/validate-a-hostname-string
 def s_hostname(sval):
@@ -82,18 +90,10 @@ def s_uri(sval):            # Check if valid URI
     raise ValueError
 
 
-def get_format_function(name, type):
+def get_format_function(name, basetype, enctype=None):
     try:
-        col = {'String': 0, 'Binary': 1, 'Number': 2}[type]
+        col = {'String': 0, 'Binary': 1, 'Number': 2}[basetype]
         return name, FORMAT_CHECK_FUNCTIONS[name][col]
-    except KeyError:
-        return '', None
-
-
-def get_format_convert_function(name, direction):
-    try:
-        col = {'b2s': 0, 's2b': 1}[direction]
-        return name, FORMAT_CONVERT_FUNCTIONS[name][col]
     except KeyError:
         return '', None
 
