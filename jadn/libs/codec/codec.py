@@ -17,7 +17,7 @@ import numbers
 import string
 from .jadn_defs import *
 from .codec_utils import topts_s2d, fopts_s2d
-from .codec_format import get_format_function, get_format_convert_function
+from .codec_format import get_format_function
 from .codec_format import FMT_NAME, FMT_CHECK, FMT_B2S, FMT_S2B
 
 __version__ = '0.2'
@@ -120,7 +120,7 @@ class Codec:
                     aa,                             # 0: S_TDEF:  JADN type definition
                     enctab['ArrayOf'],              # 1: S_CODEC: Decoder, Encoder, Encoded type
                     list,                           # 2: S_STYPE: Encoded string type (str or tag)
-                    ('', _format_ok),               # 3: S_FORMAT: Function that checks value constraints
+                    get_format_function('', ''),   # 3: S_FORMAT: Functions that check value constraints
                     {'rtype': fs[S_FDEF][FTYPE], 'min': amin, 'max': amax}  # 4: S_TOPT:  Type Options (dict)
                 ]
                 aa[TNAME] = _add_dtype(fs, aas)                     # Add to list of dynamically generated types
@@ -131,7 +131,7 @@ class Codec:
                 t,                                  # 0: S_TDEF:  JADN type definition
                 enctab[t[TTYPE]],                   # 1: S_CODEC: Decoder, Encoder, Encoded type
                 type('') if verbose_str else int,   # 2: S_STYPE: Encoded string type (str or tag)
-                ('', _format_ok),                   # 3: S_FORMAT: Function that checks value constraints
+                [],                                 # 3: S_FORMAT: Functions that check value constraints
                 topts_s2d(t[TOPTS]),                # 4: S_TOPT:  Type Options (dict)
                 verbose_str,                        # 5: S_VSTR:  Verbose String Identifiers
                 {},                                 # 6: S_FLD/S_DMAP: Field list / Enum Val to Name
@@ -155,8 +155,9 @@ class Codec:
                 amin = opts['min'] if 'min' in opts else 1
                 amax = opts['max'] if 'max' in opts and opts['max'] > 0 else self.max_array
                 opts.update({'min': amin, 'max': amax})
-            elif 'format' in symval[S_TOPT]:
-                symval[S_FORMAT] = get_format_function(symval[S_TOPT]['format'], t[TTYPE])
+            fchk = symval[S_TOPT]['format'] if 'format' in symval[S_TOPT] else None
+            fcvt = symval[S_TOPT]['cvt'] if 'cvt' in symval[S_TOPT] else None
+            symval[S_FORMAT] = get_format_function(fchk, t[TTYPE], fcvt)
             return symval
                         # TODO: Add string and binary min and max
 
@@ -171,11 +172,7 @@ class Codec:
 #                    f[S_FNAMES] = [c[FNAME] for c in t[FIELDS]]
 
         self.symtab.update(self.arrays)         # Add anonymous arrays to symbol table
-        self.symtab.update({t: [None, enctab[t], enctab[t][C_ETYPE], ('', _format_ok)] for t in PRIMITIVE_TYPES})
-
-
-def _format_ok(val):      # No value constraints on this type
-    return val
+        self.symtab.update({t: [None, enctab[t], enctab[t][C_ETYPE], get_format_function('', t)] for t in PRIMITIVE_TYPES})
 
 
 def _bad_index(ts, k, val):
@@ -240,35 +237,12 @@ def _encode_array_of(ts, val, codec):
     return [codec.encode(ts[S_TOPT]['rtype'], v) for v in val]
 
 
-def _decode_binary_b64(ts, val, codec):     # Decode base64url ASCII string to bytes
-    _check_type(ts, val, type(''))
-    v = val + ((4 - len(val)%4)%4)*'='          # Pad b64 string out to a multiple of 4 characters
-    if set(v) - set(string.ascii_letters + string.digits + '-_='):  # Python 2 doesn't support Validate
-        raise TypeError('base64decode: bad character')
-    return _format(ts, base64.b64decode(str(v), altchars='-_'), FMT_CHECK)
-
-
-def _decode_binary_hex(ts, val, codec):     # Decode hex ASCII string to bytes
-    _check_type(ts, val, type(''))
-    return _format(ts, base64.b16decode(val), FMT_CHECK)
-
-
-def _decode_binary_str(ts, val, codec):     # Decode format-specific string to bytes
+def _decode_binary(ts, val, codec):     # Decode base64url ASCII string to bytes
     _check_type(ts, val, type(''))
     return _format(ts, val, FMT_S2B)
 
 
-def _encode_binary_b64(ts, val, codec):     # Encode bytes to base64url string
-    _check_type(ts, val, bytes)
-    return base64.urlsafe_b64encode(_format(ts, val, FMT_CHECK)).decode(encoding='UTF-8').rstrip('=')
-
-
-def _encode_binary_hex(ts, val, codec):     # Encode bytes to hex string
-    _check_type(ts, val, bytes)
-    return base64.b16encode(_format(ts, val, FMT_CHECK)).decode(encoding='UTF-8')
-
-
-def _encode_binary_str(ts, val, codec):     # Encode format-specific bytes to string
+def _encode_binary(ts, val, codec):     # Encode bytes to base64url string
     _check_type(ts, val, bytes)
     return _format(ts, val, FMT_B2S)
 
@@ -520,7 +494,7 @@ def is_builtin(vtype):
 
 
 enctab = {  # decode, encode, min encoded type
-    'Binary': (_decode_binary_b64, _encode_binary_b64, str),    # TODO: dynamic select b64 or hex
+    'Binary': (_decode_binary, _encode_binary, str),
     'Boolean': (_decode_boolean, _encode_boolean, bool),
     'Integer': (_decode_integer, _encode_integer, int),
     'Number': (_decode_number, _encode_number, float),

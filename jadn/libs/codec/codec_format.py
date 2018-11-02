@@ -1,13 +1,49 @@
 from __future__ import unicode_literals
+import base64
 import re
 import socket
 from socket import AF_INET, AF_INET6
+import string
 
 # Format Operations
 FMT_NAME = 0  # Name of format option
 FMT_CHECK = 1 # Function to check if value is valid (String, Binary, or Integer/Number types)
-FMT_S2B = 2   # Function to convert string to binary (decode / deserialize Binary types)
-FMT_B2S = 3   # Function to convert binary to string (encode / serialize Binary types)
+FMT_B2S = 2   # Function to convert binary to string (encode / serialize Binary types)
+FMT_S2B = 3   # Function to convert string to binary (decode / deserialize Binary types)
+
+
+def s2b_hex(sval):      # Convert from hex string to binary
+    return base64.b16decode(sval)
+
+
+def b2s_hex(bval):      # Convert from binary to hex string
+    return base64.b16encode(bval)
+
+
+"""
+def _decode_binary_b64(ts, val, codec):     # Decode base64url ASCII string to bytes
+    _check_type(ts, val, type(''))
+    v = val + ((4 - len(val)%4)%4)*'='          # Pad b64 string out to a multiple of 4 characters
+    if set(v) - set(string.ascii_letters + string.digits + '-_='):  # Python 2 doesn't support Validate
+        raise TypeError('base64decode: bad character')
+    return _format(ts, base64.b64decode(str(v), altchars='-_'), FMT_CHECK)
+
+
+def _encode_binary_b64(ts, val, codec):     # Encode bytes to base64url string
+    _check_type(ts, val, bytes)
+    return base64.urlsafe_b64encode(_format(ts, val, FMT_CHECK)).decode(encoding='UTF-8').rstrip('=')
+"""
+
+
+def s2b_base64url(sval):      # Convert from base64url string to binary
+    v = sval + ((4 - len(sval)%4)%4)*'='          # Pad b64 string out to a multiple of 4 characters
+    if set(v) - set(string.ascii_letters + string.digits + '-_='):  # Python 2 doesn't support Validate
+        raise TypeError('base64decode: bad character')
+    return base64.b64decode(str(v), altchars='-_')
+
+
+def b2s_base64url(bval):      # Convert from binary to base64url string
+    return base64.urlsafe_b64encode(bval).rstrip('=')
 
 
 # From https://stackoverflow.com/questions/2532053/validate-a-hostname-string
@@ -90,12 +126,22 @@ def s_uri(sval):            # Check if valid URI
     raise ValueError
 
 
-def get_format_function(name, basetype, enctype=None):
+def _format_ok(val):      # No value constraints on this type
+    return val
+
+
+def get_format_function(name, basetype, convert=None):
+    if basetype == 'Binary' and convert is None:
+        convert = 'b64u'
+    try:
+        cvt = FORMAT_CONVERT_FUNCTIONS[convert]
+    except KeyError:
+        cvt = (None, None)
     try:
         col = {'String': 0, 'Binary': 1, 'Number': 2}[basetype]
-        return name, FORMAT_CHECK_FUNCTIONS[name][col]
+        return (name, FORMAT_CHECK_FUNCTIONS[name][col]) + cvt
     except KeyError:
-        return '', None
+        return ('', _format_ok) + cvt
 
 
 FORMAT_CHECK_FUNCTIONS = {
@@ -108,34 +154,27 @@ FORMAT_CHECK_FUNCTIONS = {
 }
 
 FORMAT_CONVERT_FUNCTIONS = {
-    'ip-addr':  (b2s_ip_addr, s2b_ip_addr),     # IP Address
-    'ip-subnet': (b2s_ip_subnet, s2b_ip_subnet) # IP Subnet Address with CIDR prefix length
+    'b64u': (b2s_base64url, s2b_base64url),         # Base64url
+    'x': (b2s_hex, s2b_hex),                        # Hex
+    'ip-addr':  (b2s_ip_addr, s2b_ip_addr),         # IP Address
+    'ip-subnet': (b2s_ip_subnet, s2b_ip_subnet)     # IP Subnet Address with CIDR prefix length
 }
 
 # May not need functions for:
-#   Date-Time  - Integer - min and max value
-#   Duration   - Integer - max value?
-#   Identifier - String - regex pattern
-#   Port       - Integer - min 1 ?, max 65535
-#   Request-Id - Binary - len 0 - 8 bytes
-#   UUID       - Binary - len == 16 bytes + RFC 4122 checks?
+#   Date-Time       - Integer - min and max value for plausible date range
+#   Duration        - Integer - max value for plausible durations?
+#   Identifier      - String - regex pattern
+#   Port            - Integer - min 0, max 65535
+#   Request-Id      - Binary - len 0 - 8 bytes
+#   UUID            - Binary - len == 16 bytes + RFC 4122 checks?
 
-# Semantic validation functions from JSON Schema
-#    date-time
-#    date
-#    time
-#    email
-#    idn-email
-#    hostname
-#    idn-hostname
-#    ipv4
-#    ipv6
-#    uri
-#    uri-reference
-#    iri
-#    iri-reference
-#    uri-template
-#    json-pointer
-#    relative-json-pointer
-#    regex
-
+# Semantic validation functions from JSON Schema Draft 6
+#    date-time      - String, RFC 3339, section 5.6
+#    email          - String, RFC 5322, section 3.4.1
+#    hostname       - String, RFC 1034, section 3.1
+#    ipv4           - String, dotted-quad
+#    ipv6           - String, RFC 2373, section 2.2
+#    uri            - RFC 3986
+#    uri-reference  - RFC 3986, section 4.1
+#    json-pointer   - RFC 6901
+#    uri-template   - RFC 6570

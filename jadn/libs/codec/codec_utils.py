@@ -79,6 +79,7 @@ def topts_s2d(ostr):
 
     tval = {
         "compact": lambda x: True,
+        "cvt": lambda x: x,
         "min": lambda x: int(x),
         "max": lambda x: int(x),
         "rtype": lambda x: x,

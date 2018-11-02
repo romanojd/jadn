@@ -56,6 +56,7 @@ STRUCTURE_TYPES = (
 
 TYPE_OPTIONS = {        # ID, value type, description
     0x3d: 'compact',    # '=', boolean, Enumerated type and Choice/Map/Record keys are ID not Name
+    0x2e: 'cvt',        # '.', string, String conversion and validation function for Binary derived types
     0x5b: 'min',        # '[', integer, minimum string length, integer value, array length, property count
     0x5d: 'max',        # ']', integer, maximum string length, integer value, array length, property count
     0x2a: 'rtype',      # '*', string, Enumerated value from referenced type or ArrayOf element type

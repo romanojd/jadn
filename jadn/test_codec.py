@@ -1242,7 +1242,9 @@ class Bounds(unittest.TestCase):        # TODO: check max and min string length,
 schema_format = {  # JADN schema for value constraint tests
     'meta': {'module': 'unittests-Format'},
     'types': [
-        ['t_ipaddr', 'Binary', ['@ip-addr'], ''],
+        ['t_ipaddr_b64', 'Binary', ['@ip-addr'], ''],
+        ['t_ipaddr_bx', 'Binary', ['.x', '@ip-addr'], ''],
+        ['t_ipaddr_bstr', 'Binary', ['.ip-addr'], ''],
         ['t_ipaddr_s', 'String', ['@ip-addr'], ''],
         # ['t_ipaddrs', 'ArraryOf', ['*t_ipaddr'], ''],
         ['t_macaddr', 'Binary', ['@mac-addr'], ''],
@@ -1258,15 +1260,21 @@ class Format(unittest.TestCase):
         self.tc = Codec(schema_format, verbose_rec=True, verbose_str=True)
 
     ip1b = binascii.a2b_hex('c6020304')
-    ip1s = 'xgIDBA'
+    ip1s64 = 'xgIDBA'
+    ip1sx = 'C6020304'
+    ip1str = '192.2.3.4'
     ip2b = binascii.a2b_hex('20010db885a3000000008a2e03707334')
     ip2s = 'IAENuIWjAAAAAIouA3BzNA'
     ip3b_bad = binascii.a2b_hex('c602030456')
     ip3s_bad = 'xgIDBFY'
 
     def test_ip_addr(self):
-        self.assertEqual(self.tc.encode('t_ipaddr', self.ip1b), self.ip1s)
-        self.assertEqual(self.tc.decode('t_ipaddr', self.ip1s), self.ip1b)
+        self.assertEqual(self.tc.encode('t_ipaddr_b64', self.ip1b), self.ip1s64)
+        self.assertEqual(self.tc.decode('t_ipaddr_b64', self.ip1s64), self.ip1b)
+        self.assertEqual(self.tc.encode('t_ipaddr_bx', self.ip1b), self.ip1sx)
+        self.assertEqual(self.tc.decode('t_ipaddr_bx', self.ip1sx), self.ip1b)
+        self.assertEqual(self.tc.encode('t_ipaddr_bstr', self.ip1b), self.ip1str)
+        self.assertEqual(self.tc.decode('t_ipaddr_bstr', self.ip1str), self.ip1b)
         self.assertEqual(self.tc.encode('t_ipaddr', self.ip2b), self.ip2s)
         self.assertEqual(self.tc.decode('t_ipaddr', self.ip2s), self.ip2b)
         with self.assertRaises(ValueError):

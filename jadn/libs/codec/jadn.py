@@ -98,7 +98,7 @@ def jadn_check(schema):
 #        assert jc.encode('Schema', schema) == schema
 
     valid_topts = {                         # TODO: comprehensive review of valid type and field options, plus unit tests
-        'Binary': ['min', 'max', 'format'],
+        'Binary': ['min', 'max', 'format', 'cvt'],
         'Boolean': [],
         'Integer': ['min', 'max', 'format'],
         'Number': ['min', 'max', 'format'],
