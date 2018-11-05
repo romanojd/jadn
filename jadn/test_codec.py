@@ -1242,10 +1242,10 @@ class Bounds(unittest.TestCase):        # TODO: check max and min string length,
 schema_format = {  # JADN schema for value constraint tests
     'meta': {'module': 'unittests-Format'},
     'types': [
-        ['t_ipaddr_b64', 'Binary', ['@ip-addr'], ''],
-        ['t_ipaddr_bx', 'Binary', ['.x', '@ip-addr'], ''],
-        ['t_ipaddr_bstr', 'Binary', ['.ip-addr'], ''],
-        ['t_ipaddr_s', 'String', ['@ip-addr'], ''],
+        ['t_ipaddr_b64', 'Binary', ['@ip-addr'], ''],       # Baset64url encoding
+        ['t_ipaddr_bx', 'Binary', ['.x', '@ip-addr'], ''],  # Hex encoding
+        ['t_ipaddr_bstr', 'Binary', ['.ip-addr'], ''],      # Datatype-specific string encoding
+        # ['t_ipaddr_s', 'String', ['@ip-addr'], ''],
         # ['t_ipaddrs', 'ArraryOf', ['*t_ipaddr'], ''],
         ['t_macaddr', 'Binary', ['@mac-addr'], ''],
         ['t_email_s', 'String', ['@email'], ''],
@@ -1262,11 +1262,13 @@ class Format(unittest.TestCase):
     ip1b = binascii.a2b_hex('c6020304')
     ip1s64 = 'xgIDBA'
     ip1sx = 'C6020304'
-    ip1str = '192.2.3.4'
+    ip1str = '198.2.3.4'
     ip2b = binascii.a2b_hex('20010db885a3000000008a2e03707334')
-    ip2s = 'IAENuIWjAAAAAIouA3BzNA'
+    ip2s64 = 'IAENuIWjAAAAAIouA3BzNA'
+    ip2sx = '20010DB885A3000000008A2E03707334'
+    ip2str = '2001:0DB8:85A3:0000:0000:8A2E:0370:7334'
     ip3b_bad = binascii.a2b_hex('c602030456')
-    ip3s_bad = 'xgIDBFY'
+    ip3s64_bad = 'xgIDBFY'
 
     def test_ip_addr(self):
         self.assertEqual(self.tc.encode('t_ipaddr_b64', self.ip1b), self.ip1s64)
@@ -1275,12 +1277,18 @@ class Format(unittest.TestCase):
         self.assertEqual(self.tc.decode('t_ipaddr_bx', self.ip1sx), self.ip1b)
         self.assertEqual(self.tc.encode('t_ipaddr_bstr', self.ip1b), self.ip1str)
         self.assertEqual(self.tc.decode('t_ipaddr_bstr', self.ip1str), self.ip1b)
-        self.assertEqual(self.tc.encode('t_ipaddr', self.ip2b), self.ip2s)
-        self.assertEqual(self.tc.decode('t_ipaddr', self.ip2s), self.ip2b)
+        self.assertEqual(self.tc.encode('t_ipaddr_b64', self.ip2b), self.ip2s64)
+        self.assertEqual(self.tc.decode('t_ipaddr_b64', self.ip2s64), self.ip2b)
+        self.assertEqual(self.tc.encode('t_ipaddr_bx', self.ip2b), self.ip2sx)
+        self.assertEqual(self.tc.decode('t_ipaddr_bx', self.ip2sx), self.ip2b)
+        self.assertEqual(self.tc.encode('t_ipaddr_bstr', self.ip2b), self.ip2str)
+        self.assertEqual(self.tc.decode('t_ipaddr_bstr', self.ip2str), self.ip2b)
         with self.assertRaises(ValueError):
             self.tc.encode('t_ipaddr', self.ip3b_bad)
         with self.assertRaises(ValueError):
-            self.tc.decode('t_ipaddr', self.ip3s_bad)
+            self.tc.decode('t_ipaddr', self.ip3s64_bad)
+        with self.assertRaises(ValueError):
+            self.tc.decode('t_ipaddr', self.ip3s64_bad)
         with self.assertRaises(ValueError):
             self.tc.encode('t_ipaddr', b'')
         with self.assertRaises(ValueError):

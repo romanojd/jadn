@@ -12,9 +12,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 """
 
 from __future__ import unicode_literals
-import base64
 import numbers
-import string
 from .jadn_defs import *
 from .codec_utils import topts_s2d, fopts_s2d
 from .codec_format import get_format_function
@@ -73,6 +71,7 @@ class Codec:
 
         self.arrays = None          # Declare here, populate in set_mode.
         self.symtab = None
+        self.types = None
         self.set_mode(verbose_rec, verbose_str)
 
     def decode(self, datatype, mstr):
@@ -159,25 +158,18 @@ class Codec:
             fcvt = symval[S_TOPT]['cvt'] if 'cvt' in symval[S_TOPT] else None
             symval[S_FORMAT] = get_format_function(fchk, t[TTYPE], fcvt)
             return symval
-                        # TODO: Add string and binary min and max
+        # TODO: Add string and binary min and max
 
         self.arrays = {}
-        self.types = {t[TNAME]: t for t in self.schema['types']}    # pre-index types to allow symtab forward refs
+        self.types = {t[TNAME]: t for t in self.schema['types']}        # pre-index types to allow symtab forward refs
         self.symtab = {t[TNAME]: sym(t) for t in self.schema['types']}
-#        for t in self.symtab.values():        # TODO: Check for wildcard name collisions
-#            for f in t[S_FLD].values():
-#                if type(f) == list and f[S_FDEF][FNAME] == '*':
-#                    t = self.symtab[f[S_FDEF][FTYPE]][S_TDEF]
-#                    assert(t[TTYPE] in ['Map', 'Choice'])
-#                    f[S_FNAMES] = [c[FNAME] for c in t[FIELDS]]
-
-        self.symtab.update(self.arrays)         # Add anonymous arrays to symbol table
+        self.symtab.update(self.arrays)                                 # Add generated arrays to symbol table
         self.symtab.update({t: [None, enctab[t], enctab[t][C_ETYPE], get_format_function('', t)] for t in PRIMITIVE_TYPES})
 
 
 def _bad_index(ts, k, val):
     td = ts[S_TDEF]
-    raise ValueError('%s(%s): array index %d out of bounds (%d, %d)' % (td[TNAME], td[TTYPE], k, len(ts[S_FLD]), len[val]))
+    raise ValueError('%s(%s): array index %d out of bounds (%d, %d)' % (td[TNAME], td[TTYPE], k, len(ts[S_FLD]), len(val)))
 
 
 def _bad_choice(ts, val):
@@ -198,7 +190,7 @@ def _check_type(ts, val, vtype, fail=False):      # fail forces rejection of boo
     if vtype is not None:
         if fail or not isinstance(val, vtype):
             td = ts[S_TDEF]
-            tn =  ('%s(%s)' % (td[TNAME], td[TTYPE]) if td else 'Primitive')
+            tn = ('%s(%s)' % (td[TNAME], td[TTYPE]) if td else 'Primitive')
             raise TypeError('%s: %s is not %s' % (tn, val, vtype))
 
 
@@ -237,14 +229,16 @@ def _encode_array_of(ts, val, codec):
     return [codec.encode(ts[S_TOPT]['rtype'], v) for v in val]
 
 
-def _decode_binary(ts, val, codec):     # Decode base64url ASCII string to bytes
+def _decode_binary(ts, val, codec):         # Decode ASCII string to bytes
     _check_type(ts, val, type(''))
-    return _format(ts, val, FMT_S2B)
+    bval = _format(ts, val, FMT_S2B)        # Convert to bytes
+    return _format(ts, bval, FMT_CHECK)     # Check bytes value
 
 
-def _encode_binary(ts, val, codec):     # Encode bytes to base64url string
+def _encode_binary(ts, val, codec):         # Encode bytes to string
     _check_type(ts, val, bytes)
-    return _format(ts, val, FMT_B2S)
+    val = _format(ts, val, FMT_CHECK)       # Check bytes value
+    return _format(ts, val, FMT_B2S)        # Convert to string
 
 
 def _decode_boolean(ts, val, codec):

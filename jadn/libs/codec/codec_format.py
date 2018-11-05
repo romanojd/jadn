@@ -6,10 +6,10 @@ from socket import AF_INET, AF_INET6
 import string
 
 # Format Operations
-FMT_NAME = 0  # Name of format option
-FMT_CHECK = 1 # Function to check if value is valid (String, Binary, or Integer/Number types)
-FMT_B2S = 2   # Function to convert binary to string (encode / serialize Binary types)
-FMT_S2B = 3   # Function to convert string to binary (decode / deserialize Binary types)
+FMT_NAME = 0    # Name of format option
+FMT_CHECK = 1   # Function to check if value is valid (String, Binary, or Integer/Number types)
+FMT_B2S = 2     # Function to convert binary to string (encode / serialize Binary types)
+FMT_S2B = 3     # Function to convert string to binary (decode / deserialize Binary types)
 
 
 def s2b_hex(sval):      # Convert from hex string to binary
@@ -17,33 +17,18 @@ def s2b_hex(sval):      # Convert from hex string to binary
 
 
 def b2s_hex(bval):      # Convert from binary to hex string
-    return base64.b16encode(bval)
-
-
-"""
-def _decode_binary_b64(ts, val, codec):     # Decode base64url ASCII string to bytes
-    _check_type(ts, val, type(''))
-    v = val + ((4 - len(val)%4)%4)*'='          # Pad b64 string out to a multiple of 4 characters
-    if set(v) - set(string.ascii_letters + string.digits + '-_='):  # Python 2 doesn't support Validate
-        raise TypeError('base64decode: bad character')
-    return _format(ts, base64.b64decode(str(v), altchars='-_'), FMT_CHECK)
-
-
-def _encode_binary_b64(ts, val, codec):     # Encode bytes to base64url string
-    _check_type(ts, val, bytes)
-    return base64.urlsafe_b64encode(_format(ts, val, FMT_CHECK)).decode(encoding='UTF-8').rstrip('=')
-"""
+    return base64.b16encode(bval).decode()
 
 
 def s2b_base64url(sval):      # Convert from base64url string to binary
-    v = sval + ((4 - len(sval)%4)%4)*'='          # Pad b64 string out to a multiple of 4 characters
+    v = sval + ((4 - len(sval) % 4) % 4)*'='          # Pad b64 string out to a multiple of 4 characters
     if set(v) - set(string.ascii_letters + string.digits + '-_='):  # Python 2 doesn't support Validate
         raise TypeError('base64decode: bad character')
     return base64.b64decode(str(v), altchars='-_')
 
 
 def b2s_base64url(bval):      # Convert from binary to base64url string
-    return base64.urlsafe_b64encode(bval).rstrip('=')
+    return base64.urlsafe_b64encode(bval).decode().rstrip('=')
 
 
 # From https://stackoverflow.com/questions/2532053/validate-a-hostname-string
@@ -141,7 +126,7 @@ def get_format_function(name, basetype, convert=None):
         col = {'String': 0, 'Binary': 1, 'Number': 2}[basetype]
         return (name, FORMAT_CHECK_FUNCTIONS[name][col]) + cvt
     except KeyError:
-        return ('', _format_ok) + cvt
+        return (convert if convert else '', _format_ok) + cvt
 
 
 FORMAT_CHECK_FUNCTIONS = {
