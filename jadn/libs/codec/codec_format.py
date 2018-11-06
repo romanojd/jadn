@@ -76,6 +76,8 @@ def b_ip_subnet(bval):      # CIDR IP Address Range = base address + network pre
 def s2b_ip_addr(sval):      # Convert IP addr from string to binary
     try:
         return socket.inet_pton(AF_INET, sval)
+    except AttributeError:
+        return socket.inet_aton(sval)       # Python 2 doesn't support inet_pton on Windows
     except OSError:
         raise ValueError
 
@@ -83,6 +85,8 @@ def s2b_ip_addr(sval):      # Convert IP addr from string to binary
 def b2s_ip_addr(bval):      # Convert IP addr from binary to string
     try:
         return socket.inet_ntop(AF_INET, bval)
+    except AttributeError:
+        return socket.inet_ntoa(bval)       # Python 2 doesn't support inet_ntop on Windows
     except OSError:
         raise ValueError
 

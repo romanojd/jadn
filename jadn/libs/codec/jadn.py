@@ -147,6 +147,9 @@ def jadn_check(schema):
         if 'format' in topts:
             if not get_format_function(topts['format'], tt)[1]:
                 print('Unsupported value constraint', '"' + topts['format'] + '" on', tt + ':',  t[TNAME])
+        if 'cvt' in topts:
+            if not get_format_function(None, tt, topts['cvt'])[1]:
+                print('Unsupported binary-string conversion', '"' + topts['cvt'] + '" on', tt + ':',  t[TNAME])
         if is_primitive(tt) or tt == 'ArrayOf':
             if len(t) != 4:    # TODO: trace back to base type
                 print('Type format error:', t[TNAME], '- type', tt, 'cannot have items')
