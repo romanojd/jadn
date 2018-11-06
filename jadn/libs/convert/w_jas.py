@@ -56,7 +56,7 @@ def jas_dumps(jadn):
     jas += '*/\n'
 
     assert set(stype_map) == set(PRIMITIVE_TYPES + STRUCTURE_TYPES)         # Ensure type list is up to date
-    tolist = ['pattern', 'rtype', 'compact', 'format', 'min', 'max']
+    tolist = ['pattern', 'rtype', 'compact', 'cvt', 'format', 'min', 'max']
     assert set(TYPE_OPTIONS.values()) == set(tolist)                # Ensure type options list is up to date
     folist = ['rtype', 'atfield', 'min', 'max', 'etype', 'default']
     assert set(FIELD_OPTIONS.values()) == set(folist)               # Ensure field options list is up to date

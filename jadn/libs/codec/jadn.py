@@ -152,8 +152,8 @@ def jadn_check(schema):
                 print('Type format error:', t[TNAME], '- type', tt, 'cannot have items')
         elif is_builtin(tt):
             if len(t) == 5:
-                tags = set()
-                n = 3 if tt == 'Enumerated' else 5
+                tags = set()                            # TODO: check for name and tag collisions
+                n = 3 if tt == 'Enumerated' else 5      # TODO: check Choice min cardinality != 0
                 for k, i in enumerate(t[FIELDS]):       # item definition: 0-tag, 1-name, 2-type, 3-options, 4-description
                     tags.update({i[FTAG]})              # or (enumerated): 0-tag, 1-name, 2-description
                     ordinal = tt in ('Array', 'Record')
@@ -227,8 +227,8 @@ def topo_sort(items):
 
 def build_jadn_deps(schema):
     def ns(name, nsids):   # Return namespace if name has a known namespace, otherwise return full name
-        ns = name.split(':')[0]
-        return ns if ns in nsids else name
+        nsp = name.split(':')[0]
+        return nsp if nsp in nsids else name
 
     imps = schema['meta']['imports'] if 'imports' in schema['meta'] else []
     items = [(n[0], []) for n in imps]
@@ -273,33 +273,34 @@ def jadn_load(fname):
     return schema
 
 
-def jadn_dumps(schema, level=0, indent=1):
+def jadn_dumps(schema, level=0, indent=1, strip=False, nlevel=None):
     sp = level * indent * ' '
     sp2 = (level + 1) * indent * ' '
-    sp0 = (level - 1) * indent * ' '
+    sep2 = ',\n' if strip else ',\n\n'
     if isinstance(schema, dict):
-        sep = ',\n' if level > 0 else ',\n\n'
+        sep = ',\n' if level > 0 else sep2
         lines = []
         for k in schema:
-            lines.append(sp2 + '"' + k + '": ' + jadn_dumps(schema[k], level + 1, indent))
+            lines.append(sp2 + '"' + k + '": ' + jadn_dumps(schema[k], level + 1, indent, strip))
         return '{\n' + sep.join(lines) + '\n' + sp + '}'
     elif isinstance(schema, list):
-        sep = ',\n' if level > 1 else ',\n\n'
+        sep = ',\n' if level > 1 else sep2
         vals = []
-        nest = schema and isinstance(schema[0], list)
+        nest = schema and isinstance(schema[0], list)       # Not an empty list
         for v in schema:
             sp3 = sp2 if nest else ''
-            vals.append(sp3 + jadn_dumps(v, level + 1, indent))
+            vals.append(sp3 + jadn_dumps(v, level + 1, indent, strip, level))
         if nest:
-            return '[\n' + sep.join(vals) + '\n' + sp0 + ']'
+            spn = (nlevel if nlevel else level) * indent * ' '
+            return '[\n' + sep.join(vals) + '\n' + spn + ']'
         return '[' + ', '.join(vals) + ']'
     elif isinstance(schema, (numbers.Number, type(''))):
         return json.dumps(schema)
     return '???'
 
 
-def jadn_dump(schema, fname, source=''):
+def jadn_dump(schema, fname, source='', strip=False):
     with open(fname, 'w') as f:
         if source:
             f.write('"Generated from ' + source + ', ' + datetime.ctime(datetime.now()) + '"\n\n')
-        f.write(jadn_dumps(schema) + '\n')
+        f.write(jadn_dumps(schema, strip=strip) + '\n')

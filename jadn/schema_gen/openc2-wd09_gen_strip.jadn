@@ -9,7 +9,6 @@
  ],
   "exports": ["OpenC2-Command", "OpenC2-Response", "Message-Type", "Status-Code", "Request-Id", "Date-Time"]
  },
-
  "types": [
   ["Message", "Array", [], "", [
     [1, "msg_type", "Message-Type", [], ""],
@@ -21,14 +20,12 @@
     [7, "from", "String", ["[0"], ""],
     [8, "created", "Date-Time", ["[0"], ""]
   ]],
-
   ["OpenC2-Command", "Record", [], "", [
     [1, "action", "Action", [], ""],
     [2, "target", "Target", [], ""],
     [3, "args", "Args", ["[0"], ""],
     [4, "actuator", "Actuator", ["[0"], ""]
   ]],
-
   ["Action", "Enumerated", [], "", [
     [1, "scan", ""],
     [2, "locate", ""],
@@ -51,7 +48,6 @@
     [30, "investigate", ""],
     [32, "remediate", ""]
   ]],
-
   ["Target", "Choice", [], "", [
     [1, "artifact", "Artifact", [], ""],
     [2, "command", "Request-Id", [], ""],
@@ -70,12 +66,10 @@
     [1001, "extension_unr", "Unr-Target", [], ""],
     [1024, "slpf", "slpf:Target", [], ""]
   ]],
-
   ["Actuator", "Choice", [], "", [
     [1000, "extension", "PE-Specifiers", [], ""],
     [1001, "extension_unr", "Unr-Specifiers", [], ""]
   ]],
-
   ["Args", "Map", [], "", [
     [1, "start_time", "Date-Time", ["[0"], ""],
     [2, "stop_time", "Date-Time", ["[0"], ""],
@@ -84,7 +78,6 @@
     [1000, "extension", "PE-Args", ["[0"], ""],
     [1001, "extension_unr", "Unr-Args", ["[0"], ""]
   ]],
-
   ["OpenC2-Response", "Map", [], "", [
     [1, "status", "Status-Code", ["[0"], ""],
     [2, "status_text", "String", ["[0"], ""],
@@ -99,7 +92,6 @@
     [1000, "extension", "PE-Results", ["[0"], ""],
     [1001, "extension_unr", "Unr-Results", ["[0"], ""]
   ]],
-
   ["Status-Code", "Enumerated", ["="], "", [
     [102, "Processing", ""],
     [200, "OK", ""],
@@ -112,49 +104,37 @@
     [501, "Not Implemented", ""],
     [503, "Service Unavailable", ""]
   ]],
-
   ["PE-Target", "Choice", ["="], "", [
     [32473, "Example", "32473:Target", [], ""]
   ]],
-
   ["PE-Specifiers", "Choice", ["="], "", [
     [32473, "Example", "32473:Specifiers", [], ""]
   ]],
-
   ["PE-Args", "Map", ["="], "", [
     [32473, "Example", "32473:Args", [], ""]
   ]],
-
   ["PE-Results", "Map", ["="], "", [
     [32473, "Example", "32473:Results", [], ""]
   ]],
-
   ["Artifact", "Record", [], "", [
     [1, "mime_type", "String", ["[0"], ""],
     [2, "payload", "Payload", ["[0"], ""],
     [3, "hashes", "Hashes", ["[0"], ""]
   ]],
-
   ["Device", "Map", [], "", [
     [1, "hostname", "Hostname", [], ""],
     [2, "description", "String", ["[0"], ""],
     [3, "device_id", "String", ["[0"], ""]
   ]],
-
   ["Domain-Name", "String", ["@hostname"], ""],
-
   ["Email-Addr", "String", ["@email"], ""],
-
   ["Features", "ArrayOf", ["*Feature", "[0"], ""],
-
   ["File", "Map", [], "", [
     [1, "name", "String", ["[0"], ""],
     [2, "path", "String", ["[0"], ""],
     [3, "hashes", "Hashes", ["[0"], ""]
   ]],
-
   ["IP-Addr", "Binary", ["@ip-addr"], ""],
-
   ["IP-Connection", "Record", [], "", [
     [1, "src_addr", "IP-Addr", ["[0"], ""],
     [2, "src_port", "Port", ["[0"], ""],
@@ -162,9 +142,7 @@
     [4, "dst_port", "Port", ["[0"], ""],
     [5, "protocol", "L4-Protocol", ["[0"], ""]
   ]],
-
   ["MAC-Addr", "Binary", [], ""],
-
   ["Process", "Map", [], "", [
     [1, "pid", "Integer", ["[0"], ""],
     [2, "name", "String", ["[0"], ""],
@@ -173,45 +151,33 @@
     [5, "parent", "Process", ["[0"], ""],
     [6, "command_line", "String", ["[0"], ""]
   ]],
-
   ["Properties", "ArrayOf", ["*String"], ""],
-
   ["URI", "String", ["@uri"], ""],
-
   ["Message-Type", "Enumerated", [], "", [
     [0, "notification", ""],
     [1, "request", ""],
     [2, "response", ""]
   ]],
-
   ["Request-Id", "Binary", [], ""],
-
   ["Date-Time", "Integer", [], ""],
-
   ["Duration", "Integer", [], ""],
-
   ["Hashes", "Map", [], "", [
     [1, "md5", "Binary", ["[0"], ""],
     [4, "sha1", "Binary", ["[0"], ""],
     [6, "sha256", "Binary", ["[0"], ""]
   ]],
-
   ["Hostname", "String", [], ""],
-
   ["L4-Protocol", "Enumerated", [], "", [
     [1, "icmp", ""],
     [6, "tcp", ""],
     [17, "udp", ""],
     [132, "sctp", ""]
   ]],
-
   ["Payload", "Choice", [], "", [
     [1, "bin", "Binary", [], ""],
     [2, "url", "URI", [], ""]
   ]],
-
   ["Port", "Integer", ["[0", "]65535"], ""],
-
   ["Feature", "Enumerated", [], "", [
     [1, "versions", ""],
     [2, "profiles", ""],
@@ -219,24 +185,20 @@
     [4, "pairs", ""],
     [5, "rate_limit", ""]
   ]],
-
   ["Response-Type", "Enumerated", [], "", [
     [0, "none", ""],
     [1, "ack", ""],
     [2, "status", ""],
     [3, "complete", ""]
   ]],
-
   ["Version", "String", [], ""],
-
   ["KVP", "Array", [], "", [
     [1, "key", "String", [], ""],
     [2, "value", "String", [], ""]
   ]],
-
   ["Action-Targets", "Array", [], "", [
     [1, "action", "Action", [], ""],
     [2, "targets", "Target", ["]0", "*"], ""]
   ]]
-]
+ ]
 }

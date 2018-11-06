@@ -30,7 +30,7 @@ if __name__ == '__main__':
         source = os.path.join(idir, fn) + '.jadn'
         dest = os.path.join(odir, fn) + '_gen'
 
-        # Prettyprint JADN, and convert to other formats
+        # Prettyprint JADN, strip comments, and convert to other formats
 
         schema = jadn_load(source)
         sa = jadn_analyze(schema)
@@ -40,7 +40,7 @@ if __name__ == '__main__':
         sa.update({'module': schema['meta']['module'] + patch, 'exports': exports})
         print('\n'.join(['  ' + k + ': ' + str(sa[k]) for k in ('module', 'exports', 'unreferenced', 'undefined', 'cycles')]))
 
-        jadn_dump(jadn_strip(schema), dest + '_strip.jadn')
+        jadn_dump(jadn_strip(schema), dest + '_strip.jadn', strip=True)
         jadn_dump(schema, dest + '.jadn')
         jas_dump(schema, dest + '.jas')
         table_dump(schema, dest + '.md', source, form='markdown')
