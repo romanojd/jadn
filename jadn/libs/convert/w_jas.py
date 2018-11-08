@@ -49,14 +49,16 @@ def jas_dumps(jadn):
             elif h == 'imports':
                 hh = '{:14} '.format(h+':')
                 for imp in hdrs[h]:
-                    jas += hh + '  {0}: {1}\n'.format(*imp)
+                    jas += hh + '{}: {}\n'.format(*imp)
                     hh = 15*' '
+            elif h == 'exports':
+                jas += '{:14} {}\n'.format(h+':', ', '.join(hdrs[h]))
             else:
-                jas += '{0:14} {1:}\n'.format(h+':', hdrs[h])
+                jas += '{:14} {}\n'.format(h+':', hdrs[h])
     jas += '*/\n'
 
     assert set(stype_map) == set(PRIMITIVE_TYPES + STRUCTURE_TYPES)         # Ensure type list is up to date
-    tolist = ['pattern', 'rtype', 'compact', 'cvt', 'format', 'min', 'max']
+    tolist = ['compact', 'cvt', 'rtype', 'min', 'max', 'pattern', 'format']
     assert set(TYPE_OPTIONS.values()) == set(tolist)                # Ensure type options list is up to date
     folist = ['rtype', 'atfield', 'min', 'max', 'etype', 'default']
     assert set(FIELD_OPTIONS.values()) == set(folist)               # Ensure field options list is up to date
@@ -64,18 +66,38 @@ def jas_dumps(jadn):
         tname, ttype = td[TNAME:TTYPE+1]
         topts = topts_s2d(td[TOPTS])
         tostr = ''
+        if 'min' in topts or 'max' in topts:
+            lo = topts['min'] if 'min' in topts else 0
+            hi = topts['max'] if 'max' in topts else 0
+            range = ''
+            if lo or hi:
+                range = '(' + str(lo) + '..' + (str(hi) if hi else 'MAX') + ')'
         for opt in tolist:
             if opt in topts:
-                if opt == 'pattern':
-                    tostr += "(PATTERN '" + topts[opt] + "')"
-                elif opt =='rtype':
-                    tostr += '(' + topts[opt] + ')'
-                elif opt == 'compact':
+                ov = topts[opt]
+                if opt == 'compact':
                     tostr += '.ID'
+                elif opt == 'cvt':
+                    if ov not in ('x'):
+                        ov = 's:' + ov
+                    tostr += '.' + ov
+                elif opt =='rtype':
+                    tostr += '(' + ov + ')'
+                elif opt == 'pattern':
+                    tostr += ' (PATTERN ("' + ov + '"))'
                 elif opt == 'format':
-                    tostr += '.' + topts[opt]
-                else:     # TODO: add handling for min, max
-                    tostr += ' %' + opt + ': ' + str(topts[opt]) + '%'
+                    tostr += ' (CONSTRAINED BY {' + ov + '})'
+                elif opt in ('min', 'max'):     # TODO fix to handle both
+                    if range:
+                        if ttype in ('Integer', 'Number'):
+                            tostr += ' ' + range
+                        elif ttype in ('String', 'ArrayOf'):
+                            tostr += ' (Size ' + range + ')'
+                        else:
+                            assert False        # Should never get here
+                    range = ''
+                else:
+                    tostr += ' %' + opt + ': ' + str(ov) + '%'
         tdesc = '    -- ' + td[TDESC] if td[TDESC] else ''
         jas += '\n' + tname + ' ::= ' + stype(ttype) + tostr
         if len(td) > FIELDS:

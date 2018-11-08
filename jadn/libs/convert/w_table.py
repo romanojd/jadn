@@ -421,24 +421,36 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
 
     for td in jadn['types']:
         to = topts_s2d(td[TOPTS])
-        tor = set(to)
+        tor = set(to) - {'min', 'max'}
         tos = ' ' + str([str(k) for k in tor]) if tor else ''
+        rng = ''
+        if 'min' in to or 'max' in to:
+            lo = to['min'] if 'min' in to else 0
+            hi = to['max'] if 'max' in to else 0
+            rng = ' [' + str(lo) + '..' + (str(hi) if hi else 'n') + ']'
         if td[TTYPE] in PRIMITIVE_TYPES or not is_builtin(td[TTYPE]):
             cls = ['s', 's', 'd']
-            text += type_begin(td[TNAME], None, None, ['Type Name', 'Base Type', 'Description'], cls)
-            rng = ''            # TODO: format min-max into string length or number range
+            text += type_begin(td[TNAME], None, tos, ['Type Name', 'Base Type', 'Description'], cls)
             fmt = ' (' + to['format'] + ')' if 'format' in to else ''
-            text += type_item([td[TNAME], td[TTYPE] + rng + fmt, td[TDESC]], cls)
+            cvt = ''                # Binary-string conversion method:
+            if 'cvt' in to:         # base64url (default), hex (.x), or type-specific (.s:)
+                cvt = to['cvt']
+                if cvt not in ('x'):
+                    cvt = 's:' + cvt
+                cvt = '.' + cvt
+            text += type_item([td[TNAME], td[TTYPE] + cvt + rng + fmt, td[TDESC]], cls)
         elif td[TTYPE] == 'ArrayOf':            # In STRUCTURE_TYPES but with no field definitions
             cls = ['s', 's', 'd']
-            text += type_begin(td[TNAME], None, None, ['Type Name', 'Base Type', 'Description'], cls)
-            tor = set(to) - {'rtype', }
-            tos = ' ' + str([str(k) for k in tor]) if tor else ''
             rtype = '(' + to['rtype'] + ')'
-            text += type_item([td[TNAME], td[TTYPE] + rtype + tos, td[TDESC]], cls)
+            tor = set(to) - {'rtype', 'min', 'max'}
+            tos = ' ' + str([str(k) for k in tor]) if tor else ''
+            text += type_begin(td[TNAME], None, tos, ['Type Name', 'Base Type', 'Description'], cls)
+            text += type_item([td[TNAME], td[TTYPE] + rtype + rng, td[TDESC]], cls)
         elif td[TTYPE] == 'Enumerated':
             if 'rtype' in to:
                 rtype = '.*' + to['rtype']
+                tor = set(to) - {'rtype'}
+                tos = ' ' + str([str(k) for k in tor]) if tor else ''
                 text += type_begin(td[TNAME], td[TTYPE] + rtype, tos, [], [])
             else:
                 cls = ['n', 'b', 'd']
