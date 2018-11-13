@@ -1,0 +1,38 @@
+/*
+module:        oasis-open.org/openc2/oc2ls/v1.0/experimental
+patch:         0
+title:         Experimental Schema Features
+description:   Profile used to test schema features not used in existing
+               language or profiles
+exports:       Target, Specifiers, Args, Results
+*/
+
+Target ::= CHOICE {    -- New targets
+    ipv4_addr_s    [1] IPv4-String,    -- IPv4 address as type-specific string (dotted-decimal): '192.168.0.254'
+    ipv4_addr_x    [2] IPv4-Hex,    -- IPv4 address serialized as hex: 'C0A800FE'
+    ipv4_addr_b64  [3] IPv4-Base64url,    -- IPv4 address serialized as Base64-url: 'wKgA_g'
+    ipv4_addr_s    [4] IPv6-String,    -- IPv6 address as type-specific string (dotted-decimal): '192.168.0.254'
+    ipv4_addr_x    [5] IPv6-Hex,    -- IPv6 address serialized as hex: 'C0A800FE'
+    ipv4_addr_b64  [6] IPv6-Base64url     -- IPv6 address serialized as Base64-url: 'wKgA_g'
+}
+
+IPv4-Hex ::= BINARY.x (CONSTRAINED BY {ipv4})
+
+IPv4-Base64url ::= BINARY (CONSTRAINED BY {ipv4})
+
+IPv4-String ::= BINARY.s:ipv4 (CONSTRAINED BY {ipv4})
+
+Args ::= MAP {    -- Experimental command arguments
+}
+
+Specifiers ::= MAP {    -- Experimental actuator specifiers
+}
+
+Results ::= MAP {    -- Experimental results
+    knps         [1] KNP OPTIONAL     -- Generic set of key:number pairs. %{'max': 0}
+}
+
+KNP ::= ARRAY {
+    key          [1] STRING,    -- name of this item
+    value        [2] REAL     -- numeric value of this item
+}

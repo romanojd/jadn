@@ -3,7 +3,7 @@ module:        oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0
 patch:         0
 title:         Stateless Packet Filtering
 description:   Data definitions for Stateless Packet Filtering (SLPF) functions
-exports:       ['Target', 'Specifiers', 'Args', 'Results']
+exports:       Target, Specifiers, Args, Results
 */
 
 Target ::= CHOICE {    -- SLPF targets

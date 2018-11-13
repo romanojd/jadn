@@ -1,11 +1,12 @@
 /*
-module:        oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0
-patch:         0
-title:         OpenC2 Language Objects
+module:        oasis-open.org/openc2/v1.0/oc2ls-exp
+patch:         0-wd01
+title:         OpenC2 Language with experimental elements
 description:   Datatypes that define the content of OpenC2 commands and
                responses.
-imports:         jadn: oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0
-exports:       ['OpenC2-Command', 'OpenC2-Response', 'Message-Type', 'Status-Code', 'Request-Id', 'Date-Time']
+imports:       exp: oasis-open.org/openc2/oc2ls/v1.0/experimental
+               jadn: oasis-open.org/openc2/v1.0/jadn
+exports:       OpenC2-Command, OpenC2-Response, Message-Type, Status-Code, Request-Id, Date-Time
 */
 
 Message ::= ARRAY {    -- Example structure that lists message elements
@@ -63,38 +64,32 @@ Target ::= CHOICE {    -- OpenC2 Target datatypes
     process        [17] Process,    -- Common properties of an instance of a computer program as executed on an operating system.
     properties     [25] Properties,    -- Data attribute associated with an actuator
     uri            [19] URI,    -- A uniform resource identifier (URI).
-    extension      [1000] PE-Target,    -- Targets defined in a Private Enterprise extension profile
-    extension_unr  [1001] Unr-Target,    -- Targets defined in an unregistered extension profile
-    slpf           [1024] slpf:Target     -- Targets defined in the Stateless Packet Filter Profile
+    exp            [1099] exp:Target     -- Targets defined in the Experimental Schema Features Profile
 }
 
 Actuator ::= CHOICE {
-    extension      [1000] PE-Specifiers,    -- Specifiers defined in a Private Enterprise extension profile.
-    extension_unr  [1001] Unr-Specifiers     -- Specifiers defined in an unregistered extension profile.
+    exp          [1099] exp:Specifiers     -- Specifiers defined in Experimental Schema Features profile.
 }
 
 Args ::= MAP {
     start_time          [1] Date-Time OPTIONAL,    -- The specific date/time to initiate the action
     stop_time           [2] Date-Time OPTIONAL,    -- The specific date/time to terminate the action
     duration            [3] Duration OPTIONAL,    -- The length of time for an action to be in effect
-    response_requested  [4] Response-Type OPTIONAL,    -- The type of response required for the action
-    extension           [1000] PE-Args OPTIONAL,    -- Command arguments defined in a Private Enterprise extension profile
-    extension_unr       [1001] Unr-Args OPTIONAL     -- Command arguments defined in an unregistered extension profile
+    response_requested  [4] Response-Type OPTIONAL     -- The type of response required for the action
 }
 
 OpenC2-Response ::= MAP {
-    status         [1] Status-Code OPTIONAL,    -- An integer status code (Duplicates message status code)
-    status_text    [2] STRING OPTIONAL,    -- A free-form human-readable description of the response status
-    strings        [3] STRING OPTIONAL,    -- Generic set of string values %{'max': 0}
-    ints           [4] INTEGER OPTIONAL,    -- Generic set of integer values %{'max': 0}
-    kvps           [5] KVP OPTIONAL,    -- Generic set of key:value pairs %{'max': 0}
-    versions       [6] Version OPTIONAL,    -- Supported OpenC2 Language versions %{'max': 0}
-    profiles       [7] jadn:Uname OPTIONAL,    -- List of profiles supported by this actuator %{'max': 0}
-    schema         [8] jadn:Schema OPTIONAL,    -- Syntax of the OpenC2 language elements supported by this actuator
-    pairs          [9] Action-Targets OPTIONAL,    -- List of targets applicable to each supported action %{'max': 0}
-    rate_limit     [10] REAL OPTIONAL,    -- Maximum number of requests per minute supported by design or policy
-    extension      [1000] PE-Results OPTIONAL,    -- Response data defined in a Private Enterprise extension profile
-    extension_unr  [1001] Unr-Results OPTIONAL     -- Response data defined in an unregistered extension profile
+    status       [1] Status-Code OPTIONAL,    -- An integer status code (Duplicates message status code)
+    status_text  [2] STRING OPTIONAL,    -- A free-form human-readable description of the response status
+    strings      [3] STRING OPTIONAL,    -- Generic set of string values %{'max': 0}
+    ints         [4] INTEGER OPTIONAL,    -- Generic set of integer values %{'max': 0}
+    kvps         [5] KVP OPTIONAL,    -- Generic set of key:value pairs %{'max': 0}
+    versions     [6] Version OPTIONAL,    -- Supported OpenC2 Language versions %{'max': 0}
+    profiles     [7] jadn:Uname OPTIONAL,    -- List of profiles supported by this actuator %{'max': 0}
+    schema       [8] jadn:Schema OPTIONAL,    -- Syntax of the OpenC2 language elements supported by this actuator
+    pairs        [9] Action-Targets OPTIONAL,    -- List of targets applicable to each supported action %{'max': 0}
+    rate_limit   [10] REAL OPTIONAL,    -- Maximum number of requests per minute supported by design or policy
+    exp          [1099] exp:Results OPTIONAL     -- Response data defined in Experimental Schema Features profile
 }
 
 Status-Code ::= ENUMERATED.ID {
@@ -110,22 +105,6 @@ Status-Code ::= ENUMERATED.ID {
     Service Unavailable  (503)     -- the consumer is currently unable to handle the request due to a temporary overloading or maintenance.
 }
 
-PE-Target ::= CHOICE.ID {
-    Example      [32473] 32473:Target     -- Targets defined in the Example Inc. extension profile
-}
-
-PE-Specifiers ::= CHOICE.ID {
-    Example      [32473] 32473:Specifiers     -- Actuator Specifiers defined in the Example Inc. extension profile
-}
-
-PE-Args ::= MAP.ID {
-    Example      [32473] 32473:Args     -- Command Arguments defined in the Example Inc. extension profile
-}
-
-PE-Results ::= MAP.ID {
-    Example      [32473] 32473:Results     -- Results defined in the Example Inc. extension profile
-}
-
 Artifact ::= RECORD {
     mime_type    STRING OPTIONAL,    -- Permitted values specified in the IANA Media Types registry
     payload      Payload OPTIONAL,    -- choice of literal content or URL to obtain content
@@ -138,11 +117,11 @@ Device ::= MAP {
     device_id    [3] STRING OPTIONAL     -- An identifier that refers to this device within an inventory or management system
 }
 
-Domain-Name ::= STRING.hostname    -- RFC 1034, section 3.5
+Domain-Name ::= STRING (CONSTRAINED BY {hostname})    -- RFC 1034, section 3.5
 
-Email-Addr ::= STRING.email    -- Email address, RFC 5322, section 3.4.1
+Email-Addr ::= STRING (CONSTRAINED BY {email})    -- Email address, RFC 5322, section 3.4.1
 
-Features ::= ARRAY_OF(Feature) %min: 0%    -- A target used to query Actuator for its supported capabilities
+Features ::= ARRAY_OF(Feature)    -- A target used to query Actuator for its supported capabilities
 
 File ::= MAP {
     name         [1] STRING OPTIONAL,    -- The name of the file as defined in the file system
@@ -150,7 +129,7 @@ File ::= MAP {
     hashes       [3] Hashes OPTIONAL     -- One or more cryptographic hash codes of the file contents
 }
 
-IP-Addr ::= BINARY.ip-addr    -- 32 bit IPv4 address or 128 bit IPv6 address
+IP-Addr ::= BINARY (CONSTRAINED BY {ip-addr})    -- 32 bit IPv4 address or 128 bit IPv6 address
 
 IP-Connection ::= RECORD {    -- 5-tuple that specifies a tcp/ip connection
     src_addr     IP-Addr OPTIONAL,    -- source address
@@ -173,7 +152,7 @@ Process ::= MAP {
 
 Properties ::= ARRAY_OF(String)    -- A list of names that uniquely identify properties of an actuator
 
-URI ::= STRING.uri    -- Uniform Resource Identifier
+URI ::= STRING (CONSTRAINED BY {uri})    -- Uniform Resource Identifier
 
 Message-Type ::= ENUMERATED {
     notification  (0),    -- A message that does not solicit a response
@@ -207,7 +186,7 @@ Payload ::= CHOICE {
     url          [2] URI     -- MUST be a valid URL that resolves to the un-encoded content
 }
 
-Port ::= INTEGER %min: 0% %max: 65535%    -- Transport Protocol Port Number, RFC 6335
+Port ::= INTEGER (0..65535)    -- Transport Protocol Port Number, RFC 6335
 
 Feature ::= ENUMERATED {    -- Results to be included in response to query features command
     versions     (1),    -- List of OpenC2 language versions supported by this actuator

@@ -1,7 +1,7 @@
 {
  "meta": {
   "module": "oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0",
-  "patch": "0",
+  "patch": "0-csdpr01",
   "title": "JADN Syntax",
   "description": "Syntax of a JSON Abstract Data Notation (JADN) module.",
   "exports": ["Schema", "Uname"]
@@ -81,5 +81,5 @@
   ["Options", "ArrayOf", ["*Option", "[0", "]10"], "Options list may be empty but may not be omitted"],
 
   ["Option", "String", ["[1", "]100"], "Option string: 1st char = option id"]
-]
+ ]
 }

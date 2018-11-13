@@ -1,13 +1,13 @@
-<!-- Generated from schema\openc2-wd09.jadn, Wed Oct 31 16:26:30 2018-->
+<!-- Generated from schema\oc2ls-csdpr01.jadn, Tue Nov 13 13:21:11 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
 | **title:** | OpenC2 Language Objects |
-| **module:** | oasis-open.org/openc2/oc2ls/v1.0/oc2ls-v1.0 |
-| **patch:** | 0 |
+| **module:** | oasis-open.org/openc2/v1.0/openc2-lang |
+| **patch:** | wd09 |
 | **description:** | Datatypes that define the content of OpenC2 commands and responses. |
 | **exports:** | OpenC2-Command, OpenC2-Response, Message-Type, Status-Code, Request-Id, Date-Time |
-| **imports:** | **jadn**:&nbsp;oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0 |
+| **imports:** | **slpf**:&nbsp;oasis-open.org/openc2/v1.0/ap-slpf **jadn**:&nbsp;oasis-open.org/openc2/v1.0/jadn |
 
 **_Type: Message (Array)_**
 
@@ -183,7 +183,7 @@
 
 | Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| Features | ArrayOf(Feature) ['min'] | A target used to query Actuator for its supported capabilities |
+| Features | ArrayOf(Feature) [0..n] | A target used to query Actuator for its supported capabilities |
 
 **_Type: File (Map)_**
 
@@ -298,7 +298,7 @@
 
 | Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| Port | Integer | Transport Protocol Port Number, RFC 6335 |
+| Port | Integer [0..65535] | Transport Protocol Port Number, RFC 6335 |
 
 **_Type: Feature (Enumerated)_**
 

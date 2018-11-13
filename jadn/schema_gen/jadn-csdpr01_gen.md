@@ -1,10 +1,10 @@
-<!-- Generated from schema\jadn.jadn, Tue Nov 13 13:21:11 2018-->
+<!-- Generated from schema\jadn-csdpr01.jadn, Tue Nov 13 13:21:11 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
 | **title:** | JADN Syntax |
-| **module:** | oasis-open.org/openc2/oc2ls/v1.0/jadn-v1.0 |
-| **patch:** | 0-csdpr01 |
+| **module:** | oasis-open.org/openc2/v1.0/jadn |
+| **patch:** | wd01 |
 | **description:** | Syntax of a JSON Abstract Data Notation (JADN) module. |
 | **exports:** | Schema, Uname |
 

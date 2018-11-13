@@ -56,7 +56,11 @@ def merge(idir):
     for k, v in files.items():
         if v['imports']:
             print(k, 'imports', v['imports'])
-            _merge_imports(v, files)
+            try:
+                _merge_imports(v, files)
+            except ValueError as e:
+                print('  ##', v['source'], e.args)
+
 
 
 if __name__ == '__main__':

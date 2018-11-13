@@ -1,0 +1,39 @@
+{
+ "meta": {
+  "module": "oasis-open.org/openc2/oc2ls/v1.0/experimental",
+  "patch": "0",
+  "title": "Experimental Schema Features",
+  "description": "Profile used to test schema features not used in existing language or profiles",
+  "exports": ["Target", "Specifiers", "Args", "Results"]
+ },
+
+ "types": [
+  ["Target", "Choice", [], "New targets", [
+    [1, "ipv4_addr_s", "IPv4-String", [], "IPv4 address as type-specific string (dotted-decimal): '192.168.0.254'"],
+    [2, "ipv4_addr_x", "IPv4-Hex", [], "IPv4 address serialized as hex: 'C0A800FE'"],
+    [3, "ipv4_addr_b64", "IPv4-Base64url", [], "IPv4 address serialized as Base64-url: 'wKgA_g'"],
+    [4, "ipv4_addr_s", "IPv6-String", [], "IPv6 address as type-specific string (dotted-decimal): '192.168.0.254'"],
+    [5, "ipv4_addr_x", "IPv6-Hex", [], "IPv6 address serialized as hex: 'C0A800FE'"],
+    [6, "ipv4_addr_b64", "IPv6-Base64url", [], "IPv6 address serialized as Base64-url: 'wKgA_g'"]
+  ]],
+
+  ["IPv4-Hex", "Binary", ["@ipv4", ".x"], ""],
+
+  ["IPv4-Base64url", "Binary", ["@ipv4"], ""],
+
+  ["IPv4-String", "Binary", ["@ipv4", ".ipv4"], ""],
+
+  ["Args", "Map", [], "Experimental command arguments", []],
+
+  ["Specifiers", "Map", [], "Experimental actuator specifiers", []],
+
+  ["Results", "Map", [], "Experimental results", [
+    [1, "knps", "KNP", ["[0", "]0"], "Generic set of key:number pairs."]
+  ]],
+
+  ["KNP", "Array", [], "", [
+    [1, "key", "String", [], "name of this item"],
+    [2, "value", "Number", [], "numeric value of this item"]
+  ]]
+ ]
+}
