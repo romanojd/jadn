@@ -8,13 +8,26 @@ exports:       Target, Specifiers, Args, Results
 */
 
 Target ::= CHOICE {    -- New targets
-    ipv4_addr_s    [1] IPv4-String,    -- IPv4 address as type-specific string (dotted-decimal): '192.168.0.254'
-    ipv4_addr_x    [2] IPv4-Hex,    -- IPv4 address serialized as hex: 'C0A800FE'
-    ipv4_addr_b64  [3] IPv4-Base64url,    -- IPv4 address serialized as Base64-url: 'wKgA_g'
-    ipv6_addr_s    [4] IPv6-String,    -- IPv6 address as type-specific string (dotted-decimal): ''
-    ipv6_addr_x    [5] IPv6-Hex,    -- IPv6 address serialized as hex: ''
-    ipv6_addr_b64  [6] IPv6-Base64url     -- IPv6 address serialized as Base64-url: ''
+    hashes         [1] Hashes,    -- Hash values serialized as hex
+    ipv4_addr_s    [2] IPv4-String,    -- IPv4 address as type-specific string (dotted-decimal): '192.168.0.254'
+    ipv4_addr_x    [3] IPv4-Hex,    -- IPv4 address serialized as hex: 'C0A800FE'
+    ipv4_addr_b64  [4] IPv4-Base64url,    -- IPv4 address serialized as Base64-url: 'wKgA_g'
+    ipv6_addr_s    [5] IPv6-String,    -- IPv6 address as type-specific string (dotted-decimal): ''
+    ipv6_addr_x    [6] IPv6-Hex,    -- IPv6 address serialized as hex: ''
+    ipv6_addr_b64  [7] IPv6-Base64url     -- IPv6 address serialized as Base64-url: ''
 }
+
+Hashes ::= MAP {    -- Cryptographic Hash values
+    md5          [1] Bin-128 OPTIONAL,    -- MD5 hash as defined in RFC3121
+    sha1         [4] Bin-160 OPTIONAL,    -- SHA1 hash as defined in RFC3174
+    sha256       [6] Bin-256 OPTIONAL     -- SHA256 as defined in RFC6234
+}
+
+Bin-128 ::= BINARY (Size (16..16))    -- 128 bit value, hex display
+
+Bin-160 ::= BINARY (Size (20..20))    -- 160 bit value, hex display
+
+Bin-256 ::= BINARY (Size (32..32))    -- 256 bit value, hex display
 
 IPv4-Hex ::= BINARY.x (CONSTRAINED BY {ipv4})    -- Value must be 32 bits (ipv4).  Value displayed in hex (Binary.x)
 

@@ -1,4 +1,4 @@
-<!-- Generated from schema\exp.jadn, Tue Nov 13 13:34:54 2018-->
+<!-- Generated from schema\exp.jadn, Tue Nov 13 14:36:02 2018-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,12 +16,27 @@
 <tr><td class="h">exports:</td><td class="s">Target, Specifiers, Args, Results</td></tr>
 </table>
 <table><caption>Target (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
-<tr><td class="n">1</td><td class="b">ipv4_addr_s</td><td class="s">IPv4-String</td><td class="n">1</td><td class="d">IPv4 address as type-specific string (dotted-decimal): '192.168.0.254'</td></tr>
-<tr><td class="n">2</td><td class="b">ipv4_addr_x</td><td class="s">IPv4-Hex</td><td class="n">1</td><td class="d">IPv4 address serialized as hex: 'C0A800FE'</td></tr>
-<tr><td class="n">3</td><td class="b">ipv4_addr_b64</td><td class="s">IPv4-Base64url</td><td class="n">1</td><td class="d">IPv4 address serialized as Base64-url: 'wKgA_g'</td></tr>
-<tr><td class="n">4</td><td class="b">ipv6_addr_s</td><td class="s">IPv6-String</td><td class="n">1</td><td class="d">IPv6 address as type-specific string (dotted-decimal): ''</td></tr>
-<tr><td class="n">5</td><td class="b">ipv6_addr_x</td><td class="s">IPv6-Hex</td><td class="n">1</td><td class="d">IPv6 address serialized as hex: ''</td></tr>
-<tr><td class="n">6</td><td class="b">ipv6_addr_b64</td><td class="s">IPv6-Base64url</td><td class="n">1</td><td class="d">IPv6 address serialized as Base64-url: ''</td></tr>
+<tr><td class="n">1</td><td class="b">hashes</td><td class="s">Hashes</td><td class="n">1</td><td class="d">Hash values serialized as hex</td></tr>
+<tr><td class="n">2</td><td class="b">ipv4_addr_s</td><td class="s">IPv4-String</td><td class="n">1</td><td class="d">IPv4 address as type-specific string (dotted-decimal): '192.168.0.254'</td></tr>
+<tr><td class="n">3</td><td class="b">ipv4_addr_x</td><td class="s">IPv4-Hex</td><td class="n">1</td><td class="d">IPv4 address serialized as hex: 'C0A800FE'</td></tr>
+<tr><td class="n">4</td><td class="b">ipv4_addr_b64</td><td class="s">IPv4-Base64url</td><td class="n">1</td><td class="d">IPv4 address serialized as Base64-url: 'wKgA_g'</td></tr>
+<tr><td class="n">5</td><td class="b">ipv6_addr_s</td><td class="s">IPv6-String</td><td class="n">1</td><td class="d">IPv6 address as type-specific string (dotted-decimal): ''</td></tr>
+<tr><td class="n">6</td><td class="b">ipv6_addr_x</td><td class="s">IPv6-Hex</td><td class="n">1</td><td class="d">IPv6 address serialized as hex: ''</td></tr>
+<tr><td class="n">7</td><td class="b">ipv6_addr_b64</td><td class="s">IPv6-Base64url</td><td class="n">1</td><td class="d">IPv6 address serialized as Base64-url: ''</td></tr>
+</table>
+<table><caption>Hashes (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
+<tr><td class="n">1</td><td class="b">md5</td><td class="s">Bin-128</td><td class="n">0..1</td><td class="d">MD5 hash as defined in RFC3121</td></tr>
+<tr><td class="n">4</td><td class="b">sha1</td><td class="s">Bin-160</td><td class="n">0..1</td><td class="d">SHA1 hash as defined in RFC3174</td></tr>
+<tr><td class="n">6</td><td class="b">sha256</td><td class="s">Bin-256</td><td class="n">0..1</td><td class="d">SHA256 as defined in RFC6234</td></tr>
+</table>
+<table><caption>Bin-128</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
+<tr><td class="s">Bin-128</td><td class="s">Binary.x [16..16]</td><td class="d">128 bit value, hex display</td></tr>
+</table>
+<table><caption>Bin-160</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
+<tr><td class="s">Bin-160</td><td class="s">Binary.x [20..20]</td><td class="d">160 bit value, hex display</td></tr>
+</table>
+<table><caption>Bin-256</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
+<tr><td class="s">Bin-256</td><td class="s">Binary.x [32..32]</td><td class="d">256 bit value, hex display</td></tr>
 </table>
 <table><caption>IPv4-Hex</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
 <tr><td class="s">IPv4-Hex</td><td class="s">Binary.x (ipv4)</td><td class="d">Value must be 32 bits (ipv4).  Value displayed in hex (Binary.x)</td></tr>

@@ -11,7 +11,7 @@ import numbers
 import os
 from datetime import datetime
 from .codec import is_builtin, is_primitive, Codec
-from .codec_utils import topts_s2d, fopts_s2d
+from .codec_utils import topts_s2d, fopts_s2d, basetype
 from .codec_format import get_format_function
 from .jadn_defs import *
 
@@ -133,7 +133,7 @@ def jadn_check(schema):
     assert set(valid_fopts) == set(STRUCTURE_TYPES + PRIMITIVE_TYPES)
 
     for t in schema['types']:     # datatype definition: TNAME, TTYPE, TOPTS, TDESC, FIELDS
-        tt = t[TTYPE]
+        tt = basetype(t[TTYPE])
         if is_builtin(tt):
             topts = topts_s2d(t[TOPTS])
             vop = {k for k in topts} - {k for k in valid_topts[tt]}

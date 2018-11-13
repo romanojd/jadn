@@ -3,7 +3,7 @@ Translate JADN to JAS (JADN Abstract Syntax)
 """
 
 from ..codec.jadn_defs import *
-from ..codec.codec_utils import topts_s2d, fopts_s2d
+from ..codec.codec_utils import topts_s2d, fopts_s2d, basetype
 from copy import deepcopy
 from datetime import datetime
 from textwrap import fill
@@ -63,7 +63,8 @@ def jas_dumps(jadn):
     folist = ['rtype', 'atfield', 'min', 'max', 'etype', 'default']
     assert set(FIELD_OPTIONS.values()) == set(folist)               # Ensure field options list is up to date
     for td in jadn['types']:                    # 0:type name, 1:base type, 2:type opts, 3:type desc, 4:fields
-        tname, ttype = td[TNAME:TTYPE+1]
+        tname = td[TNAME]
+        ttype = basetype(td[TTYPE])
         topts = topts_s2d(td[TOPTS])
         tostr = ''
         if 'min' in topts or 'max' in topts:
@@ -91,7 +92,7 @@ def jas_dumps(jadn):
                     if range:
                         if ttype in ('Integer', 'Number'):
                             tostr += ' ' + range
-                        elif ttype in ('String', 'ArrayOf'):
+                        elif ttype in ('ArrayOf', 'Binary', 'String'):
                             tostr += ' (Size ' + range + ')'
                         else:
                             assert False        # Should never get here

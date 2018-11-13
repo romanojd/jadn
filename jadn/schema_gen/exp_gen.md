@@ -1,4 +1,4 @@
-<!-- Generated from schema\exp.jadn, Tue Nov 13 13:34:54 2018-->
+<!-- Generated from schema\exp.jadn, Tue Nov 13 14:36:02 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -12,12 +12,39 @@
 
 | ID | Name | Type | # | Description |
 | ---: | --- | :--- | ---: | :--- |
-| 1 | **ipv4_addr_s** | IPv4-String | 1 | IPv4 address as type-specific string (dotted-decimal): '192.168.0.254' |
-| 2 | **ipv4_addr_x** | IPv4-Hex | 1 | IPv4 address serialized as hex: 'C0A800FE' |
-| 3 | **ipv4_addr_b64** | IPv4-Base64url | 1 | IPv4 address serialized as Base64-url: 'wKgA_g' |
-| 4 | **ipv6_addr_s** | IPv6-String | 1 | IPv6 address as type-specific string (dotted-decimal): '' |
-| 5 | **ipv6_addr_x** | IPv6-Hex | 1 | IPv6 address serialized as hex: '' |
-| 6 | **ipv6_addr_b64** | IPv6-Base64url | 1 | IPv6 address serialized as Base64-url: '' |
+| 1 | **hashes** | Hashes | 1 | Hash values serialized as hex |
+| 2 | **ipv4_addr_s** | IPv4-String | 1 | IPv4 address as type-specific string (dotted-decimal): '192.168.0.254' |
+| 3 | **ipv4_addr_x** | IPv4-Hex | 1 | IPv4 address serialized as hex: 'C0A800FE' |
+| 4 | **ipv4_addr_b64** | IPv4-Base64url | 1 | IPv4 address serialized as Base64-url: 'wKgA_g' |
+| 5 | **ipv6_addr_s** | IPv6-String | 1 | IPv6 address as type-specific string (dotted-decimal): '' |
+| 6 | **ipv6_addr_x** | IPv6-Hex | 1 | IPv6 address serialized as hex: '' |
+| 7 | **ipv6_addr_b64** | IPv6-Base64url | 1 | IPv6 address serialized as Base64-url: '' |
+
+**_Type: Hashes (Map)_**
+
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **md5** | Bin-128 | 0..1 | MD5 hash as defined in RFC3121 |
+| 4 | **sha1** | Bin-160 | 0..1 | SHA1 hash as defined in RFC3174 |
+| 6 | **sha256** | Bin-256 | 0..1 | SHA256 as defined in RFC6234 |
+
+**_Type: Bin-128_**
+
+| Type Name | Base Type | Description |
+| :--- | :--- | :--- |
+| Bin-128 | Binary.x [16..16] | 128 bit value, hex display |
+
+**_Type: Bin-160_**
+
+| Type Name | Base Type | Description |
+| :--- | :--- | :--- |
+| Bin-160 | Binary.x [20..20] | 160 bit value, hex display |
+
+**_Type: Bin-256_**
+
+| Type Name | Base Type | Description |
+| :--- | :--- | :--- |
+| Bin-256 | Binary.x [32..32] | 256 bit value, hex display |
 
 **_Type: IPv4-Hex_**
 
