@@ -24,17 +24,27 @@
   ["Bin-128", "Binary.x", ["[16", "]16"], ""],
   ["Bin-160", "Binary.x", ["[20", "]20"], ""],
   ["Bin-256", "Binary.x", ["[32", "]32"], ""],
-  ["IPv4-Hex", "Binary", ["@ipv4", ".x"], ""],
+  ["IPv4-Hex", "Binary", ["[4", "]4", ".x"], ""],
   ["IPv4-Base64url", "Binary", ["@ipv4"], ""],
   ["IPv4-String", "Binary", ["@ipv4", ".ipv4"], ""],
+  ["IPv6-Hex", "Binary", ["@ipv6", ".x"], ""],
+  ["IPv6-Base64url", "Binary", ["[16", "]16"], ""],
+  ["IPv6-String", "Binary", ["[16", "]16", ".ipv6"], ""],
   ["Args", "Map", [], "", []],
   ["Specifiers", "Map", [], "", []],
   ["Results", "Map", [], "", [
-    [1, "knps", "KNP", ["[0", "]0"], ""]
+    [1, "knps", "KNP", ["[0", "]0"], ""],
+    [42, "battery", "Battery-Properties", ["[0"], ""]
   ]],
   ["KNP", "Array", [], "", [
     [1, "key", "String", [], ""],
     [2, "value", "Number", [], ""]
-  ]]
+  ]],
+  ["Battery-Properties", "Map", [], "", [
+    [7, "voltage", "Integer", ["[0"], ""],
+    [18, "charge", "Percentage", ["[0"], ""],
+    [26, "manufacturer", "String", ["[0"], ""]
+  ]],
+  ["Percentage", "Number", ["[0", "]100"], ""]
  ]
 }
