@@ -11,9 +11,9 @@
     [1, "ipv4_addr_s", "IPv4-String", [], ""],
     [2, "ipv4_addr_x", "IPv4-Hex", [], ""],
     [3, "ipv4_addr_b64", "IPv4-Base64url", [], ""],
-    [4, "ipv4_addr_s", "IPv6-String", [], ""],
-    [5, "ipv4_addr_x", "IPv6-Hex", [], ""],
-    [6, "ipv4_addr_b64", "IPv6-Base64url", [], ""]
+    [4, "ipv6_addr_s", "IPv6-String", [], ""],
+    [5, "ipv6_addr_x", "IPv6-Hex", [], ""],
+    [6, "ipv6_addr_b64", "IPv6-Base64url", [], ""]
   ]],
   ["IPv4-Hex", "Binary", ["@ipv4", ".x"], ""],
   ["IPv4-Base64url", "Binary", ["@ipv4"], ""],

@@ -1,4 +1,4 @@
-<!-- Generated from schema\exp.jadn, Tue Nov 13 13:21:11 2018-->
+<!-- Generated from schema\exp.jadn, Tue Nov 13 13:34:54 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -15,27 +15,27 @@
 | 1 | **ipv4_addr_s** | IPv4-String | 1 | IPv4 address as type-specific string (dotted-decimal): '192.168.0.254' |
 | 2 | **ipv4_addr_x** | IPv4-Hex | 1 | IPv4 address serialized as hex: 'C0A800FE' |
 | 3 | **ipv4_addr_b64** | IPv4-Base64url | 1 | IPv4 address serialized as Base64-url: 'wKgA_g' |
-| 4 | **ipv4_addr_s** | IPv6-String | 1 | IPv6 address as type-specific string (dotted-decimal): '192.168.0.254' |
-| 5 | **ipv4_addr_x** | IPv6-Hex | 1 | IPv6 address serialized as hex: 'C0A800FE' |
-| 6 | **ipv4_addr_b64** | IPv6-Base64url | 1 | IPv6 address serialized as Base64-url: 'wKgA_g' |
+| 4 | **ipv6_addr_s** | IPv6-String | 1 | IPv6 address as type-specific string (dotted-decimal): '' |
+| 5 | **ipv6_addr_x** | IPv6-Hex | 1 | IPv6 address serialized as hex: '' |
+| 6 | **ipv6_addr_b64** | IPv6-Base64url | 1 | IPv6 address serialized as Base64-url: '' |
 
 **_Type: IPv4-Hex_**
 
 | Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| IPv4-Hex | Binary.x (ipv4) |  |
+| IPv4-Hex | Binary.x (ipv4) | Value must be 32 bits (ipv4).  Value displayed in hex (Binary.x) |
 
 **_Type: IPv4-Base64url_**
 
 | Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| IPv4-Base64url | Binary (ipv4) |  |
+| IPv4-Base64url | Binary (ipv4) | Value must be 32 bits (ipv4).  Value displayed in base64url (Binary) default |
 
 **_Type: IPv4-String_**
 
 | Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| IPv4-String | Binary.s:ipv4 (ipv4) |  |
+| IPv4-String | Binary.s:ipv4 (ipv4) | Value must be 32 bits (ipv4).  Value displayed in ipv4 dotted decimal (Binary.s:ipv4) |
 
 **_Type: Args (Map)_**
 
