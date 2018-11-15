@@ -48,7 +48,7 @@
 
   ["Results", "Map", [], "Experimental results", [
     [1, "knps", "KNP", ["[0", "]0"], "Generic set of key:number pairs."],
-    [42, "battery", "Battery-Properties", ["[0"], "Set of properties defined for an energy storage device"]
+    [42, "battery", "Battery-Properties", ["[0"], "Set of custom properties defined for an energy storage device"]
   ]],
 
   ["KNP", "Array", [], "", [

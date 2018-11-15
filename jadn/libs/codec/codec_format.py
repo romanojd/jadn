@@ -73,7 +73,12 @@ def b_ip_addr(bval):        # Length of IP addr must be 32 or 128 bits
 def b_ip_subnet(bval):      # CIDR IP Address Range = base address + network prefix length
     raise ValueError        # TODO: write it
 
-def s2b_ip_addr(sval):      # Convert IP addr from string to binary
+
+def s2b_ip_addr(sval):
+    return s2b_ipv6_addr(sval) if ':' in sval else s2b_ipv4_addr(sval)
+
+
+def s2b_ipv4_addr(sval):    # Convert IPv4 addr from string to binary
     try:
         return socket.inet_pton(AF_INET, sval)
     except AttributeError:
@@ -82,13 +87,25 @@ def s2b_ip_addr(sval):      # Convert IP addr from string to binary
         raise ValueError
 
 
-def b2s_ip_addr(bval):      # Convert IP addr from binary to string
+def s2b_ipv6_addr(sval):    # Convert IPv6 address from string to binary
+    return socket.inet_pton(AF_INET6, sval)
+
+
+def b2s_ip_addr(bval):
+    return b2s_ipv6_addr(bval) if len(bval) > 4 else b2s_ipv4_addr(bval)
+
+
+def b2s_ipv4_addr(bval):      # Convert IPv4 address from binary to string
     try:
         return socket.inet_ntop(AF_INET, bval)
     except AttributeError:
         return socket.inet_ntoa(bval)       # Python 2 doesn't support inet_ntop on Windows
     except OSError:
         raise ValueError
+
+
+def b2s_ipv6_addr(bval):        # Convert ipv6 address from binary to string
+    return socket.inet_ntop(AF_INET6, bval)
 
 
 def s2b_ip_subnet(sval):
@@ -119,18 +136,23 @@ def _format_ok(val):      # No value constraints on this type
     return val
 
 
+def _format_bad(val):       # Unsupported value constraint on this type
+    raise ValueError
+
+
 def get_format_function(name, basetype, convert=None):
-    if basetype == 'Binary' and convert is None:
-        convert = 'b64u'
-    try:
-        cvt = FORMAT_CONVERT_FUNCTIONS[convert]
-    except KeyError:
-        cvt = (None, None)
+    cvt = (True, True)              # Conversion is not needed for non-Binary types, return OK
+    if basetype == 'Binary':
+        convert = convert if convert else 'b64u'
+        try:
+            cvt = FORMAT_CONVERT_FUNCTIONS[convert]
+        except KeyError:
+            cvt = (None, None)
     try:
         col = {'String': 0, 'Binary': 1, 'Number': 2}[basetype]
         return (name, FORMAT_CHECK_FUNCTIONS[name][col]) + cvt
     except KeyError:
-        return (convert if convert else '', _format_ok) + cvt
+        return (None, _format_bad if name else _format_ok) + cvt
 
 
 FORMAT_CHECK_FUNCTIONS = {
@@ -145,7 +167,9 @@ FORMAT_CHECK_FUNCTIONS = {
 FORMAT_CONVERT_FUNCTIONS = {
     'b64u': (b2s_base64url, s2b_base64url),         # Base64url
     'x': (b2s_hex, s2b_hex),                        # Hex
-    'ip-addr':  (b2s_ip_addr, s2b_ip_addr),         # IP Address
+    'ip-addr':  (b2s_ip_addr, s2b_ip_addr),         # IP Address, version autodetect
+    'ipv4': (b2s_ipv4_addr, s2b_ipv4_addr),         # IPv4 Address
+    'ipv6': (b2s_ipv6_addr, s2b_ipv6_addr),         # IPv6 Address
     'ip-subnet': (b2s_ip_subnet, s2b_ip_subnet)     # IP Subnet Address with CIDR prefix length
 }
 

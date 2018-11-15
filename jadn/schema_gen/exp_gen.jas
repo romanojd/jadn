@@ -49,7 +49,7 @@ Specifiers ::= MAP {    -- Experimental actuator specifiers
 
 Results ::= MAP {    -- Experimental results
     knps         [1] KNP OPTIONAL,    -- Generic set of key:number pairs. %{'max': 0}
-    battery      [42] Battery-Properties OPTIONAL     -- Set of properties defined for an energy storage device
+    battery      [42] Battery-Properties OPTIONAL     -- Set of custom properties defined for an energy storage device
 }
 
 KNP ::= ARRAY {

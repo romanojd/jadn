@@ -1,4 +1,4 @@
-<!-- Generated from schema\exp.jadn, Tue Nov 13 15:22:52 2018-->
+<!-- Generated from schema\exp.jadn, Tue Nov 13 15:36:34 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -97,7 +97,7 @@
 | ID | Name | Type | # | Description |
 | ---: | --- | :--- | ---: | :--- |
 | 1 | **knps** | KNP | 0..n | Generic set of key:number pairs. |
-| 42 | **battery** | Battery-Properties | 0..1 | Set of properties defined for an energy storage device |
+| 42 | **battery** | Battery-Properties | 0..1 | Set of custom properties defined for an energy storage device |
 
 **_Type: KNP (Array)_**
 
