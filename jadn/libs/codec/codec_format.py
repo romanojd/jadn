@@ -127,7 +127,7 @@ def b_mac_addr(bval):       # Length of MAC addr must be 48 or 64 bits
 def s_uri(sval):            # Check if valid URI
     if not isinstance(sval, type('')):
         raise TypeError
-    if True:    # TODO
+    if True:                # TODO: write it
         return sval
     raise ValueError
 
@@ -136,23 +136,23 @@ def _format_ok(val):      # No value constraints on this type
     return val
 
 
-def _format_bad(val):       # Unsupported value constraint on this type
+def _format_error(val):     # Unsupported format type
     raise ValueError
 
 
 def get_format_function(name, basetype, convert=None):
-    cvt = (True, True)              # Conversion is not needed for non-Binary types, return OK
+    cvt = (True, True)              # Conversion is not used for non-Binary types, return OK
     if basetype == 'Binary':
         convert = convert if convert else 'b64u'
         try:
             cvt = FORMAT_CONVERT_FUNCTIONS[convert]
         except KeyError:
-            cvt = (None, None)
+            cvt = (None, None)    # Binary conversion function not found, return Err
     try:
         col = {'String': 0, 'Binary': 1, 'Number': 2}[basetype]
         return (name, FORMAT_CHECK_FUNCTIONS[name][col]) + cvt
     except KeyError:
-        return (None, _format_bad if name else _format_ok) + cvt
+        return (name, _format_error if name else _format_ok) + cvt
 
 
 FORMAT_CHECK_FUNCTIONS = {

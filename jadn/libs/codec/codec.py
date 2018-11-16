@@ -196,11 +196,12 @@ def _check_type(ts, val, vtype, fail=False):      # fail forces rejection of boo
 
 def _format(ts, val, fmtop):
     try:
-        return ts[S_FORMAT][fmtop](val)         # fmtop selects function to check, serialize or deserialize
+        rval = ts[S_FORMAT][fmtop](val)         # fmtop selects function to check, serialize or deserialize
     except ValueError:
         td = ts[S_TDEF]
-        tn = ('%s(%s)' % (td[TNAME], td[TTYPE]) if td else 'Primitive')
+        tn = ('%s(%s)' % (td[TNAME], td[TTYPE]) if td[TNAME] else td[TTYPE])
         raise ValueError('%s: %s is not a valid %s' % (tn, val, ts[S_FORMAT][FMT_NAME]))
+    return rval
 
 
 def _check_range(ts, val):

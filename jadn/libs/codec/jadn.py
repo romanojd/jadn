@@ -13,7 +13,7 @@ from datetime import datetime
 from .codec import is_builtin, is_primitive, Codec
 from .codec_utils import topts_s2d, fopts_s2d, basetype
 from .codec_format import get_format_function
-from .codec_format import FMT_NAME, FMT_CHECK, FMT_B2S, FMT_S2B
+from .codec_format import FMT_CHECK, FMT_B2S
 from .jadn_defs import *
 
 # TODO: convert prints to ValidationError exception
@@ -146,7 +146,7 @@ def jadn_check(schema):
         if tt == 'ArrayOf' and 'rtype' not in topts:
             print('Error:', t[TNAME], '- Missing array element type')
         if 'format' in topts:
-            if not get_format_function(topts['format'], tt)[FMT_NAME]:
+            if not get_format_function(topts['format'], tt)[FMT_CHECK]:
                 print('Unsupported value constraint', '"' + topts['format'] + '" on', tt + ':',  t[TNAME])
         if 'cvt' in topts:
             if not get_format_function(None, tt, topts['cvt'])[FMT_B2S]:
