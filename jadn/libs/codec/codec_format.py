@@ -150,11 +150,14 @@ def check_format_function(name, basetype, convert=None):
 
 
 def get_format_function(name, basetype, convert=None):
-    convert = convert if convert else 'b64u'
-    try:
-        cvt = FORMAT_CONVERT_FUNCTIONS[convert]
-    except KeyError:
-        cvt = (_err, _err)    # Binary conversion function not found, return Err
+    if basetype == 'Binary':
+        convert = convert if convert else 'b64u'
+        try:
+            cvt = FORMAT_CONVERT_FUNCTIONS[convert]
+        except KeyError:
+            cvt = (_err, _err)    # Binary conversion function not found, return Err
+    else:
+        cvt = (_err, _err)    # Binary conversion function not applicable, return Err
     try:
         col = {'String': 0, 'Binary': 1, 'Number': 2}[basetype]
         return (name, FORMAT_CHECK_FUNCTIONS[name][col]) + cvt
