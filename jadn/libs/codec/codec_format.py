@@ -5,7 +5,11 @@ import socket
 from socket import AF_INET, AF_INET6
 import string
 
-# Format Operations
+# Supported Operations - return value of check_format_function
+FMT_CHK = 0     # Format check function exists
+FMT_CVT = 1     # Binary conversion functions exist
+
+# Format Operations - return value of get_format_function
 FMT_NAME = 0    # Name of format option
 FMT_CHECK = 1   # Function to check if value is valid (String, Binary, or Integer/Number types)
 FMT_B2S = 2     # Function to convert binary to string (encode / serialize Binary types)
@@ -132,36 +136,39 @@ def s_uri(sval):            # Check if valid URI
     raise ValueError
 
 
-def _format_ok(val):      # No value constraints on this type
+def _format_ok(val):        # No value constraints on this type
     return val
 
 
-def _format_error(val):     # Unsupported format type
+def _err(val):              # Unsupported format type
     raise ValueError
 
 
+def check_format_function(name, basetype, convert=None):
+    ff = get_format_function(name, basetype, convert)
+    return (ff[FMT_CHECK] != _err, ff[FMT_B2S] != _err)
+
+
 def get_format_function(name, basetype, convert=None):
-    cvt = (True, True)              # Conversion is not used for non-Binary types, return OK
-    if basetype == 'Binary':
-        convert = convert if convert else 'b64u'
-        try:
-            cvt = FORMAT_CONVERT_FUNCTIONS[convert]
-        except KeyError:
-            cvt = (None, None)    # Binary conversion function not found, return Err
+    convert = convert if convert else 'b64u'
+    try:
+        cvt = FORMAT_CONVERT_FUNCTIONS[convert]
+    except KeyError:
+        cvt = (_err, _err)    # Binary conversion function not found, return Err
     try:
         col = {'String': 0, 'Binary': 1, 'Number': 2}[basetype]
         return (name, FORMAT_CHECK_FUNCTIONS[name][col]) + cvt
     except KeyError:
-        return (name, _format_error if name else _format_ok) + cvt
+        return (name, _err if name else _format_ok) + cvt
 
 
 FORMAT_CHECK_FUNCTIONS = {
-    'hostname':     [s_hostname, None, None],       # Domain-Name
-    'email':        [s_email, None, None],          # Email-Addr
-    'ip-addr':      [None, b_ip_addr, None],        # IP-Addr
-    'ip-subnet':    [None, b_ip_subnet, None],      # IP-Subnet
-    'mac-addr':     [None, b_mac_addr, None],       # MAC-Addr
-    'uri':          [s_uri, None, None]             # URI
+    'hostname':     [s_hostname, _err, _err],       # Domain-Name
+    'email':        [s_email, _err, _err],          # Email-Addr
+    'ip-addr':      [_err, b_ip_addr, _err],        # IP-Addr
+    'ip-subnet':    [_err, b_ip_subnet, _err],      # IP-Subnet
+    'mac-addr':     [_err, b_mac_addr, _err],       # MAC-Addr
+    'uri':          [s_uri, _err, _err]             # URI
 }
 
 FORMAT_CONVERT_FUNCTIONS = {

@@ -8,12 +8,11 @@ import copy
 import json
 import jsonschema
 import numbers
-import os
 from datetime import datetime
-from .codec import is_builtin, is_primitive, Codec
+from .codec import is_builtin, is_primitive
 from .codec_utils import topts_s2d, fopts_s2d, basetype
-from .codec_format import get_format_function
-from .codec_format import FMT_CHECK, FMT_B2S
+from .codec_format import check_format_function
+from .codec_format import FMT_CHK, FMT_CVT
 from .jadn_defs import *
 
 # TODO: convert prints to ValidationError exception
@@ -146,10 +145,10 @@ def jadn_check(schema):
         if tt == 'ArrayOf' and 'rtype' not in topts:
             print('Error:', t[TNAME], '- Missing array element type')
         if 'format' in topts:
-            if not get_format_function(topts['format'], tt)[FMT_CHECK]:
+            if not check_format_function(topts['format'], tt)[FMT_CHK]:
                 print('Unsupported value constraint', '"' + topts['format'] + '" on', tt + ':',  t[TNAME])
         if 'cvt' in topts:
-            if not get_format_function(None, tt, topts['cvt'])[FMT_B2S]:
+            if not check_format_function(None, tt, topts['cvt'])[FMT_CVT]:
                 print('Unsupported Binary-String conversion', '"' + topts['cvt'] + '" on', tt + ':',  t[TNAME])
         if is_primitive(tt) or tt == 'ArrayOf':
             if len(t) != 4:    # TODO: trace back to base type

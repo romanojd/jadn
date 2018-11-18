@@ -123,7 +123,7 @@ def fopts_s2d(ostr):
 
 
 def basetype(tt):                   # Return base type of derived subtypes
-    return tt.rsplit(sep='.')[0]    # Strip off subtype (e.g., .ID)
+    return tt.rsplit('.')[0]        # Strip off subtype (e.g., .ID)
 
 
 def cardinality(min, max):
