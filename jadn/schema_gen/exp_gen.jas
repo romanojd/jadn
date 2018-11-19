@@ -1,5 +1,5 @@
 /*
-module:        oasis-open.org/openc2/oc2ls/v1.0/experimental
+module:        oasis-open.org/openc2/oc2ls-exp/v1.0
 patch:         0
 title:         Experimental Schema Features
 description:   Profile used to test schema features not used in existing
@@ -8,13 +8,13 @@ exports:       Target, Specifiers, Args, Results
 */
 
 Target ::= CHOICE {    -- New targets
-    hashes         [1] Hashes,    -- Hash values serialized as hex
-    ipv4_addr_s    [2] IPv4-String,    -- IPv4 address as type-specific string (dotted-decimal): '192.168.0.254'
-    ipv4_addr_x    [3] IPv4-Hex,    -- IPv4 address serialized as hex: 'C0A800FE'
-    ipv4_addr_b64  [4] IPv4-Base64url,    -- IPv4 address serialized as Base64-url: 'wKgA_g'
-    ipv6_addr_s    [5] IPv6-String,    -- IPv6 address as type-specific string (colon-hex): ''
-    ipv6_addr_x    [6] IPv6-Hex,    -- IPv6 address serialized as hex: ''
-    ipv6_addr_b64  [7] IPv6-Base64url     -- IPv6 address serialized as Base64-url: ''
+    hashes         [1] Hashes,    -- Hash values displayed as hex
+    ipv4_addr_s    [2] IPv4-String,    -- IPv4 address displayed as type-specific string (dotted-decimal): '192.168.0.254'
+    ipv4_addr_x    [3] IPv4-Hex,    -- IPv4 address displayed as hex: 'C0A800FE'
+    ipv4_addr_b64  [4] IPv4-Base64url,    -- IPv4 address displayed as Base64-url: 'wKgA_g'
+    ipv6_addr_s    [5] IPv6-String,    -- IPv6 address displayed as type-specific string (colon-hex): ''
+    ipv6_addr_x    [6] IPv6-Hex,    -- IPv6 address displayed as hex: ''
+    ipv6_addr_b64  [7] IPv6-Base64url     -- IPv6 address displayed as Base64-url: ''
 }
 
 Hashes ::= MAP {    -- Cryptographic Hash values
@@ -58,9 +58,9 @@ KNP ::= ARRAY {
 }
 
 Battery-Properties ::= MAP {
-    voltage       [7] INTEGER OPTIONAL,    -- Battery output voltage (millivolts)
-    charge        [18] Percentage OPTIONAL,    -- State of charge (percent)
-    manufacturer  [26] STRING OPTIONAL     -- Product name for this device
+    voltage      [7] INTEGER OPTIONAL,    -- Battery output voltage (millivolts)
+    charge       [18] Percentage OPTIONAL,    -- State of charge (percent)
+    model        [26] STRING OPTIONAL     -- Product name for this device
 }
 
 Percentage ::= REAL (0..100)    -- Real number in the range 0.0-100.0

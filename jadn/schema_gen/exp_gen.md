@@ -1,9 +1,9 @@
-<!-- Generated from schema\exp.jadn, Tue Nov 13 15:36:34 2018-->
+<!-- Generated from schema\exp.jadn, Mon Nov 19 13:02:11 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
 | **title:** | Experimental Schema Features |
-| **module:** | oasis-open.org/openc2/oc2ls/v1.0/experimental |
+| **module:** | oasis-open.org/openc2/oc2ls-exp/v1.0 |
 | **patch:** | 0 |
 | **description:** | Profile used to test schema features not used in existing language or profiles |
 | **exports:** | Target, Specifiers, Args, Results |
@@ -12,13 +12,13 @@
 
 | ID | Name | Type | # | Description |
 | ---: | --- | :--- | ---: | :--- |
-| 1 | **hashes** | Hashes | 1 | Hash values serialized as hex |
-| 2 | **ipv4_addr_s** | IPv4-String | 1 | IPv4 address as type-specific string (dotted-decimal): '192.168.0.254' |
-| 3 | **ipv4_addr_x** | IPv4-Hex | 1 | IPv4 address serialized as hex: 'C0A800FE' |
-| 4 | **ipv4_addr_b64** | IPv4-Base64url | 1 | IPv4 address serialized as Base64-url: 'wKgA_g' |
-| 5 | **ipv6_addr_s** | IPv6-String | 1 | IPv6 address as type-specific string (colon-hex): '' |
-| 6 | **ipv6_addr_x** | IPv6-Hex | 1 | IPv6 address serialized as hex: '' |
-| 7 | **ipv6_addr_b64** | IPv6-Base64url | 1 | IPv6 address serialized as Base64-url: '' |
+| 1 | **hashes** | Hashes | 1 | Hash values displayed as hex |
+| 2 | **ipv4_addr_s** | IPv4-String | 1 | IPv4 address displayed as type-specific string (dotted-decimal): '192.168.0.254' |
+| 3 | **ipv4_addr_x** | IPv4-Hex | 1 | IPv4 address displayed as hex: 'C0A800FE' |
+| 4 | **ipv4_addr_b64** | IPv4-Base64url | 1 | IPv4 address displayed as Base64-url: 'wKgA_g' |
+| 5 | **ipv6_addr_s** | IPv6-String | 1 | IPv6 address displayed as type-specific string (colon-hex): '' |
+| 6 | **ipv6_addr_x** | IPv6-Hex | 1 | IPv6 address displayed as hex: '' |
+| 7 | **ipv6_addr_b64** | IPv6-Base64url | 1 | IPv6 address displayed as Base64-url: '' |
 
 **_Type: Hashes (Map)_**
 
@@ -112,7 +112,7 @@
 | ---: | --- | :--- | ---: | :--- |
 | 7 | **voltage** | Integer | 0..1 | Battery output voltage (millivolts) |
 | 18 | **charge** | Percentage | 0..1 | State of charge (percent) |
-| 26 | **manufacturer** | String | 0..1 | Product name for this device |
+| 26 | **model** | String | 0..1 | Product name for this device |
 
 **_Type: Percentage_**
 

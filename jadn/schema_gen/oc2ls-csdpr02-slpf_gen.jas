@@ -1,0 +1,130 @@
+/*
+module:        oasis-open.org/openc2/oc2ls/v1.0
+patch:         0-csdpr02+slpf
+title:         OpenC2 Language Objects
+description:   OpenC2 Language content used by Stateless Packet Filters.
+imports:       slpf: oasis-open.org/openc2/oc2slpf/v1.0
+               jadn: oasis-open.org/openc2/jadn/v1.0
+exports:       OpenC2-Command, OpenC2-Response, Message-Type, Status-Code, Request-Id, Date-Time
+*/
+
+OpenC2-Command ::= RECORD {
+    action       Action,    -- The task or activity to be performed (i.e., the 'verb').
+    target       Target,    -- The object of the action. The action is performed on the target.
+    args         Args OPTIONAL,    -- Additional information that applies to the command.
+    actuator     Actuator OPTIONAL     -- The subject of the action. The actuator executes the action on the target.
+}
+
+Action ::= ENUMERATED {
+    query        (3),    -- Initiate a request for information.
+    deny         (6),    -- Prevent a certain event or action from completion, such as preventing a flow from reaching a destination or preventing access.
+    allow        (8),    -- Permit access to or execution of a target.
+    update       (16),    -- Instruct a component to retrieve, install, process, and operate in accordance with a software update, reconfiguration, or other update.
+    delete       (20)     -- Remove an entity (e.g., data, files, flows.
+}
+
+Target ::= CHOICE {    -- OpenC2 Target datatypes
+    features       [16] Features,    -- A set of items used with the query action to determine an actuator's capabilities
+    file           [10] File,    -- Properties of a file.
+    ip_addr        [11] IP-Addr,    -- The representation of one or more IP addresses (either version 4 or version 6).
+    ip_connection  [15] IP-Connection,    -- A network connection that originates from a source and is addressed to a destination.
+    slpf           [1024] slpf:Target     -- Targets defined in the Stateless Packet Filter Profile
+}
+
+Actuator ::= CHOICE {
+    slpf         [1024] slpf:Specifiers     -- Actuator specifiers and options as defined in the Stateless Packet Filter profile
+}
+
+Args ::= MAP {
+    start_time          [1] Date-Time OPTIONAL,    -- The specific date/time to initiate the action
+    stop_time           [2] Date-Time OPTIONAL,    -- The specific date/time to terminate the action
+    duration            [3] Duration OPTIONAL,    -- The length of time for an action to be in effect
+    response_requested  [4] Response-Type OPTIONAL,    -- The type of response required for the action
+    slpf                [1024] slpf:Args OPTIONAL     -- Command arguments defined in the Stateless Packet Filter profile
+}
+
+OpenC2-Response ::= MAP {
+    status       [1] Status-Code OPTIONAL,    -- An integer status code (Duplicates message status code)
+    status_text  [2] STRING OPTIONAL,    -- A free-form human-readable description of the response status
+    versions     [6] Version OPTIONAL,    -- Supported OpenC2 Language versions %{'max': 0}
+    profiles     [7] jadn:Uname OPTIONAL,    -- List of profiles supported by this actuator %{'max': 0}
+    schema       [8] jadn:Schema OPTIONAL,    -- Syntax of the OpenC2 language elements supported by this actuator
+    pairs        [9] Action-Targets OPTIONAL,    -- List of targets applicable to each supported action %{'max': 0}
+    rate_limit   [10] REAL OPTIONAL,    -- Maximum number of requests per minute supported by design or policy
+    slpf         [1024] slpf:Results OPTIONAL     -- Response data defined in the Stateless Packet Filter profile
+}
+
+Status-Code ::= ENUMERATED.ID {
+    Processing       (102),    -- an interim response used to inform the client that the server has accepted the request but not yet completed it.
+    OK               (200),    -- the request has succeeded.
+    Bad Request      (400),    -- the consumer cannot process the request due to something that is perceived to be a client error (e.g., malformed request syntax.)
+    Internal Error   (500),    -- the consumer encountered an unexpected condition that prevented it from fulfilling the request.
+    Not Implemented  (501)     -- the consumer does not support the functionality required to fulfill the request.
+}
+
+Features ::= ARRAY_OF(Feature)    -- A target used to query Actuator for its supported capabilities
+
+File ::= MAP {
+    name         [1] STRING OPTIONAL,    -- The name of the file as defined in the file system
+    path         [2] STRING OPTIONAL,    -- The absolute path to the location of the file in the file system
+    hashes       [3] Hashes OPTIONAL     -- One or more cryptographic hash codes of the file contents
+}
+
+IP-Addr ::= BINARY (CONSTRAINED BY {ip-addr})    -- 32 bit IPv4 address or 128 bit IPv6 address
+
+IP-Connection ::= RECORD {    -- 5-tuple that specifies a tcp/ip connection
+    src_addr     IP-Addr OPTIONAL,    -- source address
+    src_port     Port OPTIONAL,    -- source TCP/UDP port number
+    dst_addr     IP-Addr OPTIONAL,    -- destination address
+    dst_port     Port OPTIONAL,    -- destination TCP/UDP port number
+    protocol     L4-Protocol OPTIONAL     -- Protocol (IPv4) / Next Header (IPv6)
+}
+
+Message-Type ::= ENUMERATED {
+    notification  (0),    -- A message that does not solicit a response
+    request       (1),    -- A message for which a response is requested
+    response      (2)     -- A message containing a response to a request
+}
+
+Request-Id ::= BINARY    -- A value of up to 128 bits that uniquely identifies a particular command
+
+Date-Time ::= INTEGER    -- Milliseconds since 00:00:00 UTC, 1 January 1970.
+
+Duration ::= INTEGER    -- Milliseconds
+
+Hashes ::= MAP {    -- Cryptographic Hash values
+    md5          [1] BINARY OPTIONAL,    -- MD5 hash as defined in RFC3121
+    sha1         [4] BINARY OPTIONAL,    -- SHA1 hash as defined in RFC3174
+    sha256       [6] BINARY OPTIONAL     -- SHA256 as defined in RFC6234
+}
+
+L4-Protocol ::= ENUMERATED {    -- protocol (IPv4) or next header (IPv6) field - any IANA value, RFC 5237
+    icmp         (1),    -- Internet Control Message Protocol - RFC 792
+    tcp          (6),    -- Transmission Control Protocol - RFC 793-
+    udp          (17),    -- User Datagram Protocol - RFC 768
+    sctp         (132)     -- Stream Control Transmission Protocol - RFC 4960
+}
+
+Port ::= INTEGER (0..65535)    -- Transport Protocol Port Number, RFC 6335
+
+Feature ::= ENUMERATED {    -- Results to be included in response to query features command
+    versions     (1),    -- List of OpenC2 language versions supported by this actuator
+    profiles     (2),    -- List of profiles supported by this actuator
+    schema       (3),    -- Definition of the command syntax supported by this actuator
+    pairs        (4),    -- List of supported actions and applicable targets
+    rate_limit   (5)     -- Maximum number of supported requests per minute
+}
+
+Response-Type ::= ENUMERATED {
+    none         (0),    -- No response
+    ack          (1),    -- Respond when command received
+    status       (2),    -- Respond with progress toward command completion
+    complete     (3)     -- Respond when all aspects of command completed
+}
+
+Version ::= STRING    -- Major.Minor version number
+
+Action-Targets ::= ARRAY {
+    action       [1] Action,    -- An action supported by this actuator
+    targets      [2] Target.*     -- List of targets applicable to this action %{'max': 0}
+}

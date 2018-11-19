@@ -1,6 +1,6 @@
 {
  "meta": {
-  "module": "oasis-open.org/openc2/oc2ls/v1.0/experimental",
+  "module": "oasis-open.org/openc2/oc2ls-exp/v1.0",
   "patch": "0",
   "title": "Experimental Schema Features",
   "description": "Profile used to test schema features not used in existing language or profiles",
@@ -43,7 +43,7 @@
   ["Battery-Properties", "Map", [], "", [
     [7, "voltage", "Integer", ["[0"], ""],
     [18, "charge", "Percentage", ["[0"], ""],
-    [26, "manufacturer", "String", ["[0"], ""]
+    [26, "model", "String", ["[0"], ""]
   ]],
   ["Percentage", "Number", ["[0", "]100"], ""]
  ]

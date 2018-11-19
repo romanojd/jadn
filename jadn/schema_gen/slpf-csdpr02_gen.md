@@ -1,10 +1,10 @@
-<!-- Generated from schema\slpf-csdpr01.jadn, Tue Nov 13 15:36:34 2018-->
+<!-- Generated from schema\slpf-csdpr02.jadn, Mon Nov 19 13:02:13 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
 | **title:** | Stateless Packet Filtering |
-| **module:** | oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0 |
-| **patch:** | 0 |
+| **module:** | oasis-open.org/openc2/oc2slpf/v1.0 |
+| **patch:** | 0-csdpr02 |
 | **description:** | Data definitions for Stateless Packet Filtering (SLPF) functions |
 | **exports:** | Target, Specifiers, Args, Results |
 

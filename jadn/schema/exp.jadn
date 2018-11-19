@@ -1,6 +1,6 @@
 {
  "meta": {
-  "module": "oasis-open.org/openc2/oc2ls/v1.0/experimental",
+  "module": "oasis-open.org/openc2/oc2ls-exp/v1.0",
   "patch": "0",
   "title": "Experimental Schema Features",
   "description": "Profile used to test schema features not used in existing language or profiles",
@@ -24,11 +24,11 @@
     [6, "sha256", "Bin-256", ["[0"], "SHA256 as defined in RFC6234"]
   ]],
 
-  ["Bin-128", "Binary.x", ["[16","]16"], "128 bit value, hex display"],
+  ["Bin-128", "Binary", ["[16", "]16", ".x"], "128 bit value, hex display"],
 
-  ["Bin-160", "Binary.x", ["[20","]20"], "160 bit value, hex display"],
+  ["Bin-160", "Binary", ["[20", "]20", ".x"], "160 bit value, hex display"],
 
-  ["Bin-256", "Binary.x", ["[32","]32"], "256 bit value, hex display"],
+  ["Bin-256", "Binary", ["[32", "]32", ".x"], "256 bit value, hex display"],
 
   ["IPv4-Hex", "Binary", ["[4", "]4", ".x"], "Value must be 32 bits [4..4].  Value displayed in hex (Binary.x)"],
 

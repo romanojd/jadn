@@ -1,12 +1,12 @@
 {
  "meta": {
-  "module": "oasis-open.org/openc2/v1.0/oc2ls-exp",
-  "patch": "0-wd01",
-  "title": "OpenC2 Language with experimental elements",
+  "module": "oasis-open.org/openc2/oc2ls/v1.0",
+  "patch": "0-csdpr02",
+  "title": "OpenC2 Language Objects",
   "description": "Datatypes that define the content of OpenC2 commands and responses.",
   "imports": [
-   ["exp", "oasis-open.org/openc2/oc2ls/v1.0/experimental"],
-   ["jadn", "oasis-open.org/openc2/v1.0/jadn"]
+   ["slpf", "oasis-open.org/openc2/oc2slpf/v1.0"],
+   ["jadn", "oasis-open.org/openc2/jadn/v1.0"]
   ],
   "exports": ["OpenC2-Command", "OpenC2-Response", "Message-Type", "Status-Code", "Request-Id", "Date-Time"]
  },
@@ -63,16 +63,21 @@
     [17, "process", "Process", [], ""],
     [25, "properties", "Properties", [], ""],
     [19, "uri", "URI", [], ""],
-    [1099, "exp", "exp:Target", [], ""]
+    [1000, "extension", "PE-Target", [], ""],
+    [1001, "extension_unr", "Unr-Target", [], ""],
+    [1024, "slpf", "slpf:Target", [], ""]
   ]],
   ["Actuator", "Choice", [], "", [
-    [1099, "exp", "exp:Specifiers", [], ""]
+    [1000, "extension", "PE-Specifiers", [], ""],
+    [1001, "extension_unr", "Unr-Specifiers", [], ""]
   ]],
   ["Args", "Map", [], "", [
     [1, "start_time", "Date-Time", ["[0"], ""],
     [2, "stop_time", "Date-Time", ["[0"], ""],
     [3, "duration", "Duration", ["[0"], ""],
-    [4, "response_requested", "Response-Type", ["[0"], ""]
+    [4, "response_requested", "Response-Type", ["[0"], ""],
+    [1000, "extension", "PE-Args", ["[0"], ""],
+    [1001, "extension_unr", "Unr-Args", ["[0"], ""]
   ]],
   ["OpenC2-Response", "Map", [], "", [
     [1, "status", "Status-Code", ["[0"], ""],
@@ -85,7 +90,8 @@
     [8, "schema", "jadn:Schema", ["[0"], ""],
     [9, "pairs", "Action-Targets", ["[0", "]0"], ""],
     [10, "rate_limit", "Number", ["[0"], ""],
-    [1099, "exp", "exp:Results", ["[0"], ""]
+    [1000, "extension", "PE-Results", ["[0"], ""],
+    [1001, "extension_unr", "Unr-Results", ["[0"], ""]
   ]],
   ["Status-Code", "Enumerated", ["="], "", [
     [102, "Processing", ""],
@@ -98,6 +104,18 @@
     [500, "Internal Error", ""],
     [501, "Not Implemented", ""],
     [503, "Service Unavailable", ""]
+  ]],
+  ["PE-Target", "Choice", ["="], "", [
+    [32473, "Example", "32473:Target", [], ""]
+  ]],
+  ["PE-Specifiers", "Choice", ["="], "", [
+    [32473, "Example", "32473:Specifiers", [], ""]
+  ]],
+  ["PE-Args", "Map", ["="], "", [
+    [32473, "Example", "32473:Args", [], ""]
+  ]],
+  ["PE-Results", "Map", ["="], "", [
+    [32473, "Example", "32473:Results", [], ""]
   ]],
   ["Artifact", "Record", [], "", [
     [1, "mime_type", "String", ["[0"], ""],

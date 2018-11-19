@@ -1,13 +1,12 @@
-<!-- Generated from schema\oc2ls-csdpr01.jadn, Tue Nov 13 15:36:34 2018-->
+<!-- Generated from schema\oc2ls-csdpr02_merged.jadn, Mon Nov 19 13:02:12 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
 | **title:** | OpenC2 Language Objects |
-| **module:** | oasis-open.org/openc2/v1.0/openc2-lang |
-| **patch:** | wd09 |
+| **module:** | oasis-open.org/openc2/oc2ls/v1.0 |
+| **patch:** | 0-csdpr02+merged |
 | **description:** | Datatypes that define the content of OpenC2 commands and responses. |
 | **exports:** | OpenC2-Command, OpenC2-Response, Message-Type, Status-Code, Request-Id, Date-Time |
-| **imports:** | **slpf**:&nbsp;oasis-open.org/openc2/v1.0/ap-slpf **jadn**:&nbsp;oasis-open.org/openc2/v1.0/jadn |
 
 **_Type: Message (Array)_**
 
@@ -338,3 +337,164 @@
 | ---: | :--- | ---: | :--- |
 | 1 | Action | 1 | action -- An action supported by this actuator |
 | 2 | Target.* | 1..n | targets -- List of targets applicable to this action |
+
+**_Type: slpf:Target (Choice)_**
+
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **rule_number** | slpf:Rule-ID | 1 | Uniquely identifies a rule associated with a previously-issued deny or allow. |
+
+**_Type: slpf:Args (Map)_**
+
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **drop_process** | slpf:Drop-Process | 0..1 | Specifies how to handle denied packets |
+| 2 | **running** | Boolean | 0..1 | Normal operation assumes updates are persistent. If TRUE, updates are not persistent in the event of a reboot or restart.  Default=FALSE. |
+| 3 | **direction** | slpf:Direction | 0..1 | Specifies whether to apply rules to incoming or outgoing traffic. If omitted, rules are applied to both. |
+| 4 | **insert_rule** | slpf:Rule-ID | 0..1 | Specifies the identifier of the rule within a list, typically used in a top-down rule list. |
+
+**_Type: slpf:Drop-Process (Enumerated)_**
+
+| ID | Name | Description |
+| ---: | --- | :--- |
+| 1 | **none** | Drop the packet and do not send a notification to the source of the packet. |
+| 2 | **reject** | Drop the packet and send an ICMP host unreachable (or equivalent) to the source of the packet. |
+| 3 | **false_ack** | Drop the traffic and send a false acknowledgement that the data was received by the destination. |
+
+**_Type: slpf:Direction (Enumerated)_**
+
+| ID | Name | Description |
+| ---: | --- | :--- |
+| 1 | **ingress** | Apply rules to incoming traffic only |
+| 2 | **egress** | Apply rule to outbound traffic only |
+
+**_Type: slpf:Rule-ID_**
+
+| Type Name | Base Type | Description |
+| :--- | :--- | :--- |
+| slpf:Rule-ID | Integer | Immutable identifier assigned when an access rule is created. |
+
+**_Type: slpf:Specifiers (Map)_**
+
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **hostname** | String | 0..1 | RFC 1123 hostname (can be a domain name or IP address) for a particular device with SLPF functionality |
+| 2 | **named_group** | String | 0..1 | User-defined collection of devices with SLPF functionality |
+| 3 | **asset_id** | String | 0..1 | Unique identifier for a particular SLPF |
+| 4 | **asset_tuple** | String | 0..10 | Unique tuple identifier for a particular SLPF consisting of a list of up to 10 strings |
+
+**_Type: slpf:Results (Map)_**
+
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **rule_number** | slpf:Rule-ID | 0..1 | Rule identifier returned from allow or deny command. |
+
+**_Type: jadn:Schema (Record)_**
+
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **meta** | jadn:Meta | 1 | Information about this schema module |
+| 2 | **types** | jadn:Type | 1..n | Types defined in this schema module |
+
+**_Type: jadn:Meta (Map)_**
+
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **module** | jadn:Uname | 1 | Schema unique name/version |
+| 2 | **patch** | String | 0..1 | Patch version |
+| 3 | **title** | String | 0..1 | Title |
+| 4 | **description** | String | 0..1 | Description |
+| 5 | **imports** | jadn:Import | 0..n | Imported schema modules |
+| 6 | **exports** | jadn:Identifier | 0..n | Data types exported by this module |
+| 7 | **bounds** | jadn:Bounds | 0..1 | Schema-wide upper bounds |
+
+**_Type: jadn:Import (Array)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+| 1 | jadn:Nsid | 1 | nsid -- A short local identifier (namespace id) used within this module to refer to the imported module |
+| 2 | jadn:Uname | 1 | uname -- Unique name of imported module |
+
+**_Type: jadn:Bounds (Array)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+| 1 | Integer | 1 | max_msg -- Maximum serialized message size in octets or characters |
+| 2 | Integer | 1 | max_str -- Maximum string length in characters |
+| 3 | Integer | 1 | max_bin -- Maximum binary length in octets |
+| 4 | Integer | 1 | max_fields -- Maximum number of elements in ArrayOf |
+
+**_Type: jadn:Type (Array)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+| 1 | jadn:Identifier | 1 | tname -- Name of this datatype |
+| 2 | jadn:JADN-Type.* | 1 | btype -- Base type.  Enumerated value derived from list of JADN data types |
+| 3 | jadn:Option | 1..n | opts -- Type options |
+| 4 | String | 1 | desc -- Description of this data type |
+| 5 | jadn:JADN-Type | 1..n | fields -- List of fields for compound types.  Not present for primitive types |
+
+**_Type: jadn:JADN-Type (Choice)_**
+
+| ID | Name | Type | # | Description |
+| ---: | --- | :--- | ---: | :--- |
+| 1 | **Binary** | Null | 1 | Octet (binary) string |
+| 2 | **Boolean** | Null | 1 | True or False |
+| 3 | **Integer** | Null | 1 | Whole number |
+| 4 | **Number** | Null | 1 | Real number |
+| 5 | **Null** | Null | 1 | Nothing |
+| 6 | **String** | Null | 1 | Character (text) string |
+| 7 | **Array** | jadn:FullField | 1..n | Ordered list of unnamed fields |
+| 8 | **ArrayOf** | Null | 1 | Ordered list of fields of a specified type |
+| 9 | **Choice** | jadn:FullField | 1..n | One of a set of named fields |
+| 10 | **Enumerated** | jadn:EnumField | 1..n | One of a set of id:name pairs |
+| 11 | **Map** | jadn:FullField | 1..n | Unordered set of named fields |
+| 12 | **Record** | jadn:FullField | 1..n | Ordered list of named fields |
+
+**_Type: jadn:EnumField (Array)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+| 1 | Integer | 1 | Item ID |
+| 2 | String | 1 | Item name |
+| 3 | String | 1 | Item description |
+
+**_Type: jadn:FullField (Array)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+| 1 | Integer | 1 | Field ID or ordinal position |
+| 2 | jadn:Identifier | 1 | Field name |
+| 3 | jadn:Identifier | 1 | Field type |
+| 4 | jadn:Options | 1 | Field options |
+| 5 | String | 1 | Field description |
+
+**_Type: jadn:Identifier_**
+
+| Type Name | Base Type | Description |
+| :--- | :--- | :--- |
+| jadn:Identifier | String [1..32] | A string starting with an alpha char followed by zero or more alphanumeric / underscore / dash chars |
+
+**_Type: jadn:Nsid_**
+
+| Type Name | Base Type | Description |
+| :--- | :--- | :--- |
+| jadn:Nsid | String [1..8] | Namespace ID - a short identifier |
+
+**_Type: jadn:Uname_**
+
+| Type Name | Base Type | Description |
+| :--- | :--- | :--- |
+| jadn:Uname | String [1..100] | Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes |
+
+**_Type: jadn:Options_**
+
+| Type Name | Base Type | Description |
+| :--- | :--- | :--- |
+| jadn:Options | ArrayOf(jadn:Option) [0..10] | Options list may be empty but may not be omitted |
+
+**_Type: jadn:Option_**
+
+| Type Name | Base Type | Description |
+| :--- | :--- | :--- |
+| jadn:Option | String [1..100] | Option string: 1st char = option id |

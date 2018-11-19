@@ -1,6 +1,6 @@
 /*
-module:        oasis-open.org/openc2/v1.0/jadn
-patch:         wd01
+module:        oasis-open.org/openc2/jadn/v1.0
+patch:         0-csdpr02
 title:         JADN Syntax
 description:   Syntax of a JSON Abstract Data Notation (JADN) module.
 exports:       Schema, Uname
