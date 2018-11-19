@@ -13,6 +13,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 from __future__ import unicode_literals
 import numbers
+from binascii import b2a_hex
 from .jadn_defs import *
 from .codec_utils import topts_s2d, fopts_s2d
 from .codec_format import get_format_function
@@ -200,7 +201,12 @@ def _format(ts, val, fmtop):
     except ValueError:
         td = ts[S_TDEF]
         tn = ('%s(%s)' % (td[TNAME], td[TTYPE]) if td[TNAME] else td[TTYPE])
+        val = '0x' + b2a_hex(val) if td[TTYPE] == 'Binary' else val
         raise ValueError('%s: %s is not a valid %s' % (tn, val, ts[S_FORMAT][FMT_NAME]))
+    except NameError:
+        td = ts[S_TDEF]
+        tn = ('%s(%s)' % (td[TNAME], td[TTYPE]) if td[TNAME] else td[TTYPE])
+        raise ValueError('%s: %s is not defined' % (tn, ts[S_FORMAT][FMT_NAME]))
     return rval
 
 

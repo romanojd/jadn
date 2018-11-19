@@ -109,7 +109,7 @@ def b2s_ipv4_addr(bval):      # Convert IPv4 address from binary to string
 
 
 def b2s_ipv6_addr(bval):        # Convert ipv6 address from binary to string
-    return socket.inet_ntop(AF_INET6, bval)
+        return socket.inet_ntop(AF_INET6, bval)     # Python 2 doesn't support inet_ntop on Windows
 
 
 def s2b_ip_subnet(sval):
@@ -141,7 +141,7 @@ def _format_ok(val):        # No value constraints on this type
 
 
 def _err(val):              # Unsupported format type
-    raise ValueError
+    raise NameError
 
 
 def check_format_function(name, basetype, convert=None):
