@@ -16,25 +16,6 @@ FMT_B2S = 2     # Function to convert binary to string (encode / serialize Binar
 FMT_S2B = 3     # Function to convert string to binary (decode / deserialize Binary types)
 
 
-def s2b_hex(sval):      # Convert from hex string to binary
-    return base64.b16decode(sval)
-
-
-def b2s_hex(bval):      # Convert from binary to hex string
-    return base64.b16encode(bval).decode()
-
-
-def s2b_base64url(sval):      # Convert from base64url string to binary
-    v = sval + ((4 - len(sval) % 4) % 4)*'='          # Pad b64 string out to a multiple of 4 characters
-    if set(v) - set(string.ascii_letters + string.digits + '-_='):  # Python 2 doesn't support Validate
-        raise TypeError('base64decode: bad character')
-    return base64.b64decode(str(v), altchars='-_')
-
-
-def b2s_base64url(bval):      # Convert from binary to base64url string
-    return base64.urlsafe_b64encode(bval).decode().rstrip('=')
-
-
 # From https://stackoverflow.com/questions/2532053/validate-a-hostname-string
 def s_hostname(sval):
     if not isinstance(sval, type('')):
@@ -74,8 +55,77 @@ def b_ip_addr(bval):        # Length of IP addr must be 32 or 128 bits
     raise ValueError
 
 
-def b_ip_subnet(bval):      # CIDR IP Address Range = base address + network prefix length
+def b_ipv4_addr(bval):      # Length of IPv4 addr must be 32 bits
+    if not isinstance(bval, bytes):
+        raise TypeError
+    if len(bval) == 4:
+        return bval
+    raise ValueError
+
+def b_ipv6_addr(bval):      # Length of IPv6 addr must be 128 bits
+    if not isinstance(bval, bytes):
+        raise TypeError
+    if len(bval) == 16:
+        return bval
+    raise ValueError
+
+
+def b_ip_net(bval):         # CIDR IP Address Range = base address + network prefix length
     raise ValueError        # TODO: write it
+
+
+def b_mac_addr(bval):       # Length of MAC addr must be 48 or 64 bits
+    if not isinstance(bval, bytes):
+        raise TypeError
+    if len(bval) == 6 or len(bval) == 8:
+        return bval
+    raise ValueError
+
+
+def s_uri(sval):            # Check if valid URI
+    if not isinstance(sval, type('')):
+        raise TypeError
+    if True:                # TODO: write it
+        return sval
+    raise ValueError
+
+
+def _format_ok(val):        # No value constraints on this type
+    return val
+
+
+def _err(val):              # Unsupported format type
+    raise NameError
+
+
+FORMAT_CHECK_FUNCTIONS = {
+    'hostname':     [s_hostname, _err, _err],       # Domain-Name
+    'email':        [s_email, _err, _err],          # Email-Addr
+    'ip-addr':      [_err, b_ip_addr, _err],        # IP-Addr
+    'ipv4':         [_err, b_ipv4_addr, _err],      # IPv4-Addr
+    'ip-net':       [_err, b_ip_net, _err],         # IP-Net
+    'mac-addr':     [_err, b_mac_addr, _err],       # MAC-Addr
+    'uri':          [s_uri, _err, _err]             # URI
+}
+
+
+def s2b_hex(sval):      # Convert from hex string to binary
+    return base64.b16decode(sval)
+
+
+def b2s_hex(bval):      # Convert from binary to hex string
+    return base64.b16encode(bval).decode()
+
+
+def s2b_base64url(sval):      # Convert from base64url string to binary
+    v = sval + ((4 - len(sval) % 4) % 4)*'='          # Pad b64 string out to a multiple of 4 characters
+    if set(v) - set(string.ascii_letters + string.digits + '-_='):  # Python 2 doesn't support Validate
+        raise TypeError('base64decode: bad character')
+    return base64.b64decode(str(v), altchars='-_')
+
+
+def b2s_base64url(bval):      # Convert from binary to base64url string
+    return base64.urlsafe_b64encode(bval).decode().rstrip('=')
 
 
 def s2b_ip_addr(sval):
@@ -85,8 +135,8 @@ def s2b_ip_addr(sval):
 def s2b_ipv4_addr(sval):    # Convert IPv4 addr from string to binary
     try:
         return socket.inet_pton(AF_INET, sval)
-    except AttributeError:
-        return socket.inet_aton(sval)       # Python 2 doesn't support inet_pton on Windows
+    except AttributeError:       # Python 2 doesn't support inet_pton on Windows
+        return socket.inet_aton(sval)
     except OSError:
         raise ValueError
 
@@ -120,28 +170,14 @@ def b2s_ip_subnet(bval):
     raise ValueError
 
 
-def b_mac_addr(bval):       # Length of MAC addr must be 48 or 64 bits
-    if not isinstance(bval, bytes):
-        raise TypeError
-    if len(bval) == 6 or len(bval) == 8:
-        return bval
-    raise ValueError
-
-
-def s_uri(sval):            # Check if valid URI
-    if not isinstance(sval, type('')):
-        raise TypeError
-    if True:                # TODO: write it
-        return sval
-    raise ValueError
-
-
-def _format_ok(val):        # No value constraints on this type
-    return val
-
-
-def _err(val):              # Unsupported format type
-    raise NameError
+FORMAT_CONVERT_FUNCTIONS = {
+    'b64u': (b2s_base64url, s2b_base64url),         # Base64url
+    'x': (b2s_hex, s2b_hex),                        # Hex
+    'ip-addr':  (b2s_ip_addr, s2b_ip_addr),         # IP Address, version autodetect
+    'ipv4': (b2s_ipv4_addr, s2b_ipv4_addr),         # IPv4 Address
+    'ipv6': (b2s_ipv6_addr, s2b_ipv6_addr),         # IPv6 Address
+    'ip-subnet': (b2s_ip_subnet, s2b_ip_subnet)     # IP Subnet Address with CIDR prefix length
+}
 
 
 def check_format_function(name, basetype, convert=None):
@@ -164,24 +200,6 @@ def get_format_function(name, basetype, convert=None):
     except KeyError:
         return (name, _err if name else _format_ok) + cvt
 
-
-FORMAT_CHECK_FUNCTIONS = {
-    'hostname':     [s_hostname, _err, _err],       # Domain-Name
-    'email':        [s_email, _err, _err],          # Email-Addr
-    'ip-addr':      [_err, b_ip_addr, _err],        # IP-Addr
-    'ip-subnet':    [_err, b_ip_subnet, _err],      # IP-Subnet
-    'mac-addr':     [_err, b_mac_addr, _err],       # MAC-Addr
-    'uri':          [s_uri, _err, _err]             # URI
-}
-
-FORMAT_CONVERT_FUNCTIONS = {
-    'b64u': (b2s_base64url, s2b_base64url),         # Base64url
-    'x': (b2s_hex, s2b_hex),                        # Hex
-    'ip-addr':  (b2s_ip_addr, s2b_ip_addr),         # IP Address, version autodetect
-    'ipv4': (b2s_ipv4_addr, s2b_ipv4_addr),         # IPv4 Address
-    'ipv6': (b2s_ipv6_addr, s2b_ipv6_addr),         # IPv6 Address
-    'ip-subnet': (b2s_ip_subnet, s2b_ip_subnet)     # IP Subnet Address with CIDR prefix length
-}
 
 # May not need functions for:
 #   Date-Time       - Integer - min and max value for plausible date range
