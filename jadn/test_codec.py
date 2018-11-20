@@ -1245,13 +1245,17 @@ schema_format = {  # JADN schema for value constraint tests
         ['IP-Base64url', 'Binary', ['@ip-addr'], ''],               # Baset64url encoding
         ['IP-Hex', 'Binary', ['.x', '@ip-addr'], ''],               # Hex encoding
         ['IP-String', 'Binary', ['.ip-addr', '@ip-addr'], ''],      # Datatype-specific string encoding
-        ['IPv4-Base64url', 'Binary', ['@ipv4'], ''],
-        ['IPv4-Hex', 'Binary', ['[4', ']4', '.x'], ''],
+        ['IPv4-Base64url', 'Binary', ['@ipv4'], ''],                # Check length = 32 bits with format function
+        ['IPv4-Hex', 'Binary', ['[4', ']4', '.x'], ''],             # Check length = 32 bits with min/max size
         ['IPv4-String', 'Binary', ['@ipv4', '.ipv4'], ''],
         ['IPv6-Base64url', 'Binary', ['[16', ']16'], ''],
         ['IPv6-Hex', 'Binary', ['@ipv6', '.x'], ''],
         ['IPv6-String', 'Binary', ['[16', ']16', '.ipv6'], ''],
-        ['IPv7-error', 'Binary', ['.ipv7'], ''],
+        ['IPv5-error', 'Binary', ['.ipv5'], ''],                    # Generate error: unsupported (nonexistent) format
+        ['IPv4-Net', 'Array', ['.ipv4-net'], '', [
+            [1, 'addr', 'Binary', [], ''],
+            [2, 'prefix', 'Integer', [], '']
+        ]],
         # ['t_ipaddrs', 'ArraryOf', ['*t_ipaddr'], ''],
         ['MAC-Base64url', 'Binary', ['@mac-addr'], ''],
         ['Email-Addr', 'String', ['@email'], ''],
@@ -1265,33 +1269,33 @@ class Format(unittest.TestCase):
         jadn_check(schema_format)
         self.tc = Codec(schema_format, verbose_rec=True, verbose_str=True)
 
-    ip1b = binascii.a2b_hex('c6020304')                 # IPv4 address
-    ip1s64 = 'xgIDBA'                                   # Base64url encoded
-    ip1sx = 'C6020304'                                  # Hex encoded
-    ip1str = '198.2.3.4'                                # IPv4-string encoded
-    ip1b1_bad = binascii.a2b_hex('c60203')              # Too short
-    ip1b2_bad = binascii.a2b_hex('c602030456')          # Too long
-    ip1s64_bad = 'xgIDBFY'                              # Too long
-    ip1sx_bad = 'C602030456'                            # Too long
-    ip1str_bad = '198.2.3.4.56'                         # Too long
+    ipv4_b = binascii.a2b_hex('c6020304')           # IPv4 address
+    ipv4_s64 = 'xgIDBA'                             # Base64url encoded
+    ipv4_sx = 'C6020304'                            # Hex encoded
+    ipv4_str = '198.2.3.4'                          # IPv4-string encoded
+    ipv4_b1_bad = binascii.a2b_hex('c60203')        # Too short
+    ipv4_b2_bad = binascii.a2b_hex('c602030456')    # Too long
+    ipv4_s64_bad = 'xgIDBFY'                        # Too long
+    ipv4_sx_bad = 'C602030456'                      # Too long
+    ipv4_str_bad = '198.2.3.4.56'                   # Too long
 
     def test_ipv4_addr(self):
-        # self.assertEqual(self.tc.encode('IPv4-Base64url', self.ip1b), self.ip1s64)
-        self.assertEqual(self.tc.decode('IPv4-Base64url', self.ip1s64), self.ip1b)
-        self.assertEqual(self.tc.encode('IPv4-Hex', self.ip1b), self.ip1sx)
-        self.assertEqual(self.tc.decode('IPv4-Hex', self.ip1sx), self.ip1b)
-        self.assertEqual(self.tc.encode('IPv4-String', self.ip1b), self.ip1str)
-        self.assertEqual(self.tc.decode('IPv4-String', self.ip1str), self.ip1b)
+        self.assertEqual(self.tc.encode('IPv4-Base64url', self.ipv4_b), self.ipv4_s64)
+        self.assertEqual(self.tc.decode('IPv4-Base64url', self.ipv4_s64), self.ipv4_b)
+        self.assertEqual(self.tc.encode('IPv4-Hex', self.ipv4_b), self.ipv4_sx)
+        self.assertEqual(self.tc.decode('IPv4-Hex', self.ipv4_sx), self.ipv4_b)
+        self.assertEqual(self.tc.encode('IPv4-String', self.ipv4_b), self.ipv4_str)
+        self.assertEqual(self.tc.decode('IPv4-String', self.ipv4_str), self.ipv4_b)
         with self.assertRaises(ValueError):
-            self.tc.encode('IPv4-Hex', self.ip1b1_bad)
+            self.tc.encode('IPv4-Hex', self.ipv4_b1_bad)
         with self.assertRaises(ValueError):
-            self.tc.encode('IPv4-Hex', self.ip1b1_bad)
+            self.tc.encode('IPv4-Hex', self.ipv4_b1_bad)
         with self.assertRaises(ValueError):
-            self.tc.decode('IPv4-Base64url', self.ip1s64_bad)
+            self.tc.decode('IPv4-Base64url', self.ipv4_s64_bad)
         with self.assertRaises(ValueError):
-            self.tc.decode('IPv4-Hex', self.ip1sx_bad)
+            self.tc.decode('IPv4-Hex', self.ipv4_sx_bad)
         with self.assertRaises(ValueError):
-            self.tc.decode('IPv4-String', self.ip1str_bad)
+            self.tc.decode('IPv4-String', self.ipv4_str_bad)
         with self.assertRaises(ValueError):
             self.tc.encode('IPv4-Base64url', b'')
         with self.assertRaises(ValueError):
@@ -1305,21 +1309,31 @@ class Format(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.tc.decode('IPv4-String', '')
 
-    ip2b = binascii.a2b_hex('20010db885a3000000008a2e03707334')     # IPv6 address
-    ip2s64 = 'IAENuIWjAAAAAIouA3BzNA'                               # Base64 encoded
-    ip2sx = '20010DB885A3000000008A2E03707334'                      # Hex encoded
-    ip2str1 = '2001:db8:85a3::8a2e:370:7334'                        # IPv6-string encoded
-    ip2str2 = '2001:db8:85a3::8a2e:0370:7334'                       # IPv6-string encoded - leading 0
-    ip2str3 = '2001:db8:85A3::8a2e:370:7334'                        # IPv6-string encoded - uppercase
-    ip2str4 = '2001:db8:85a3:0::8a2e:370:7334'                      # IPv6-string encoded - zero not compressed
+    ipv4_net_str = '192.168.0.0/20'                     # IPv4 CIDR network address (not class C /24)
+    ipv4_net_a = [binascii.a2b_hex('c0a80000'), 20]
+
+    def test_ipv4_net(self):
+        self.assertEqual(self.tc.encode('IPv4-Net', self.ipv4_net_a), self.ipv4_net_str)
+        self.assertEqual(self.tc.decode('IPv4-Net', self.ipv4_net_str), self.ipv4_net_a)
+        #with self.assertRaises(ValueError):
+        #    self.tc.encode('IPv4-Net', self.ipv4_net_bad1)
+
+
+    ipv6_b = binascii.a2b_hex('20010db885a3000000008a2e03707334')     # IPv6 address
+    ipv6_s64 = 'IAENuIWjAAAAAIouA3BzNA'                               # Base64 encoded
+    ipv6_sx = '20010DB885A3000000008A2E03707334'                      # Hex encoded
+    ipv6_str1 = '2001:db8:85a3::8a2e:370:7334'                        # IPv6-string encoded
+    ipv6_str2 = '2001:db8:85a3::8a2e:0370:7334'                       # IPv6-string encoded - leading 0
+    ipv6_str3 = '2001:db8:85A3::8a2e:370:7334'                        # IPv6-string encoded - uppercase
+    ipv6_str4 = '2001:db8:85a3:0::8a2e:370:7334'                      # IPv6-string encoded - zero not compressed
 
     def test_ipv6_addr(self):
-        self.assertEqual(self.tc.encode('IP-Base64url', self.ip2b), self.ip2s64)
-        self.assertEqual(self.tc.decode('IP-Base64url', self.ip2s64), self.ip2b)
-        self.assertEqual(self.tc.encode('IP-Hex', self.ip2b), self.ip2sx)
-        self.assertEqual(self.tc.decode('IP-Hex', self.ip2sx), self.ip2b)
-        self.assertEqual(self.tc.encode('IP-String', self.ip2b), self.ip2str1)
-        self.assertEqual(self.tc.decode('IP-String', self.ip2str1), self.ip2b)
+        self.assertEqual(self.tc.encode('IP-Base64url', self.ipv6_b), self.ipv6_s64)
+        self.assertEqual(self.tc.decode('IP-Base64url', self.ipv6_s64), self.ipv6_b)
+        self.assertEqual(self.tc.encode('IP-Hex', self.ipv6_b), self.ipv6_sx)
+        self.assertEqual(self.tc.decode('IP-Hex', self.ipv6_sx), self.ipv6_b)
+        self.assertEqual(self.tc.encode('IP-String', self.ipv6_b), self.ipv6_str1)
+        self.assertEqual(self.tc.decode('IP-String', self.ipv6_str1), self.ipv6_b)
 
     eui48b = binascii.a2b_hex('002186b56e10')
     eui48s = 'ACGGtW4Q'

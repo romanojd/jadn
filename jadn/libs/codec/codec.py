@@ -201,7 +201,7 @@ def _format(ts, val, fmtop):
     except ValueError:
         td = ts[S_TDEF]
         tn = ('%s(%s)' % (td[TNAME], td[TTYPE]) if td[TNAME] else td[TTYPE])
-        val = '0x' + b2a_hex(val) if td[TTYPE] == 'Binary' else val
+        val = b2a_hex(val).decode() if isinstance(val, bytes) else val
         raise ValueError('%s: %s is not a valid %s' % (tn, val, ts[S_FORMAT][FMT_NAME]))
     except NameError:
         td = ts[S_TDEF]

@@ -62,16 +62,13 @@ def b_ipv4_addr(bval):      # Length of IPv4 addr must be 32 bits
         return bval
     raise ValueError
 
+
 def b_ipv6_addr(bval):      # Length of IPv6 addr must be 128 bits
     if not isinstance(bval, bytes):
         raise TypeError
     if len(bval) == 16:
         return bval
     raise ValueError
-
-
-def b_ip_net(bval):         # CIDR IP Address Range = base address + network prefix length
-    raise ValueError        # TODO: write it
 
 
 def b_mac_addr(bval):       # Length of MAC addr must be 48 or 64 bits
@@ -101,9 +98,8 @@ def _err(val):              # Unsupported format type
 FORMAT_CHECK_FUNCTIONS = {
     'hostname':     [s_hostname, _err, _err],       # Domain-Name
     'email':        [s_email, _err, _err],          # Email-Addr
-    'ip-addr':      [_err, b_ip_addr, _err],        # IP-Addr
+    'ip-addr':      [_err, b_ip_addr, _err],        # IP-Addr (IPv4 or IPv6)
     'ipv4':         [_err, b_ipv4_addr, _err],      # IPv4-Addr
-    'ip-net':       [_err, b_ip_net, _err],         # IP-Net
     'mac-addr':     [_err, b_mac_addr, _err],       # MAC-Addr
     'uri':          [s_uri, _err, _err]             # URI
 }
@@ -162,27 +158,39 @@ def b2s_ipv6_addr(bval):        # Convert ipv6 address from binary to string
         return socket.inet_ntop(AF_INET6, bval)     # Python 2 doesn't support inet_ntop on Windows
 
 
-def s2b_ip_subnet(sval):
+def s2a_ip_net(sval):
     raise ValueError        # TODO: write it
 
 
-def b2s_ip_subnet(bval):
+def a2s_ip_net(bval):
+    raise ValueError
+
+
+def s2a_ipv4_net(sval):
+    s_ip, s_prefix = sval.split('/', 1)
+    ip = s2b_ipv4_addr(s_ip)
+    prefix = int(s_prefix)
+    return ip, prefix
+
+
+def a2s_ipv4_net(bval):
     raise ValueError
 
 
 FORMAT_CONVERT_FUNCTIONS = {
     'b64u': (b2s_base64url, s2b_base64url),         # Base64url
     'x': (b2s_hex, s2b_hex),                        # Hex
-    'ip-addr':  (b2s_ip_addr, s2b_ip_addr),         # IP Address, version autodetect
+    'ip-addr':  (b2s_ip_addr, s2b_ip_addr),         # IP (v4 or v6) Address, version autodetect
     'ipv4': (b2s_ipv4_addr, s2b_ipv4_addr),         # IPv4 Address
     'ipv6': (b2s_ipv6_addr, s2b_ipv6_addr),         # IPv6 Address
-    'ip-subnet': (b2s_ip_subnet, s2b_ip_subnet)     # IP Subnet Address with CIDR prefix length
+    'ip-net': (a2s_ip_net, s2a_ip_net),             # IP (v4 or v6) Net Address with CIDR prefix length
+    'ipv4-net': (a2s_ipv4_net, s2a_ipv4_net)        # IPv4 Net Address with CIDR prefix length
 }
 
 
 def check_format_function(name, basetype, convert=None):
     ff = get_format_function(name, basetype, convert)
-    return (ff[FMT_CHECK] != _err, ff[FMT_B2S] != _err)
+    return ff[FMT_CHECK] != _err, ff[FMT_B2S] != _err
 
 
 def get_format_function(name, basetype, convert=None):
