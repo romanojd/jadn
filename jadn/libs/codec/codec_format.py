@@ -55,22 +55,6 @@ def b_ip_addr(bval):        # Length of IP addr must be 32 or 128 bits
     raise ValueError
 
 
-def b_ipv4_addr(bval):      # Length of IPv4 addr must be 32 bits
-    if not isinstance(bval, bytes):
-        raise TypeError
-    if len(bval) == 4:
-        return bval
-    raise ValueError
-
-
-def b_ipv6_addr(bval):      # Length of IPv6 addr must be 128 bits
-    if not isinstance(bval, bytes):
-        raise TypeError
-    if len(bval) == 16:
-        return bval
-    raise ValueError
-
-
 def b_mac_addr(bval):       # Length of MAC addr must be 48 or 64 bits
     if not isinstance(bval, bytes):
         raise TypeError
@@ -99,7 +83,6 @@ FORMAT_CHECK_FUNCTIONS = {
     'hostname':     [s_hostname, _err, _err],       # Domain-Name
     'email':        [s_email, _err, _err],          # Email-Addr
     'ip-addr':      [_err, b_ip_addr, _err],        # IP-Addr (IPv4 or IPv6)
-    'ipv4':         [_err, b_ipv4_addr, _err],      # IPv4-Addr
     'mac-addr':     [_err, b_mac_addr, _err],       # MAC-Addr
     'uri':          [s_uri, _err, _err]             # URI
 }
@@ -157,24 +140,47 @@ def b2s_ipv4_addr(bval):      # Convert IPv4 address from binary to string
 def b2s_ipv6_addr(bval):        # Convert ipv6 address from binary to string
         return socket.inet_ntop(AF_INET6, bval)     # Python 2 doesn't support inet_ntop on Windows
 
-
-def s2a_ip_net(sval):
-    raise ValueError        # TODO: write it
+# IP Net (address, prefix length tuple) conversions
 
 
-def a2s_ip_net(bval):
-    raise ValueError
+def s2a_ip_net(sval):           # Convert CIDR string to IP Net (v4 or v6)
+    return s2a_ipv6_net(sval) if ':' in sval else s2a_ipv4_net(sval)
 
 
 def s2a_ipv4_net(sval):
-    s_ip, s_prefix = sval.split('/', 1)
-    ip = s2b_ipv4_addr(s_ip)
-    prefix = int(s_prefix)
-    return ip, prefix
+    sa, spl = sval.split('/', 1)
+    addr = s2b_ipv4_addr(sa)
+    prefix_len = int(spl)
+    if prefix_len < 0 or prefix_len > 32:
+        raise ValueError
+    return [addr, prefix_len]
 
 
-def a2s_ipv4_net(bval):
-    raise ValueError
+def s2a_ipv6_net(sval):
+    sa, spl = sval.split('/', 1)
+    addr = s2b_ipv4_addr(sa)
+    prefix_len = int(spl)
+    if prefix_len < 0 or prefix_len > 128:
+        raise ValueError
+    return [addr, prefix_len]
+
+
+def a2s_ip_net(aval):           # Convert IP Net (v4 or v6) to string in CIDR notation
+    return a2s_ipv6_net(aval) if len(aval[0]) > 4 else a2s_ipv4_net(aval)
+
+
+def a2s_ipv4_net(aval):
+    if aval[1] < 0 or aval[1] > 32:       # Verify prefix length is valid
+        raise ValueError
+    sval = b2s_ip_addr(aval[0]) + '/' + str(aval[1])
+    return sval
+
+
+def a2s_ipv6_net(aval):
+    if aval[1] < 0 or aval[1] > 128:       # Verify prefix length is valid
+        raise ValueError
+    sval = b2s_ip_addr(aval[0]) + '/' + str(aval[1])
+    return sval
 
 
 FORMAT_CONVERT_FUNCTIONS = {
@@ -184,7 +190,7 @@ FORMAT_CONVERT_FUNCTIONS = {
     'ipv4': (b2s_ipv4_addr, s2b_ipv4_addr),         # IPv4 Address
     'ipv6': (b2s_ipv6_addr, s2b_ipv6_addr),         # IPv6 Address
     'ip-net': (a2s_ip_net, s2a_ip_net),             # IP (v4 or v6) Net Address with CIDR prefix length
-    'ipv4-net': (a2s_ipv4_net, s2a_ipv4_net)        # IPv4 Net Address with CIDR prefix length
+    'ipv4-net': (a2s_ipv4_net, s2a_ipv4_net),       # IPv4 Net Address with CIDR prefix length
 }
 
 
@@ -194,14 +200,14 @@ def check_format_function(name, basetype, convert=None):
 
 
 def get_format_function(name, basetype, convert=None):
-    if basetype == 'Binary':
+    if basetype in ('Binary', 'Array'):
         convert = convert if convert else 'b64u'
         try:
             cvt = FORMAT_CONVERT_FUNCTIONS[convert]
         except KeyError:
-            cvt = (_err, _err)    # Binary conversion function not found, return Err
+            cvt = (_err, _err)    # Conversion function not found, return Err
     else:
-        cvt = (_err, _err)    # Binary conversion function not applicable, return Err
+        cvt = (_err, _err)    # Conversion function not applicable, return Err
     try:
         col = {'String': 0, 'Binary': 1, 'Number': 2}[basetype]
         return (name, FORMAT_CHECK_FUNCTIONS[name][col]) + cvt
@@ -209,13 +215,12 @@ def get_format_function(name, basetype, convert=None):
         return (name, _err if name else _format_ok) + cvt
 
 
-# May not need functions for:
+# Don't need custom format functions, use built-in value constraints instead:
 #   Date-Time       - Integer - min and max value for plausible date range
-#   Duration        - Integer - max value for plausible durations?
+#   Duration        - Integer - min 0, max value for plausible durations
 #   Identifier      - String - regex pattern
 #   Port            - Integer - min 0, max 65535
 #   Request-Id      - Binary - len 0 - 8 bytes
-#   UUID            - Binary - len == 16 bytes + RFC 4122 checks?
 
 # Semantic validation functions from JSON Schema Draft 6
 #    date-time      - String, RFC 3339, section 5.6
@@ -223,7 +228,7 @@ def get_format_function(name, basetype, convert=None):
 #    hostname       - String, RFC 1034, section 3.1
 #    ipv4           - String, dotted-quad
 #    ipv6           - String, RFC 2373, section 2.2
-#    uri            - RFC 3986
-#    uri-reference  - RFC 3986, section 4.1
-#    json-pointer   - RFC 6901
-#    uri-template   - RFC 6570
+#    uri            - String, RFC 3986
+#    uri-reference  - String, RFC 3986, section 4.1
+#    json-pointer   - String, RFC 6901
+#    uri-template   - String, RFC 6570

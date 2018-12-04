@@ -1,4 +1,4 @@
-<!-- Generated from schema\exp.jadn, Mon Nov 19 13:02:11 2018-->
+<!-- Generated from schema\exp.jadn, Tue Dec  4 16:45:07 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -19,6 +19,8 @@
 | 5 | **ipv6_addr_s** | IPv6-String | 1 | IPv6 address displayed as type-specific string (colon-hex): '' |
 | 6 | **ipv6_addr_x** | IPv6-Hex | 1 | IPv6 address displayed as hex: '' |
 | 7 | **ipv6_addr_b64** | IPv6-Base64url | 1 | IPv6 address displayed as Base64-url: '' |
+| 8 | **ipv4_net** | IPv4-Net | 1 | IPv4 Network CIDR string |
+| 9 | **ipv6_net** | IPv6-Net | 1 | IPv6 Network CIDR string |
 
 **_Type: Hashes (Map)_**
 
@@ -56,19 +58,19 @@
 
 | Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| IPv4-Base64url | Binary (ipv4) | Value must be 32 bits (ipv4).  Value displayed in base64url (Binary) default |
+| IPv4-Base64url | Binary [4..4] | Value must be 32 bits [4..4].  Value displayed in base64url (Binary) default |
 
 **_Type: IPv4-String_**
 
 | Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| IPv4-String | Binary.s:ipv4 (ipv4) | Value must be 32 bits (ipv4).  Value displayed in ipv4 dotted-decimal (Binary.s:ipv4) |
+| IPv4-String | Binary.s:ipv4 [4..4] | Value must be 32 bits [4..4].  Value displayed in ipv4 dotted-decimal (Binary.s:ipv4) |
 
 **_Type: IPv6-Hex_**
 
 | Type Name | Base Type | Description |
 | :--- | :--- | :--- |
-| IPv6-Hex | Binary.x (ipv6) | Value must be 128 bits (ipv6).  Value displayed in hex (Binary.x) |
+| IPv6-Hex | Binary.x [16..16] | Value must be 128 bits [16..16].  Value displayed in hex (Binary.x) |
 
 **_Type: IPv6-Base64url_**
 
@@ -81,6 +83,20 @@
 | Type Name | Base Type | Description |
 | :--- | :--- | :--- |
 | IPv6-String | Binary.s:ipv6 [16..16] | Value must be 128 bits [16..16].  Value displayed in ipv6 colon-hex (Binary.s:ipv6) |
+
+**_Type: IPv4-Net (Array.s:ipv4-net)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+| 1 | Binary | 1 | address |
+| 2 | Integer | 1 | prefix_len |
+
+**_Type: IPv6-Net (Array.s:ipv6-net)_**
+
+| ID | Type | # | Description |
+| ---: | :--- | ---: | :--- |
+| 1 | Binary | 1 | address |
+| 2 | Integer | 1 | prefix_len |
 
 **_Type: Args (Map)_**
 

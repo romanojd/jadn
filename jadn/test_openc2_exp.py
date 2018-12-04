@@ -60,27 +60,27 @@ class Experimental_IP(unittest.TestCase):
 
     ipv6_addr_b64_api = {           # API IPv6 address target.  All API values are identical except for target name.
       'action': 'deny',
-      'target': {'exp': {'ipv6_addr_b64': b'\xc0\xa8\x00\xfe'}}}
+      'target': {'exp': {'ipv6_addr_b64': b' \x01\r\xb8\x85\xa3\x08\xd3\x13\x19\x8a.\x03psH'}}}
 
     ipv6_addr_b64_ser = {           # IPv6 address target serialized in Base64url format
       'action': 'deny',
-      'target': {'exp': {'ipv6_addr_b64': 'wKgA_g'}}}
+      'target': {'exp': {'ipv6_addr_b64': 'IAENuIWjCNMTGYouA3BzSA'}}}
 
     ipv6_addr_hex_api = {           # API IPv6 address target.  All API values are identical except for target name.
       'action': 'deny',
-      'target': {'exp': {'ipv6_addr_x': b'\xc0\xa8\x00\xfe'}}}
+      'target': {'exp': {'ipv6_addr_x': b' \x01\r\xb8\x85\xa3\x08\xd3\x13\x19\x8a.\x03psH'}}}
 
     ipv6_addr_hex_ser = {           # IPv6 address target serialized in hex format
       'action': 'deny',
-      'target': {'exp': {'ipv6_addr_x': 'C0A800FE'}}}
+      'target': {'exp': {'ipv6_addr_x': '20010DB885A308D313198A2E03707348'}}}
 
     ipv6_addr_str_api = {           # API IPv6 address target.  All API values are identical except for target name.
       'action': 'deny',
-      'target': {'exp': {'ipv6_addr_s': b'\xc0\xa8\x00\xfe'}}}
+      'target': {'exp': {'ipv6_addr_s': b' \x01\r\xb8\x85\xa3\x08\xd3\x13\x19\x8a.\x03psH'}}}
 
     ipv6_addr_str_ser = {           # IPv6 address target serialized in type-specific string (dotted decimal) format
       'action': 'deny',
-      'target': {'exp': {'ipv6_addr_s': '192.168.0.254'}}}
+      'target': {'exp': {'ipv6_addr_s': '2001:db8:85a3:8d3:1319:8a2e:370:7348'}}}
 
     def test_ipv6_b64(self):
         self.assertEqual(self.tc.encode('OpenC2-Command', self.ipv6_addr_b64_api), self.ipv6_addr_b64_ser)

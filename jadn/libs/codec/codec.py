@@ -422,6 +422,12 @@ def _encode_maprec(ts, val, codec):
 
 
 def _decode_array(ts, val, codec):          # Ordered list of types, returned as a list
+    if 'cvt' in ts[S_TOPT]:
+        _check_type(ts, val, type(''))
+        aval = _format(ts, val, FMT_S2B)    # Convert string to multipart value (array)
+        apival = aval       # TODO: write field type checker
+        return apival
+
     _check_type(ts, val, list)
     apival = list()
     extra = len(val) > len(ts[S_FLD])

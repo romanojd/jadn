@@ -1245,11 +1245,11 @@ schema_format = {  # JADN schema for value constraint tests
         ['IP-Base64url', 'Binary', ['@ip-addr'], ''],               # Baset64url encoding
         ['IP-Hex', 'Binary', ['.x', '@ip-addr'], ''],               # Hex encoding
         ['IP-String', 'Binary', ['.ip-addr', '@ip-addr'], ''],      # Datatype-specific string encoding
-        ['IPv4-Base64url', 'Binary', ['@ipv4'], ''],                # Check length = 32 bits with format function
+        ['IPv4-Base64url', 'Binary', ['[4', ']4'], ''],             # Check length = 32 bits with format function
         ['IPv4-Hex', 'Binary', ['[4', ']4', '.x'], ''],             # Check length = 32 bits with min/max size
-        ['IPv4-String', 'Binary', ['@ipv4', '.ipv4'], ''],
+        ['IPv4-String', 'Binary', ['[4', ']4', '.ipv4'], ''],
         ['IPv6-Base64url', 'Binary', ['[16', ']16'], ''],
-        ['IPv6-Hex', 'Binary', ['@ipv6', '.x'], ''],
+        ['IPv6-Hex', 'Binary', ['[16', ']16', '.x'], ''],
         ['IPv6-String', 'Binary', ['[16', ']16', '.ipv6'], ''],
         ['IPv5-error', 'Binary', ['.ipv5'], ''],                    # Generate error: unsupported (nonexistent) format
         ['IPv4-Net', 'Array', ['.ipv4-net'], '', [

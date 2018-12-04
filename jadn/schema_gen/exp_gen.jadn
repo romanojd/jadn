@@ -15,7 +15,9 @@
     [4, "ipv4_addr_b64", "IPv4-Base64url", [], "IPv4 address displayed as Base64-url: 'wKgA_g'"],
     [5, "ipv6_addr_s", "IPv6-String", [], "IPv6 address displayed as type-specific string (colon-hex): ''"],
     [6, "ipv6_addr_x", "IPv6-Hex", [], "IPv6 address displayed as hex: ''"],
-    [7, "ipv6_addr_b64", "IPv6-Base64url", [], "IPv6 address displayed as Base64-url: ''"]
+    [7, "ipv6_addr_b64", "IPv6-Base64url", [], "IPv6 address displayed as Base64-url: ''"],
+    [8, "ipv4_net", "IPv4-Net", [], "IPv4 Network CIDR string"],
+    [9, "ipv6_net", "IPv6-Net", [], "IPv6 Network CIDR string"]
   ]],
 
   ["Hashes", "Map", [], "Cryptographic Hash values", [
@@ -24,23 +26,33 @@
     [6, "sha256", "Bin-256", ["[0"], "SHA256 as defined in RFC6234"]
   ]],
 
-  ["Bin-128", "Binary.x", ["[16", "]16"], "128 bit value, hex display"],
+  ["Bin-128", "Binary", ["[16", "]16", ".x"], "128 bit value, hex display"],
 
-  ["Bin-160", "Binary.x", ["[20", "]20"], "160 bit value, hex display"],
+  ["Bin-160", "Binary", ["[20", "]20", ".x"], "160 bit value, hex display"],
 
-  ["Bin-256", "Binary.x", ["[32", "]32"], "256 bit value, hex display"],
+  ["Bin-256", "Binary", ["[32", "]32", ".x"], "256 bit value, hex display"],
 
   ["IPv4-Hex", "Binary", ["[4", "]4", ".x"], "Value must be 32 bits [4..4].  Value displayed in hex (Binary.x)"],
 
-  ["IPv4-Base64url", "Binary", ["@ipv4"], "Value must be 32 bits (ipv4).  Value displayed in base64url (Binary) default"],
+  ["IPv4-Base64url", "Binary", ["[4", "]4"], "Value must be 32 bits [4..4].  Value displayed in base64url (Binary) default"],
 
-  ["IPv4-String", "Binary", ["@ipv4", ".ipv4"], "Value must be 32 bits (ipv4).  Value displayed in ipv4 dotted-decimal (Binary.s:ipv4)"],
+  ["IPv4-String", "Binary", ["[4", "]4", ".ipv4"], "Value must be 32 bits [4..4].  Value displayed in ipv4 dotted-decimal (Binary.s:ipv4)"],
 
-  ["IPv6-Hex", "Binary", ["@ipv6", ".x"], "Value must be 128 bits (ipv6).  Value displayed in hex (Binary.x)"],
+  ["IPv6-Hex", "Binary", ["[16", "]16", ".x"], "Value must be 128 bits [16..16].  Value displayed in hex (Binary.x)"],
 
   ["IPv6-Base64url", "Binary", ["[16", "]16"], "Value must be 128 bits [16..16].  Value displayed in base64url (Binary) default"],
 
   ["IPv6-String", "Binary", ["[16", "]16", ".ipv6"], "Value must be 128 bits [16..16].  Value displayed in ipv6 colon-hex (Binary.s:ipv6)"],
+
+  ["IPv4-Net", "Array", [".ipv4-net"], "", [
+    [1, "address", "Binary", [], ""],
+    [2, "prefix_len", "Integer", [], ""]
+  ]],
+
+  ["IPv6-Net", "Array", [".ipv6-net"], "", [
+    [1, "address", "Binary", [], ""],
+    [2, "prefix_len", "Integer", [], ""]
+  ]],
 
   ["Args", "Map", [], "Experimental command arguments", []],
 

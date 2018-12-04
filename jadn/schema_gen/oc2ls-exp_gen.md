@@ -1,13 +1,13 @@
-<!-- Generated from schema\oc2ls-csdpr02.jadn, Tue Dec  4 16:45:08 2018-->
+<!-- Generated from schema\oc2ls-exp.jadn, Tue Dec  4 16:45:08 2018-->
 ## Schema
 | . | . |
 | ---: | :--- |
-| **title:** | OpenC2 Language Objects |
-| **module:** | oasis-open.org/openc2/oc2ls/v1.0 |
-| **patch:** | 0-csdpr02 |
+| **title:** | OpenC2 Language with experimental elements |
+| **module:** | oasis-open.org/oc2ls/v1.0 |
+| **patch:** | 0-csdpr02+exp |
 | **description:** | Datatypes that define the content of OpenC2 commands and responses. |
 | **exports:** | OpenC2-Command, OpenC2-Response, Message-Type, Status-Code, Request-Id, Date-Time |
-| **imports:** | **slpf**:&nbsp;oasis-open.org/openc2/oc2slpf/v1.0 **jadn**:&nbsp;oasis-open.org/openc2/jadn/v1.0 |
+| **imports:** | **exp**:&nbsp;oasis-open.org/openc2/oc2ls-exp/v1.0 **jadn**:&nbsp;oasis-open.org/openc2/jadn/v1.0 |
 
 **_Type: Message (Array)_**
 
@@ -73,16 +73,13 @@
 | 17 | **process** | Process | 1 | Common properties of an instance of a computer program as executed on an operating system. |
 | 25 | **properties** | Properties | 1 | Data attribute associated with an actuator |
 | 19 | **uri** | URI | 1 | A uniform resource identifier (URI). |
-| 1000 | **extension** | PE-Target | 1 | Targets defined in a Private Enterprise extension profile |
-| 1001 | **extension_unr** | Unr-Target | 1 | Targets defined in an unregistered extension profile |
-| 1024 | **slpf** | slpf:Target | 1 | Targets defined in the Stateless Packet Filter Profile |
+| 1099 | **exp** | exp:Target | 1 | Targets defined in the Experimental Schema Features Profile |
 
 **_Type: Actuator (Choice)_**
 
 | ID | Name | Type | # | Description |
 | ---: | --- | :--- | ---: | :--- |
-| 1000 | **extension** | PE-Specifiers | 1 | Specifiers defined in a Private Enterprise extension profile. |
-| 1001 | **extension_unr** | Unr-Specifiers | 1 | Specifiers defined in an unregistered extension profile. |
+| 1099 | **exp** | exp:Specifiers | 1 | Specifiers defined in Experimental Schema Features profile. |
 
 **_Type: Args (Map)_**
 
@@ -92,8 +89,6 @@
 | 2 | **stop_time** | Date-Time | 0..1 | The specific date/time to terminate the action |
 | 3 | **duration** | Duration | 0..1 | The length of time for an action to be in effect |
 | 4 | **response_requested** | Response-Type | 0..1 | The type of response required for the action |
-| 1000 | **extension** | PE-Args | 0..1 | Command arguments defined in a Private Enterprise extension profile |
-| 1001 | **extension_unr** | Unr-Args | 0..1 | Command arguments defined in an unregistered extension profile |
 
 **_Type: OpenC2-Response (Map)_**
 
@@ -109,8 +104,7 @@
 | 8 | **schema** | jadn:Schema | 0..1 | Syntax of the OpenC2 language elements supported by this actuator |
 | 9 | **pairs** | Action-Targets | 0..n | List of targets applicable to each supported action |
 | 10 | **rate_limit** | Number | 0..1 | Maximum number of requests per minute supported by design or policy |
-| 1000 | **extension** | PE-Results | 0..1 | Response data defined in a Private Enterprise extension profile |
-| 1001 | **extension_unr** | Unr-Results | 0..1 | Response data defined in an unregistered extension profile |
+| 1099 | **exp** | exp:Results | 0..1 | Response data defined in Experimental Schema Features profile |
 
 **_Type: Status-Code (Enumerated.ID)_**
 
@@ -126,30 +120,6 @@
 | 500 | Internal Error -- the consumer encountered an unexpected condition that prevented it from fulfilling the request. |
 | 501 | Not Implemented -- the consumer does not support the functionality required to fulfill the request. |
 | 503 | Service Unavailable -- the consumer is currently unable to handle the request due to a temporary overloading or maintenance. |
-
-**_Type: PE-Target (Choice.ID)_**
-
-| ID | Type | # | Description |
-| ---: | :--- | ---: | :--- |
-| 32473 | 32473:Target | 1 | Example -- Targets defined in the Example Inc. extension profile |
-
-**_Type: PE-Specifiers (Choice.ID)_**
-
-| ID | Type | # | Description |
-| ---: | :--- | ---: | :--- |
-| 32473 | 32473:Specifiers | 1 | Example -- Actuator Specifiers defined in the Example Inc. extension profile |
-
-**_Type: PE-Args (Map.ID)_**
-
-| ID | Type | # | Description |
-| ---: | :--- | ---: | :--- |
-| 32473 | 32473:Args | 1 | Example -- Command Arguments defined in the Example Inc. extension profile |
-
-**_Type: PE-Results (Map.ID)_**
-
-| ID | Type | # | Description |
-| ---: | :--- | ---: | :--- |
-| 32473 | 32473:Results | 1 | Example -- Results defined in the Example Inc. extension profile |
 
 **_Type: Artifact (Record)_**
 

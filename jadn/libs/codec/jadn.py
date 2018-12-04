@@ -104,7 +104,7 @@ def jadn_check(schema):
         'Number': ['min', 'max', 'format'],
         'Null': [],
         'String': ['min', 'max', 'pattern', 'format'],
-        'Array': ['min'],
+        'Array': ['min', 'cvt'],
         'ArrayOf': ['min', 'max', 'rtype'],
         'Choice': ['compact'],
         'Enumerated': ['compact', 'rtype'],

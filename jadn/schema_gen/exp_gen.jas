@@ -14,7 +14,9 @@ Target ::= CHOICE {    -- New targets
     ipv4_addr_b64  [4] IPv4-Base64url,    -- IPv4 address displayed as Base64-url: 'wKgA_g'
     ipv6_addr_s    [5] IPv6-String,    -- IPv6 address displayed as type-specific string (colon-hex): ''
     ipv6_addr_x    [6] IPv6-Hex,    -- IPv6 address displayed as hex: ''
-    ipv6_addr_b64  [7] IPv6-Base64url     -- IPv6 address displayed as Base64-url: ''
+    ipv6_addr_b64  [7] IPv6-Base64url,    -- IPv6 address displayed as Base64-url: ''
+    ipv4_net       [8] IPv4-Net,    -- IPv4 Network CIDR string
+    ipv6_net       [9] IPv6-Net     -- IPv6 Network CIDR string
 }
 
 Hashes ::= MAP {    -- Cryptographic Hash values
@@ -23,23 +25,33 @@ Hashes ::= MAP {    -- Cryptographic Hash values
     sha256       [6] Bin-256 OPTIONAL     -- SHA256 as defined in RFC6234
 }
 
-Bin-128 ::= BINARY (Size (16..16))    -- 128 bit value, hex display
+Bin-128 ::= BINARY.x (Size (16..16))    -- 128 bit value, hex display
 
-Bin-160 ::= BINARY (Size (20..20))    -- 160 bit value, hex display
+Bin-160 ::= BINARY.x (Size (20..20))    -- 160 bit value, hex display
 
-Bin-256 ::= BINARY (Size (32..32))    -- 256 bit value, hex display
+Bin-256 ::= BINARY.x (Size (32..32))    -- 256 bit value, hex display
 
 IPv4-Hex ::= BINARY.x (Size (4..4))    -- Value must be 32 bits [4..4].  Value displayed in hex (Binary.x)
 
-IPv4-Base64url ::= BINARY (CONSTRAINED BY {ipv4})    -- Value must be 32 bits (ipv4).  Value displayed in base64url (Binary) default
+IPv4-Base64url ::= BINARY (Size (4..4))    -- Value must be 32 bits [4..4].  Value displayed in base64url (Binary) default
 
-IPv4-String ::= BINARY.s:ipv4 (CONSTRAINED BY {ipv4})    -- Value must be 32 bits (ipv4).  Value displayed in ipv4 dotted-decimal (Binary.s:ipv4)
+IPv4-String ::= BINARY.s:ipv4 (Size (4..4))    -- Value must be 32 bits [4..4].  Value displayed in ipv4 dotted-decimal (Binary.s:ipv4)
 
-IPv6-Hex ::= BINARY.x (CONSTRAINED BY {ipv6})    -- Value must be 128 bits (ipv6).  Value displayed in hex (Binary.x)
+IPv6-Hex ::= BINARY.x (Size (16..16))    -- Value must be 128 bits [16..16].  Value displayed in hex (Binary.x)
 
 IPv6-Base64url ::= BINARY (Size (16..16))    -- Value must be 128 bits [16..16].  Value displayed in base64url (Binary) default
 
 IPv6-String ::= BINARY.s:ipv6 (Size (16..16))    -- Value must be 128 bits [16..16].  Value displayed in ipv6 colon-hex (Binary.s:ipv6)
+
+IPv4-Net ::= ARRAY.s:ipv4-net {
+    address      [1] BINARY,
+    prefix_len   [2] INTEGER
+}
+
+IPv6-Net ::= ARRAY.s:ipv6-net {
+    address      [1] BINARY,
+    prefix_len   [2] INTEGER
+}
 
 Args ::= MAP {    -- Experimental command arguments
 }

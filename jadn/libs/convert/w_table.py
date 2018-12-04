@@ -385,24 +385,24 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
     """
 
     def _tbegin(to, td, head, cls):
-        tor = set(to)
+        tor = set(to) - {'compact', 'cvt'}
         id = ''
         h = head
         c = cls
         if 'compact' in to:
-            tor -= {'compact', }
             id = '.ID'
             h = [head[0]] + head[2:]
             c = [cls[0]] + cls[2:]
+        cvt = '.s:' + to['cvt'] if 'cvt' in to else ''      # Multipart (Array) string conversion method (.s:xxx)
         tos = ' ' + str([str(k) for k in tor]) if tor else ''
-        return type_begin(td[TNAME], td[TTYPE] + id, tos, h, c)
+        return type_begin(td[TNAME], td[TTYPE] + id + cvt, tos, h, c)
 
     def _titem(to, fitems, cls):
         f = fitems
         c = cls
         if 'compact' in to:
             f = [fitems[0]] + fitems[2:]
-            f[-1] = (fitems[1] + ' -- ' if fitems[1] else '') + f[-1]
+            f[-1] = fitems[1] + (' -- ' if fitems[1] and f[-1] else '') + f[-1]
             c = [cls[0]] + cls[2:]
         return type_item(f, c)
 
@@ -421,7 +421,7 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
 
     for td in jadn['types']:
         to = topts_s2d(td[TOPTS])
-        tor = set(to) - {'min', 'max'}
+        tor = set(to) - {'min', 'max'}       # Remaining type options after known options are processed
         tos = ' ' + str([str(k) for k in tor]) if tor else ''
         rng = ''
         if 'min' in to or 'max' in to:
@@ -431,13 +431,13 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
         if td[TTYPE] in PRIMITIVE_TYPES or not is_builtin(td[TTYPE]):
             cls = ['s', 's', 'd']
             text += type_begin(td[TNAME], None, tos, ['Type Name', 'Base Type', 'Description'], cls)
-            fmt = ' (' + to['format'] + ')' if 'format' in to else ''
-            cvt = ''                # Binary-string conversion method:
+            cvt = ''                # Binary string conversion method:
             if 'cvt' in to:         # base64url (default), hex (.x), or type-specific (.s:)
                 cvt = to['cvt']
                 if cvt not in ('x'):
                     cvt = 's:' + cvt
                 cvt = '.' + cvt
+            fmt = ' (' + to['format'] + ')' if 'format' in to else ''
             text += type_item([td[TNAME], td[TTYPE] + cvt + rng + fmt, td[TDESC]], cls)
         elif td[TTYPE] == 'ArrayOf':            # In STRUCTURE_TYPES but with no field definitions
             cls = ['s', 's', 'd']
