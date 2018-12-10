@@ -89,8 +89,6 @@ class Codec:
             raise ValueError('datatype "%s" is not defined' % (datatype))
         return ts[S_CODEC][C_ENC](ts, aval, self)     # Dispatch to type-specific encoder
 
-#    def _base_type(self, ftype):
-#        return ftype if is_builtin(ftype) else self.types[ftype][TTYPE]
     def set_mode(self, verbose_rec=False, verbose_str=False):
         def _add_dtype(fs, newfs):          # Create datatype needed by a field
             dname = '$' + str(len(self.arrays))
@@ -103,20 +101,20 @@ class Codec:
             fs = [
                 fld,                        # S_FDEF: JADN field definition
                 fopts_s2d(fld[FOPTS]),      # S_FOPT: Field options (dict)
-                []                          # S_FNAMES: Possible field names returned from Choice type
+                []                          # S_FNAMES: Possible field names returned from Choice type  TODO: not used
             ]
             opts = fs[S_FOPT]
             if fld[FTYPE] == 'Enumerated' and 'rtype' in opts:      # Generate Enumerated from a referenced type
                 rt = self.types[opts['rtype']]
                 items = [[j[FTAG], j[FNAME], ''] for j in rt[FIELDS]]
-                aa = ['', 'Enumerated', rt[TOPTS], '', items]     # Dynamic type definition
+                aa = ['', 'Enumerated', rt[TOPTS], '', items]       # Dynamic type definition
                 aas = sym(aa)
                 aa[TNAME] = _add_dtype(fs, aas)                     # Add to list of dynamically generated types
             if 'max' in opts and opts['max'] != 1:                  # Create ArrayOf for fields with cardinality > 1
                 amin = opts['min'] if 'min' in opts and opts['min'] > 1 else 1      # Array cannot be empty
                 amax = opts['max'] if opts['max'] > 0 else self.max_array           # Inherit max length if 0
-                aa = ['', 'ArrayOf', [], '']                        # Dynamic type definition
-                aas = [
+                aa = ['', 'ArrayOf', [], '']                        # Dynamic JADN type definition
+                aas = [                             # Symtab entry for dynamic type
                     aa,                             # 0: S_TDEF:  JADN type definition
                     enctab['ArrayOf'],              # 1: S_CODEC: Decoder, Encoder, Encoded type
                     list,                           # 2: S_STYPE: Encoded string type (str or tag)

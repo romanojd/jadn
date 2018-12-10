@@ -121,7 +121,10 @@ def s2b_ipv4_addr(sval):    # Convert IPv4 addr from string to binary
 
 
 def s2b_ipv6_addr(sval):    # Convert IPv6 address from string to binary
-    return socket.inet_pton(AF_INET6, sval)
+    try:
+        return socket.inet_pton(AF_INET6, sval)
+    except OSError:         # Python 2 doesn't support inet_pton on Windows
+        raise ValueError
 
 
 def b2s_ip_addr(bval):
@@ -138,7 +141,10 @@ def b2s_ipv4_addr(bval):      # Convert IPv4 address from binary to string
 
 
 def b2s_ipv6_addr(bval):        # Convert ipv6 address from binary to string
+    try:
         return socket.inet_ntop(AF_INET6, bval)     # Python 2 doesn't support inet_ntop on Windows
+    except OSError:
+        raise ValueError
 
 # IP Net (address, prefix length tuple) conversions
 

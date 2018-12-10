@@ -26,14 +26,6 @@ class Experimental_IP(unittest.TestCase):
       'action': 'deny',
       'target': {'exp': {'ipv4_addr_b64': b'\xc0\xa8\x00\xfe'}}}
 
-    ipv4_addr_b64_api_bad1 = {      # Bad API IPv4 address target - too short
-      'action': 'deny',
-      'target': {'exp': {'ipv4_addr_s': b'\xc0\xa8\x00'}}}
-
-    ipv4_addr_b64_api_bad2 = {      # Bad API IPv4 address target - too long
-      'action': 'deny',
-      'target': {'exp': {'ipv4_addr_s': b'\xc0\xa8\x00\xfe\x02'}}}
-
     ipv4_addr_b64_ser = {           # IPv4 address target serialized in Base64url format
       'action': 'deny',
       'target': {'exp': {'ipv4_addr_b64': 'wKgA_g'}}}
@@ -45,6 +37,22 @@ class Experimental_IP(unittest.TestCase):
     ipv4_addr_hex_ser = {           # IPv4 address target serialized in hex format
       'action': 'deny',
       'target': {'exp': {'ipv4_addr_x': 'C0A800FE'}}}
+
+    ipv4_addr_str_api = {           # API IPv4 address target.  All API values are identical except for target name.
+      'action': 'deny',
+      'target': {'exp': {'ipv4_addr_s': b'\xc0\xa8\x00\xfe'}}}
+
+    ipv4_addr_str_ser = {           # IPv4 address target serialized in type-specific string (dotted decimal) format
+      'action': 'deny',
+      'target': {'exp': {'ipv4_addr_s': '192.168.0.254'}}}
+
+    ipv4_addr_b64_api_bad1 = {  # Bad API IPv4 address target - too short
+        'action': 'deny',
+        'target': {'exp': {'ipv4_addr_s': b'\xc0\xa8\x00'}}}
+
+    ipv4_addr_b64_api_bad2 = {  # Bad API IPv4 address target - too long
+        'action': 'deny',
+        'target': {'exp': {'ipv4_addr_s': b'\xc0\xa8\x00\xfe\x02'}}}
 
     ipv4_addr_hex_ser_bad1 = {      # Bad IPv4 address target - too short
       'action': 'deny',
@@ -66,14 +74,6 @@ class Experimental_IP(unittest.TestCase):
       'action': 'deny',
       'target': {'exp': {'ipv4_addr_x': 'C0 A8 00 FE'}}}
 
-    ipv4_addr_str_api = {           # API IPv4 address target.  All API values are identical except for target name.
-      'action': 'deny',
-      'target': {'exp': {'ipv4_addr_s': b'\xc0\xa8\x00\xfe'}}}
-
-    ipv4_addr_str_ser = {           # IPv4 address target serialized in type-specific string (dotted decimal) format
-      'action': 'deny',
-      'target': {'exp': {'ipv4_addr_s': '192.168.0.254'}}}
-
     ipv4_addr_str_ser_bad1 = {      # Bad IPv4 address target - too long
       'action': 'deny',
       'target': {'exp': {'ipv4_addr_s': '192.168.0.254.2'}}}
@@ -89,7 +89,6 @@ class Experimental_IP(unittest.TestCase):
     ipv4_addr_str_ser_bad4 = {      # Bad IPv4 address target - non-decimal
       'action': 'deny',
       'target': {'exp': {'ipv4_addr_s': '192.168.0.5a'}}}
-
 
     def test_ipv4_b64(self):
         self.assertEqual(self.tc.encode('OpenC2-Command', self.ipv4_addr_b64_api), self.ipv4_addr_b64_ser)
@@ -149,17 +148,77 @@ class Experimental_IP(unittest.TestCase):
       'action': 'deny',
       'target': {'exp': {'ipv6_addr_s': '2001:db8:85a3:8d3:1319:8a2e:370:7348'}}}
 
+    ipv6_addr_b64_api_bad1 = {      # Bad API IPv6 address target - too short
+        'action': 'deny',
+        'target': {'exp': {'ipv6_addr_s': b' \x01\r\xb8\x85\xa3\x08\xd3\x13\x19\x8a.\x03ps'}}}
+
+    ipv6_addr_b64_api_bad2 = {      # Bad API IPv6 address target - too long
+        'action': 'deny',
+        'target': {'exp': {'ipv6_addr_s': b' \x01\r\xb8\x85\xa3\x08\xd3\x13\x19\x8a.\x03psH\x01'}}}
+
+    ipv6_addr_hex_ser_bad1 = {      # Bad IPv6 address target - too short
+      'action': 'deny',
+      'target': {'exp': {'ipv6_addr_x': '20010DB885A308D313198A2E037073'}}}
+
+    ipv6_addr_hex_ser_bad2 = {      # Bad IPv6 address target - too long
+      'action': 'deny',
+      'target': {'exp': {'ipv6_addr_x': '20010DB885A308D313198A2E0370734801'}}}
+
+    ipv6_addr_hex_ser_bad3 = {      # Bad IPv6 address target - punctuation
+      'action': 'deny',
+      'target': {'exp': {'ipv6_addr_x': '2001:0DB8:85A3:08D3:1319:8A2E:0370:7348'}}}
+
+    ipv6_addr_hex_ser_bad4 = {      # Bad IPv6 address target - lower case
+      'action': 'deny',
+      'target': {'exp': {'ipv6_addr_x': '20010db885a308d313198a2e03707348'}}}
+
+    ipv6_addr_hex_ser_bad5 = {      # Bad IPv6 address target - spaces
+      'action': 'deny',
+      'target': {'exp': {'ipv6_addr_x': '2001 0DB8 85A3 08D3 1319 8A2E 0370 7348'}}}
+
+    ipv6_addr_str_ser_bad1 = {      # Bad IPv6 address target - too long
+      'action': 'deny',
+      'target': {'exp': {'ipv6_addr_s': '2001:db8:85a3:8d3:1319:8a2e:370:7348:0123'}}}
+
+    ipv6_addr_str_ser_bad2 = {      # Bad IPv6 address target - leading zero
+      'action': 'deny',
+      'target': {'exp': {'ipv6_addr_s': '2001:0db8:85a3:08d3:1319:8a2e:0370:7348'}}}
+
+    ipv6_addr_str_ser_bad3 = {      # Bad IPv6 address target - wrong punctuation
+      'action': 'deny',
+      'target': {'exp': {'ipv6_addr_s': '2001.db8.85a3.8d3.1319.8a2e.370.7348'}}}
+
     def test_ipv6_b64(self):
         self.assertEqual(self.tc.encode('OpenC2-Command', self.ipv6_addr_b64_api), self.ipv6_addr_b64_ser)
         self.assertEqual(self.tc.decode('OpenC2-Command', self.ipv6_addr_b64_ser), self.ipv6_addr_b64_api)
+        with self.assertRaises(ValueError):
+            self.tc.encode('OpenC2-Command', self.ipv6_addr_b64_api_bad1)
+        with self.assertRaises(ValueError):
+            self.tc.encode('OpenC2-Command', self.ipv6_addr_b64_api_bad2)
 
     def test_ipv6_hex(self):
         self.assertEqual(self.tc.encode('OpenC2-Command', self.ipv6_addr_hex_api), self.ipv6_addr_hex_ser)
         self.assertEqual(self.tc.decode('OpenC2-Command', self.ipv6_addr_hex_ser), self.ipv6_addr_hex_api)
+        with self.assertRaises(ValueError):
+            self.tc.decode('OpenC2-Command', self.ipv6_addr_hex_ser_bad1)
+        with self.assertRaises(ValueError):
+            self.tc.decode('OpenC2-Command', self.ipv6_addr_hex_ser_bad2)
+        with self.assertRaises(ValueError):
+            self.tc.decode('OpenC2-Command', self.ipv6_addr_hex_ser_bad3)
+        with self.assertRaises(ValueError):
+            self.tc.decode('OpenC2-Command', self.ipv6_addr_hex_ser_bad4)
+        with self.assertRaises(ValueError):
+            self.tc.decode('OpenC2-Command', self.ipv6_addr_hex_ser_bad5)
 
     def test_ipv6_str(self):
         self.assertEqual(self.tc.encode('OpenC2-Command', self.ipv6_addr_str_api), self.ipv6_addr_str_ser)
         self.assertEqual(self.tc.decode('OpenC2-Command', self.ipv6_addr_str_ser), self.ipv6_addr_str_api)
+        with self.assertRaises(ValueError):
+            self.tc.decode('OpenC2-Command', self.ipv6_addr_str_ser_bad1)
+#        with self.assertRaises(ValueError):    # https://tools.ietf.org/html/draft-main-ipaddr-text-rep-02#section-3
+#            self.tc.decode('OpenC2-Command', self.ipv6_addr_str_ser_bad2)      # leading zeroes are not used
+        with self.assertRaises(ValueError):
+            self.tc.decode('OpenC2-Command', self.ipv6_addr_str_ser_bad3)
 
 if __name__ == '__main__':
     unittest.main()
