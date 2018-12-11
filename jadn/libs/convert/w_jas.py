@@ -2,8 +2,8 @@
 Translate JADN to JAS (JADN Abstract Syntax)
 """
 
-from ..codec.jadn_defs import *
-from ..codec.codec_utils import topts_s2d, fopts_s2d, basetype
+from libs.jadn_defs import *
+from libs.codec_utils import topts_s2d, fopts_s2d, basetype
 from copy import deepcopy
 from datetime import datetime
 from textwrap import fill

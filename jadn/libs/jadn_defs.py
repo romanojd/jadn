@@ -48,6 +48,15 @@ STRUCTURE_TYPES = (
     'Record',
 )
 
+
+def is_primitive(vtype):
+    return vtype in PRIMITIVE_TYPES
+
+
+def is_builtin(vtype):
+    return vtype in PRIMITIVE_TYPES + STRUCTURE_TYPES
+
+
 # Option Tags/Keys
 #   JADN Type Options (TOPTS) and Field Options (FOPTS) contain a list of strings, each of which is an option.
 #   The first character of an option string is the type ID; the remaining characters are the value.

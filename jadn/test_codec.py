@@ -6,7 +6,7 @@ import binascii
 import unittest
 
 from libs.codec.codec import Codec
-from libs.codec.jadn import jadn_load, jadn_check, jadn_analyze
+from libs.jadn import jadn_load, jadn_check, jadn_analyze
 
 schema_basic = {                # JADN schema for datatypes used in Basic Types tests
     'meta': {'module': 'unittests-BasicTypes'},

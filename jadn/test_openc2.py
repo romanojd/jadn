@@ -5,7 +5,7 @@ import os
 import unittest
 
 from libs.codec.codec import Codec
-from libs.codec.jadn import jadn_load, jadn_analyze
+from libs.jadn import jadn_load, jadn_analyze
 
 
 class Language(unittest.TestCase):

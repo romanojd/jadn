@@ -5,7 +5,7 @@ Support functions for JADN codec
 """
 
 from functools import reduce
-from .jadn_defs import *
+from libs.jadn_defs import *
 
 # Dict conversion utilities
 

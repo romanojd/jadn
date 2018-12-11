@@ -14,8 +14,8 @@ http://www.apache.org/licenses/LICENSE-2.0
 from __future__ import unicode_literals
 import numbers
 from binascii import b2a_hex
-from .jadn_defs import *
-from .codec_utils import topts_s2d, fopts_s2d
+from libs.jadn_defs import *
+from libs.jadn_utils import topts_s2d, fopts_s2d
 from .codec_format import get_format_function
 from .codec_format import FMT_NAME, FMT_CHECK, FMT_B2S, FMT_S2B
 
@@ -505,14 +505,6 @@ def _encode_string(ts, val, codec):
     _check_type(ts, val, type(''))
     _check_size(ts, val)
     return _format(ts, val, FMT_CHECK)
-
-
-def is_primitive(vtype):
-    return vtype in PRIMITIVE_TYPES
-
-
-def is_builtin(vtype):
-    return vtype in PRIMITIVE_TYPES + STRUCTURE_TYPES
 
 
 enctab = {  # decode, encode, min encoded type

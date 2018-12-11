@@ -189,12 +189,15 @@ def a2s_ipv6_net(aval):
     return sval
 
 
-FORMAT_CONVERT_FUNCTIONS = {
+FORMAT_CONVERT_BINARY_FUNCTIONS = {
     'b64u': (b2s_base64url, s2b_base64url),         # Base64url
     'x': (b2s_hex, s2b_hex),                        # Hex
     'ip-addr':  (b2s_ip_addr, s2b_ip_addr),         # IP (v4 or v6) Address, version autodetect
     'ipv4': (b2s_ipv4_addr, s2b_ipv4_addr),         # IPv4 Address
     'ipv6': (b2s_ipv6_addr, s2b_ipv6_addr),         # IPv6 Address
+}
+
+FORMAT_CONVERT_MULTI_FUNCTIONS = {
     'ip-net': (a2s_ip_net, s2a_ip_net),             # IP (v4 or v6) Net Address with CIDR prefix length
     'ipv4-net': (a2s_ipv4_net, s2a_ipv4_net),       # IPv4 Net Address with CIDR prefix length
 }
@@ -206,14 +209,19 @@ def check_format_function(name, basetype, convert=None):
 
 
 def get_format_function(name, basetype, convert=None):
-    if basetype in ('Binary', 'Array'):
+    if basetype == 'Binary':
         convert = convert if convert else 'b64u'
         try:
-            cvt = FORMAT_CONVERT_FUNCTIONS[convert]
+            cvt = FORMAT_CONVERT_BINARY_FUNCTIONS[convert]
         except KeyError:
-            cvt = (_err, _err)    # Conversion function not found, return Err
+            cvt = (_err, _err)      # Binary conversion function not found
+    elif basetype == 'Array':
+        try:
+            cvt = FORMAT_CONVERT_MULTI_FUNCTIONS[convert]
+        except KeyError:
+            cvt = (_err, _err)      # Multipart conversion function not found
     else:
-        cvt = (_err, _err)    # Conversion function not applicable, return Err
+        cvt = (_err, _err)          # Type does not support conversion
     try:
         col = {'String': 0, 'Binary': 1, 'Number': 2}[basetype]
         return (name, FORMAT_CHECK_FUNCTIONS[name][col]) + cvt

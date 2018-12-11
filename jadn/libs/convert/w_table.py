@@ -3,9 +3,8 @@ Translate JADN to HTML or Markdown property tables
 """
 
 from __future__ import unicode_literals
-from ..codec.codec import is_builtin
-from ..codec.jadn_defs import *
-from ..codec.codec_utils import topts_s2d, fopts_s2d, cardinality
+from libs.jadn_defs import *
+from libs.jadn_utils import topts_s2d, fopts_s2d, cardinality
 from datetime import datetime
 
 

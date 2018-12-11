@@ -9,11 +9,10 @@ import json
 import jsonschema
 import numbers
 from datetime import datetime
-from .codec import is_builtin, is_primitive
-from .codec_utils import topts_s2d, fopts_s2d, basetype
-from .codec_format import check_format_function
-from .codec_format import FMT_CHK, FMT_CVT
-from .jadn_defs import *
+from libs.jadn_defs import *
+from libs.jadn_utils import topts_s2d, fopts_s2d, basetype
+from libs.codec.codec_format import check_format_function
+from libs.codec.codec_format import FMT_CHK, FMT_CVT
 
 # TODO: convert prints to ValidationError exception
 

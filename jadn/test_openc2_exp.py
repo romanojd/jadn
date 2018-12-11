@@ -5,7 +5,7 @@ import os
 import unittest
 
 from libs.codec.codec import Codec
-from libs.codec.jadn import jadn_load, jadn_analyze
+from libs.jadn import jadn_load, jadn_analyze
 
 # These unit tests include features that are not currently used in the OpenC2 Language Specification or
 # any actuator profile.  They demonstrate that potential features work and show how to use them, to
