@@ -1247,10 +1247,10 @@ schema_format = {  # JADN schema for value constraint tests
         ['IP-String', 'Binary', ['.ip-addr', '@ip-addr'], ''],      # Datatype-specific string encoding
         ['IPv4-Base64url', 'Binary', ['[4', ']4'], ''],             # Check length = 32 bits with format function
         ['IPv4-Hex', 'Binary', ['[4', ']4', '.x'], ''],             # Check length = 32 bits with min/max size
-        ['IPv4-String', 'Binary', ['[4', ']4', '.ipv4'], ''],
+        ['IPv4-String', 'Binary', ['[4', ']4', '.ipv4-addr'], ''],
         ['IPv6-Base64url', 'Binary', ['[16', ']16'], ''],
         ['IPv6-Hex', 'Binary', ['[16', ']16', '.x'], ''],
-        ['IPv6-String', 'Binary', ['[16', ']16', '.ipv6'], ''],
+        ['IPv6-String', 'Binary', ['[16', ']16', '.ipv6-addr'], ''],
         ['IPv5-error', 'Binary', ['.ipv5'], ''],                    # Generate error: unsupported (nonexistent) format
         ['IPv4-Net', 'Array', ['.ipv4-net'], '', [
             [1, 'addr', 'Binary', [], ''],
@@ -1403,7 +1403,7 @@ class Format(unittest.TestCase):
 class JADN(unittest.TestCase):
 
     def setUp(self):
-        fn = os.path.join('schema', 'jadn-csdpr01.jadn')
+        fn = os.path.join('schema', 'jadn-csdpr02.jadn')
         schema = jadn_load(fn)
         self.schema = schema
         sa = jadn_analyze(schema)

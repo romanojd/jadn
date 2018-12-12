@@ -11,8 +11,6 @@ import numbers
 from datetime import datetime
 from libs.jadn_defs import *
 from libs.jadn_utils import topts_s2d, fopts_s2d, basetype
-from libs.codec.codec_format import check_format_function
-from libs.codec.codec_format import FMT_CHK, FMT_CVT
 
 # TODO: convert prints to ValidationError exception
 
@@ -96,46 +94,13 @@ def jadn_check(schema):
 #        jc = Codec(json.load(f), verbose_rec=True, verbose_str=True)
 #        assert jc.encode('Schema', schema) == schema
 
-    valid_topts = {                         # TODO: comprehensive review of valid type and field options, plus unit tests
-        'Binary': ['min', 'max', 'format', 'cvt'],
-        'Boolean': [],
-        'Integer': ['min', 'max', 'format'],
-        'Number': ['min', 'max', 'format'],
-        'Null': [],
-        'String': ['min', 'max', 'pattern', 'format'],
-        'Array': ['min', 'cvt'],
-        'ArrayOf': ['min', 'max', 'rtype'],
-        'Choice': ['compact'],
-        'Enumerated': ['compact', 'rtype'],
-        'Map': ['compact', 'min'],
-        'Record': ['min'],
-    }
-    valid_fopts = {
-        'Binary': ['min', 'max'],
-        'Boolean': ['min', 'max'],
-        'Integer': ['min', 'max'],
-        'Number': ['min', 'max'],
-        'Null': [],
-        'String': ['min', 'max', 'pattern'],
-        'Array': ['min', 'max', 'etype', 'atfield'],
-        'ArrayOf': ['min', 'max', 'rtype'],
-        'Choice': ['min', 'max', 'etype'],
-        'Enumerated': ['rtype'],
-        'Map': ['min', 'max', 'etype'],
-        'Record': ['min', 'max', 'etype', 'atfield'],
-    }
-
     # TODO: raise exception instead of print
-    # TODO: field type Null can't have options
-
-    assert set(valid_topts) == set(STRUCTURE_TYPES + PRIMITIVE_TYPES)       # Ensure valid options list is in sync with jadn_defs
-    assert set(valid_fopts) == set(STRUCTURE_TYPES + PRIMITIVE_TYPES)
 
     for t in schema['types']:     # datatype definition: TNAME, TTYPE, TOPTS, TDESC, FIELDS
         tt = basetype(t[TTYPE])
         if is_builtin(tt):
             topts = topts_s2d(t[TOPTS])
-            vop = {k for k in topts} - {k for k in valid_topts[tt]}
+            vop = {k for k in topts} - {k for k in SUPPORTED_TYPE_OPTIONS[tt]}
             if vop:
                 print('Error:', t[TNAME], 'type', tt, 'invalid type option', str(vop))
         else:
@@ -144,11 +109,13 @@ def jadn_check(schema):
         if tt == 'ArrayOf' and 'rtype' not in topts:
             print('Error:', t[TNAME], '- Missing array element type')
         if 'format' in topts:
-            if not check_format_function(topts['format'], tt)[FMT_CHK]:
+            f = topts['format']
+            if f not in FORMAT_CHECK or tt != FORMAT_CHECK[f]:
                 print('Unsupported value constraint', '"' + topts['format'] + '" on', tt + ':',  t[TNAME])
         if 'cvt' in topts:
-            if not check_format_function(None, tt, topts['cvt'])[FMT_CVT]:
-                print('Unsupported Binary-String conversion', '"' + topts['cvt'] + '" on', tt + ':',  t[TNAME])
+            f = topts['cvt']
+            if f not in FORMAT_CONVERT or tt != FORMAT_CONVERT[f]:
+                print('Unsupported String conversion', '"' + topts['cvt'] + '" on', tt + ':',  t[TNAME])
         if is_primitive(tt) or tt == 'ArrayOf':
             if len(t) != 4:    # TODO: trace back to base type
                 print('Type format error:', t[TNAME], '- type', tt, 'cannot have items')
@@ -164,7 +131,7 @@ def jadn_check(schema):
                     if len(i) != n:
                         print('Item format error:', t[TNAME], tt, i[FNAME], '-', len(i), '!=', n)
                     if len(i) > 3 and is_builtin(i[FTYPE]):     # TODO: trace back to builtin types
-                        fop = {k for k in fopts_s2d(i[FOPTS])} - {k for k in valid_fopts[i[FTYPE]]}
+                        fop = {k for k in fopts_s2d(i[FOPTS])} - {k for k in SUPPORTED_FIELD_OPTIONS[i[FTYPE]]}
                         if fop:
                             print('Error:', t[TNAME], ':', i[FNAME], i[FTYPE], 'invalid field option', str(fop))
                     # TODO: check that wildcard name has Choice type, and that there is only one wildcard.

@@ -190,11 +190,11 @@ def a2s_ipv6_net(aval):
 
 
 FORMAT_CONVERT_BINARY_FUNCTIONS = {
-    'b64u': (b2s_base64url, s2b_base64url),         # Base64url
+    'b': (b2s_base64url, s2b_base64url),            # Base64url
     'x': (b2s_hex, s2b_hex),                        # Hex
     'ip-addr':  (b2s_ip_addr, s2b_ip_addr),         # IP (v4 or v6) Address, version autodetect
-    'ipv4': (b2s_ipv4_addr, s2b_ipv4_addr),         # IPv4 Address
-    'ipv6': (b2s_ipv6_addr, s2b_ipv6_addr),         # IPv6 Address
+    'ipv4-addr': (b2s_ipv4_addr, s2b_ipv4_addr),         # IPv4 Address
+    'ipv6-addr': (b2s_ipv6_addr, s2b_ipv6_addr),         # IPv6 Address
 }
 
 FORMAT_CONVERT_MULTI_FUNCTIONS = {
@@ -210,7 +210,7 @@ def check_format_function(name, basetype, convert=None):
 
 def get_format_function(name, basetype, convert=None):
     if basetype == 'Binary':
-        convert = convert if convert else 'b64u'
+        convert = convert if convert else 'b'
         try:
             cvt = FORMAT_CONVERT_BINARY_FUNCTIONS[convert]
         except KeyError:
