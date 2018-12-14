@@ -121,7 +121,7 @@ FORMAT_CHECK = {            # Semantic validation functions
 }
 
 FORMAT_CONVERT = {          # Binary-String and Array-String conversion functions
-    'b': 'Binary',          # Base64url - RFC 4648 Section 5
+    'b': 'Binary',          # Base64url - RFC 4648 Section 5 (default)
     'x': 'Binary',          # Hex - RFC 4648 Section 8
     'ipv4-addr': 'Binary',  # IPv4 text representation - draft-main-ipaddr-text-rep-02 Section 3
     'ipv6-addr': 'Binary',  # IPv6 text representation - RFC 5952 Section 4
