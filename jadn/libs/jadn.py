@@ -154,19 +154,23 @@ def jadn_strip(schema):             # Strip comments from schema
 
 
 def jadn_merge(base, imp, nsid):      # Merge an imported schema into a base schema
-    types = base['types'][:]
-    imp_types = {t[TNAME] for t in imp['types']}
+    def update_opts(opts):
+        return [(x[0] + nsid + ':' + x[1:] if x[0] == '*' and x[1:] in imported_names else x) for x in opts]
+
+    types = base['types'][:]        # Make a copy to avoid modifying base
+    imported_names = {t[TNAME] for t in imp['types']}
     for t in imp['types']:
-        nt = [nsid + ':' + t[TNAME], t[TTYPE], t[TOPTS], t[TDESC]]
-        nt[TOPTS] = [(x[0] + nsid + ':' + x[1:] if x[0] == '*' and x[1:] in imp_types else x) for x in nt[TOPTS]]
+        new_types = [nsid + ':' + t[TNAME], t[TTYPE], t[TOPTS], t[TDESC]]
+        new_types[TOPTS] = update_opts(new_types[TOPTS])
         if len(t) > FIELDS:
-            nf = t[FIELDS][:]
+            new_fields = t[FIELDS][:]
             if t[TTYPE] != 'Enumerated':
-                for f in nf:
-                    if f[FTYPE] in imp_types:
+                for f in new_fields:
+                    f[FOPTS] = update_opts(f[FOPTS])
+                    if f[FTYPE] in imported_names:
                         f[FTYPE] = nsid + ':' + f[FTYPE]
-            nt.append(nf)
-        types.append(nt)
+            new_types.append(new_fields)
+        types.append(new_types)
     return {'meta': base['meta'], 'types': types}
 
 

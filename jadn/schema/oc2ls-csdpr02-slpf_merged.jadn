@@ -193,10 +193,10 @@
 
   ["jadn:Type", "Array", [], "", [
     [1, "tname", "jadn:Identifier", [], "Name of this datatype"],
-    [2, "btype", "jadn:JADN-Type", ["*"], "Base type.  Enumerated value derived from list of JADN data types"],
-    [3, "opts", "jadn:Option", ["]0"], "Type options"],
+    [2, "btype", "Enumerated", ["*jadn:JADN-Type"], "Base type.  Enumerated value derived from list of JADN data types"],
+    [3, "opts", "jadn:Options", [], "Type options"],
     [4, "desc", "String", [], "Description of this data type"],
-    [5, "fields", "jadn:JADN-Type", ["&btype", "]0"], "List of fields for compound types.  Not present for primitive types"]
+    [5, "fields", "jadn:JADN-Type", ["&2", "]0"], "List of fields for compound types.  Not present for primitive types"]
   ]],
 
   ["jadn:JADN-Type", "Choice", [], "", [
