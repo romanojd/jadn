@@ -20,54 +20,54 @@ schema_basic = {                # JADN schema for datatypes used in Basic Types 
         ['t_choice', 'Choice', [], '', [
             [1, 'type1', 'String', [], ''],
             [4, 'type2', 'Boolean', [], ''],
-            [7, 'type3', 'Integer', [], '']]
-        ],
+            [7, 'type3', 'Integer', [], '']
+        ]],
         ['t_choice_c', 'Choice', ['='], '', [
             [1, 'type1', 'String', [], ''],
             [2, 'type2', 'Boolean', [], ''],
-            [3, 'type3', 'Integer', [], '']]
-        ],
+            [3, 'type3', 'Integer', [], '']
+        ]],
         ['t_enum', 'Enumerated', [], '', [
             [1, 'first', ''],
             [15, 'extra', ''],
-            [8, 'Chunk', '']]
-        ],
+            [8, 'Chunk', '']
+        ]],
         ['t_enum_c', 'Enumerated', ['='], '', [
             [1, 'first', ''],
             [15, 'extra', ''],
-            [8, 'Chunk', '']]
-         ],
+            [8, 'Chunk', '']
+        ]],
         ['t_array', 'Array', [], '', [
             [1, 'fbool', 'Boolean', ['[0'], ''],
             [2, 'fint', 'Integer', [], ''],
             [3, 'fnum', 'Number', [], ''],
             [4, 'fstr', 'String', ['[0'], ''],
             [5, 'farr', 't_arr', ['[0'], ''],
-            [6, 'fao', 't_ao', ['[0'], '']]
-        ],
+            [6, 'fao', 't_ao', ['[0'], '']
+        ]],
         ['t_arr', 'Array', [], '', [
             [1, '', 'Integer', [], ''],
-            [2, '', 'String', [], '']]
-        ],
+            [2, '', 'String', [], '']
+        ]],
         ['t_ao', 'ArrayOf', ['*Integer'], ''],
         ['t_map', 'Map', [], '', [
             [2, 'red', 'Integer', [], ''],
             [4, 'green', 'Integer', ['[0'], ''],
             [6, 'blue', 'Integer', [], ''],
-            [9, 'alpha', 'Integer', ['[0'], '']]
-        ],
+            [9, 'alpha', 'Integer', ['[0'], '']
+        ]],
         ['t_rec', 'Record', [], '', [
             [1, 'red', 'Integer', [], ''],
             [2, 'green', 'Integer', ['[0'], ''],
             [3, 'blue', 'Integer', [], ''],
-            [4, 'alpha', 'Integer', ['[0'], '']]
-        ],
+            [4, 'alpha', 'Integer', ['[0'], '']
+        ]],
         ['t_arr_rec', 'Array', [], '', [
             [1, 'red', 'Integer', [], ''],
             [2, 'green', 'Integer', ['[0'], ''],
             [3, 'blue', 'Integer', [], ''],
-            [4, 'alpha', 'Integer', ['[0'], '']]
-        ]
+            [4, 'alpha', 'Integer', ['[0'], '']
+        ]]
     ]}
 
 
@@ -205,7 +205,6 @@ class BasicTypes(unittest.TestCase):            # TODO: Test Array
         with self.assertRaises(ValueError):
             self.tc.encode('t_choice', self.C1_bad3a)
 
-
     def test_choice_verbose(self):
         self.tc.set_mode(True, True)
         self.assertEqual(self.tc.decode('t_choice', self.C1a), self.C1a)
@@ -227,7 +226,6 @@ class BasicTypes(unittest.TestCase):            # TODO: Test Array
             self.tc.encode('t_choice', self.C1_bad2a)
         with self.assertRaises(ValueError):
             self.tc.encode('t_choice', self.C1_bad3a)
-
 
     def test_enumerated_min(self):
         self.assertEqual(self.tc.decode('t_enum', 15), 'extra')
@@ -583,7 +581,6 @@ class BasicTypes(unittest.TestCase):            # TODO: Test Array
         with self.assertRaises(ValueError):
             self.tc.encode('t_rec', self.RGB_bad7a)
 
-
     Arr1 = [True, 3, 2.71828, 'Red']
     Arr2 = [None, 3, 2]
     Arr3 = [True, 3, 2, 'Red', [1, 'Blue'], [2, 3]]
@@ -651,6 +648,7 @@ class BasicTypes(unittest.TestCase):            # TODO: Test Array
         self.tc.set_mode(True, True)
         ta()
 
+
 schema_compound = {
     'meta': {'module': 'unittests-Compound'},
     'types': [
@@ -658,25 +656,26 @@ schema_compound = {
             [10, 'rec', 't_crec', [], ''],
             [11, 'map', 't_cmap', [], ''],
             [12, 'array', 't_carray', [], ''],
-            [13, 'choice', 't_cchoice', [], '']]
-        ],
+            [13, 'choice', 't_cchoice', [], '']
+        ]],
         ['t_crec', 'Record', [], '', [
             [1, 'a', 'Integer', [], ''],
-            [2, 'b', 'String', [], '']]
-        ],
+            [2, 'b', 'String', [], '']
+        ]],
         ['t_cmap', 'Map', [], '', [
             [4, 'c', 'Integer', [], ''],
-            [6, 'd', 'String', [], '']]
-        ],
+            [6, 'd', 'String', [], '']
+        ]],
         ['t_carray', 'Array', [], '', [
             [1, 'e', 'Integer', [], ''],
-            [2, 'f', 'String', [], '']]
-        ],
+            [2, 'f', 'String', [], '']
+        ]],
         ['t_cchoice', 'Choice', [], '', [
             [7, 'g', 'Integer', [], ''],
-            [8, 'h', 'String', [], '']]
-        ],
+            [8, 'h', 'String', [], '']
+        ]],
     ]}
+
 
 class Compound(unittest.TestCase):      # TODO: arrayOf(rec,map,array,arrayof,choice), array(), map(), rec()
 
@@ -685,7 +684,7 @@ class Compound(unittest.TestCase):      # TODO: arrayOf(rec,map,array,arrayof,ch
         self.tc = Codec(schema_compound)
 
     C4a = {'rec': {'a': 1, 'b': 'c'}}
-    C4m = {10:[1,'c']}
+    C4m = {10: [1, 'c']}
 
     def test_choice_rec_verbose(self):
         self.tc.set_mode(True, True)
@@ -703,73 +702,73 @@ schema_selectors = {                # JADN schema for selector tests
     'types': [
         ['t_attr_arr_tag', 'Array', [], '', [
             [1, 'type', 'Enumerated', ['*Menu_tag'], ''],
-            [2, 'value', 'Menu_tag', ['&1'], '']]
-        ],
+            [2, 'value', 'Menu_tag', ['&1'], '']
+        ]],
         ['t_attr_arr_enum', 'Array', [], '', [
             [1, 'type', 'Enumerated', ['*Menu_rec'], ''],
-            [2, 'value', 'Menu_rec', ['&1'], '']]
-        ],
+            [2, 'value', 'Menu_rec', ['&1'], '']
+        ]],
         ['t_attr_rec_implicit', 'Record', [], '', [
             [1, 'type', 'Enumerated', ['*Menu_rec'], ''],
-            [2, '*', 'Menu_rec', ['&type'], '']]
-        ],
+            [2, '*', 'Menu_rec', ['&type'], '']
+        ]],
         ['t_attr_rec_explicit', 'Record', [], '', [
             [1, 'type', 'Enumerated', ['*Menu_rec'], ''],
-            [2, 'value', 'Menu_rec', ['&type'], '']]
-        ],
+            [2, 'value', 'Menu_rec', ['&type'], '']
+        ]],
         ['t_property_implicit_primitive', 'Record', [], '', [
             [1, 'foo', 'String', [], ''],
-            [2, '*', 'Primitive', [], '']]
-        ],
+            [2, '*', 'Primitive', [], '']
+        ]],
         ['t_property_explicit_primitive', 'Record', [], '', [
             [1, 'foo', 'String', [], ''],
-            [2, 'data', 'Primitive', [], '']]
-        ],
+            [2, 'data', 'Primitive', [], '']
+        ]],
         ['t_property_implicit_category', 'Record', [], '', [
             [1, 'foo', 'String', [], ''],
-            [2, '*', 'Category', [], '']]
-         ],
+            [2, '*', 'Category', [], '']
+        ]],
         ['t_property_explicit_category', 'Record', [], '', [
             [1, 'foo', 'String', [], ''],
-            [2, 'data', 'Category', [], '']]
-         ],
+            [2, 'data', 'Category', [], '']
+        ]],
         ['Menu_tag', 'Choice', ['='], '', [
             [9, 'name', 'String', [], ''],
             [4, 'flag', 'Boolean', [], ''],
             [7, 'count', 'Integer', [], ''],
             [6, 'color', 'Colors', [], ''],
-            [5, 'animal', 'Animals', [], '']]
-        ],
+            [5, 'animal', 'Animals', [], '']
+        ]],
         ['Menu_rec', 'Choice', [], '', [
             [9, 'name', 'String', [], ''],
             [4, 'flag', 'Boolean', [], ''],
             [7, 'count', 'Integer', [], ''],
             [6, 'color', 'Colors', [], ''],
-            [5, 'animal', 'Animals', [], '']]
-        ],
+            [5, 'animal', 'Animals', [], '']
+        ]],
         ['Primitive', 'Choice', [], '', [
             [1, 'name', 'String', [], ''],
             [4, 'flag', 'Boolean', [], ''],
-            [7, 'count', 'Integer', [], '']]
-        ],
+            [7, 'count', 'Integer', [], '']
+        ]],
         ['Category', 'Choice', [], '', [
             [2, 'animal', 'Animals', [], ''],
-            [6, 'color', 'Colors', [], '']]
-        ],
+            [6, 'color', 'Colors', [], '']
+        ]],
         ['Animals', 'Map', [], '', [
             [3, 'cat', 'String', ['[0'], ''],
             [4, 'dog', 'Integer', ['[0'], ''],
-            [5, 'rat', 'Rattrs', ['[0'], '']]
-        ],
+            [5, 'rat', 'Rattrs', ['[0'], '']
+        ]],
         ['Colors', 'Enumerated', [], '', [
             [2, 'red', ''],
             [3, 'green', ''],
-            [4, 'blue', '']]
-         ],
+            [4, 'blue', '']
+        ]],
         ['Rattrs', 'Record', [], '', [
             [1, 'length', 'Integer', [], ''],
-            [2, 'weight', 'Number', [], '']]
-        ]
+            [2, 'weight', 'Number', [], '']
+        ]]
     ]}
 
 
@@ -870,7 +869,6 @@ class Selectors(unittest.TestCase):         # TODO: bad schema - verify * field 
             self.tc.encode('t_attr_arr_tag', self.array5t_bad_api)
         with self.assertRaises(ValueError):
             self.tc.decode('t_attr_arr_tag', self.array5t_bad_min)
-
 
     attr1e_api = {'type': 'Integer', 'value': 17}
     attr2e_api = {'type': 'Primitive', 'value': {'count': 17}}
@@ -1042,28 +1040,28 @@ schema_listfield = {                # JADN schema for fields with cardinality > 
         ['t_array1', 'ArrayOf', ['*String', ']2'], ''],         # Min array length = 1 (default), Max = 2
         ['t_opt_list0', 'Record', [], '', [
             [1, 'string', 'String', [], ''],
-            [2, 'list', 't_array0', ['[0'], '']]        # Min = 0, Max default = 1 (Array is optional)
-        ],
+            [2, 'list', 't_array0', ['[0'], '']        # Min = 0, Max default = 1 (Array is optional)
+        ]],
         ['t_opt_list1', 'Record', [], '', [
             [1, 'string', 'String', [], ''],
-            [2, 'list', 't_array1', ['[0'], '']]        # Min = 0, Max default = 1  (Array is optional)
-        ],
+            [2, 'list', 't_array1', ['[0'], '']        # Min = 0, Max default = 1  (Array is optional)
+        ]],
         ['t_list_1_2', 'Record', [], '', [
             [1, 'string', 'String', [], ''],
-            [2, 'list', 'String', [']2'], '']]          # Min default = 1, Max = 2
-        ],
+            [2, 'list', 'String', [']2'], '']          # Min default = 1, Max = 2
+        ]],
         ['t_list_0_2', 'Record', [], '', [
             [1, 'string', 'String', [], ''],
-            [2, 'list', 'String', ['[0', ']2'], '']]    # Min = 0, Max = 2
-        ],
+            [2, 'list', 'String', ['[0', ']2'], '']    # Min = 0, Max = 2
+        ]],
         ['t_list_2_3', 'Record', [], '', [
             [1, 'string', 'String', [], ''],
-            [2, 'list', 'String', ['[2',']3'], '']]     # Min = 2, Max = 3
-        ],
+            [2, 'list', 'String', ['[2',']3'], '']     # Min = 2, Max = 3
+        ]],
         ['t_list_1_n', 'Record', [], '', [
             [1, 'string', 'String', [], ''],
-            [2, 'list', 'String', [']0'], '']]          # Min default = 1, Max = 0 -> n
-        ],
+            [2, 'list', 'String', [']0'], '']          # Min default = 1, Max = 0 -> n
+        ]],
         ['t_list_types', 'Record', [], '', [
             [1, 'bins', 'Binary', ['[0', ']2'], ''],
             [2, 'bools', 'Boolean', ['[0', ']2'], ''],
@@ -1074,30 +1072,31 @@ schema_listfield = {                # JADN schema for fields with cardinality > 
             [7, 'choices', 't_ch', ['[0', ']2'], ''],
             [8, 'enums', 't_enum', ['[0', ']2'], ''],
             [9, 'maps', 't_map', ['[0', ']2'], ''],
-            [10, 'recs', 't_rec', ['[0', ']2'], '']]
-        ],
+            [10, 'recs', 't_rec', ['[0', ']2'], '']
+        ]],
         ['t_arr', 'Array', [], '', [
             [1, 'x', 'Integer', [], ''],
-            [2, 'y', 'Number', [], '']]
-        ],
+            [2, 'y', 'Number', [], '']
+        ]],
         ['t_aro', 'ArrayOf', ['*String'], ''],
         ['t_ch', 'Choice', [], '', [
             [1, 'red', 'Integer', [], ''],
-            [2, 'blue', 'Integer', [], '']]
-        ],
+            [2, 'blue', 'Integer', [], '']
+        ]],
         ['t_enum', 'Enumerated', [], '', [
             [1, 'heads', ''],
-            [2, 'tails', '']]
-        ],
+            [2, 'tails', '']
+        ]],
         ['t_map', 'Map', [], '', [
             [1, 'red', 'Integer', [], ''],
-            [2, 'blue', 'Integer', [], '']]
-        ],
+            [2, 'blue', 'Integer', [], '']
+        ]],
         ['t_rec', 'Record', [], '', [
             [1, 'red', 'Integer', [], ''],
-            [2, 'blue', 'Integer', [], '']]
-        ]
+            [2, 'blue', 'Integer', [], '']
+        ]]
     ]}
+
 
 class ListField(unittest.TestCase):      # TODO: arrayOf(rec,map,array,arrayof,choice), array(), map(), rec()
 
@@ -1239,29 +1238,32 @@ class Bounds(unittest.TestCase):        # TODO: check max and min string length,
         jadn_check(schema_bounds)
         self.tc = Codec(schema_bounds)
 
+
 schema_format = {  # JADN schema for value constraint tests
     'meta': {'module': 'unittests-Format'},
     'types': [
-        ['IP-Base64url', 'Binary', ['@ip-addr'], ''],               # Baset64url encoding
-        ['IP-Hex', 'Binary', ['.x', '@ip-addr'], ''],               # Hex encoding
-        ['IP-String', 'Binary', ['.ip-addr', '@ip-addr'], ''],      # Datatype-specific string encoding
-        ['IPv4-Base64url', 'Binary', ['[4', ']4'], ''],             # Check length = 32 bits with format function
+        ['IPv4-Bin', 'Binary', ['[4', ']4'], ''],                   # Check length = 32 bits with format function
         ['IPv4-Hex', 'Binary', ['[4', ']4', '.x'], ''],             # Check length = 32 bits with min/max size
         ['IPv4-String', 'Binary', ['[4', ']4', '.ipv4-addr'], ''],
         ['IPv6-Base64url', 'Binary', ['[16', ']16'], ''],
         ['IPv6-Hex', 'Binary', ['[16', ']16', '.x'], ''],
         ['IPv6-String', 'Binary', ['[16', ']16', '.ipv6-addr'], ''],
-        ['IPv5-error', 'Binary', ['.ipv5'], ''],                    # Generate error: unsupported (nonexistent) format
+        ['IPv5-error-expected', 'Binary', ['.ipv5'], ''],           # Generate error: unsupported (nonexistent) format
         ['IPv4-Net', 'Array', ['.ipv4-net'], '', [
             [1, 'addr', 'Binary', [], ''],
             [2, 'prefix', 'Integer', [], '']
         ]],
-        # ['t_ipaddrs', 'ArraryOf', ['*t_ipaddr'], ''],
+        ['IPv6-Net', 'Array', ['.ipv6-net'], '', [
+            [1, 'addr', 'Binary', [], ''],
+            [2, 'prefix', 'Integer', [], '']
+        ]],
+        ['t_ipaddrs', 'ArrayOf', ['*IPv4-Bin'], ''],
         ['MAC-Base64url', 'Binary', ['@mac-addr'], ''],
         ['Email-Addr', 'String', ['@email'], ''],
         ['Hostname', 'String', ['@hostname'], '']
     ]
 }
+
 
 class Format(unittest.TestCase):
 
@@ -1280,8 +1282,8 @@ class Format(unittest.TestCase):
     ipv4_str_bad = '198.2.3.4.56'                   # Too long
 
     def test_ipv4_addr(self):
-        self.assertEqual(self.tc.encode('IPv4-Base64url', self.ipv4_b), self.ipv4_s64)
-        self.assertEqual(self.tc.decode('IPv4-Base64url', self.ipv4_s64), self.ipv4_b)
+        self.assertEqual(self.tc.encode('IPv4-Bin', self.ipv4_b), self.ipv4_s64)
+        self.assertEqual(self.tc.decode('IPv4-Bin', self.ipv4_s64), self.ipv4_b)
         self.assertEqual(self.tc.encode('IPv4-Hex', self.ipv4_b), self.ipv4_sx)
         self.assertEqual(self.tc.decode('IPv4-Hex', self.ipv4_sx), self.ipv4_b)
         self.assertEqual(self.tc.encode('IPv4-String', self.ipv4_b), self.ipv4_str)
@@ -1291,15 +1293,15 @@ class Format(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.tc.encode('IPv4-Hex', self.ipv4_b1_bad)
         with self.assertRaises(ValueError):
-            self.tc.decode('IPv4-Base64url', self.ipv4_s64_bad)
+            self.tc.decode('IPv4-Bin', self.ipv4_s64_bad)
         with self.assertRaises(ValueError):
             self.tc.decode('IPv4-Hex', self.ipv4_sx_bad)
         with self.assertRaises(ValueError):
             self.tc.decode('IPv4-String', self.ipv4_str_bad)
         with self.assertRaises(ValueError):
-            self.tc.encode('IPv4-Base64url', b'')
+            self.tc.encode('IPv4-Bin', b'')
         with self.assertRaises(ValueError):
-            self.tc.decode('IPv4-Base64url', '')
+            self.tc.decode('IPv4-Bin', '')
         with self.assertRaises(ValueError):
             self.tc.encode('IPv4-Hex', b'')
         with self.assertRaises(ValueError):
@@ -1315,25 +1317,31 @@ class Format(unittest.TestCase):
     def test_ipv4_net(self):
         self.assertEqual(self.tc.encode('IPv4-Net', self.ipv4_net_a), self.ipv4_net_str)
         self.assertEqual(self.tc.decode('IPv4-Net', self.ipv4_net_str), self.ipv4_net_a)
-        #with self.assertRaises(ValueError):
+        # with self.assertRaises(ValueError):
         #    self.tc.encode('IPv4-Net', self.ipv4_net_bad1)
 
-
-    ipv6_b = binascii.a2b_hex('20010db885a3000000008a2e03707334')     # IPv6 address
-    ipv6_s64 = 'IAENuIWjAAAAAIouA3BzNA'                               # Base64 encoded
-    ipv6_sx = '20010DB885A3000000008A2E03707334'                      # Hex encoded
-    ipv6_str1 = '2001:db8:85a3::8a2e:370:7334'                        # IPv6-string encoded
-    ipv6_str2 = '2001:db8:85a3::8a2e:0370:7334'                       # IPv6-string encoded - leading 0
-    ipv6_str3 = '2001:db8:85A3::8a2e:370:7334'                        # IPv6-string encoded - uppercase
-    ipv6_str4 = '2001:db8:85a3:0::8a2e:370:7334'                      # IPv6-string encoded - zero not compressed
+    ipv6_b = binascii.a2b_hex('20010db885a3000000008a2e03707334')   # IPv6 address
+    ipv6_s64 = 'IAENuIWjAAAAAIouA3BzNA'                             # Base64 encoded
+    ipv6_sx = '20010DB885A3000000008A2E03707334'                    # Hex encoded
+    ipv6_str1 = '2001:db8:85a3::8a2e:370:7334'                      # IPv6-string encoded
+    ipv6_str2 = '2001:db8:85a3::8a2e:0370:7334'                     # IPv6-string encoded - leading 0
+    ipv6_str3 = '2001:db8:85A3::8a2e:370:7334'                      # IPv6-string encoded - uppercase
+    ipv6_str4 = '2001:db8:85a3:0::8a2e:370:7334'                    # IPv6-string encoded - zero not compressed
 
     def test_ipv6_addr(self):
-        self.assertEqual(self.tc.encode('IP-Base64url', self.ipv6_b), self.ipv6_s64)
-        self.assertEqual(self.tc.decode('IP-Base64url', self.ipv6_s64), self.ipv6_b)
-        self.assertEqual(self.tc.encode('IP-Hex', self.ipv6_b), self.ipv6_sx)
-        self.assertEqual(self.tc.decode('IP-Hex', self.ipv6_sx), self.ipv6_b)
-        self.assertEqual(self.tc.encode('IP-String', self.ipv6_b), self.ipv6_str1)
-        self.assertEqual(self.tc.decode('IP-String', self.ipv6_str1), self.ipv6_b)
+        self.assertEqual(self.tc.encode('IPv6-Base64url', self.ipv6_b), self.ipv6_s64)
+        self.assertEqual(self.tc.decode('IPv6-Base64url', self.ipv6_s64), self.ipv6_b)
+        self.assertEqual(self.tc.encode('IPv6-Hex', self.ipv6_b), self.ipv6_sx)
+        self.assertEqual(self.tc.decode('IPv6-Hex', self.ipv6_sx), self.ipv6_b)
+        self.assertEqual(self.tc.encode('IPv6-String', self.ipv6_b), self.ipv6_str1)
+        self.assertEqual(self.tc.decode('IPv6-String', self.ipv6_str1), self.ipv6_b)
+
+    ipv6_net_str = '2001:db8:85a3::8a2e:370:7334/64'                # IPv6 network address
+    ipv6_net_a = [binascii.a2b_hex('20010db885a3000000008a2e03707334'), 64]
+
+    def test_ipv6_net(self):
+        self.assertEqual(self.tc.encode('IPv6-Net', self.ipv6_net_a), self.ipv6_net_str)
+        self.assertEqual(self.tc.decode('IPv6-Net', self.ipv6_net_str), self.ipv6_net_a)
 
     eui48b = binascii.a2b_hex('002186b56e10')
     eui48s = 'ACGGtW4Q'

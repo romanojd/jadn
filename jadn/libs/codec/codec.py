@@ -205,6 +205,11 @@ def _format(ts, val, fmtop):
         td = ts[S_TDEF]
         tn = ('%s(%s)' % (td[TNAME], td[TTYPE]) if td[TNAME] else td[TTYPE])
         raise ValueError('%s: %s is not defined' % (tn, ts[S_FORMAT][FMT_NAME]))
+    except AttributeError:
+        td = ts[S_TDEF]
+        tn = ('%s(%s)' % (td[TNAME], td[TTYPE]) if td[TNAME] else td[TTYPE])
+        val = b2a_hex(val).decode() if isinstance(val, bytes) else val
+        raise ValueError('%s: %s is not supported: %s' % (tn, val, ts[S_FORMAT][FMT_NAME]))
     return rval
 
 
@@ -419,13 +424,12 @@ def _encode_maprec(ts, val, codec):
     return encval
 
 
-def _decode_array(ts, val, codec):          # Ordered list of types, returned as a list
+def _decode_array(ts, aval, codec):          # Ordered list of types, returned as a list
     if 'cvt' in ts[S_TOPT]:
-        _check_type(ts, val, type(''))
-        aval = _format(ts, val, FMT_S2B)    # Convert string to multipart value (array)
-        apival = aval       # TODO: write field type checker
-        return apival
-
+        _check_type(ts, aval, type(''))
+        val = _format(ts, aval, FMT_S2B)    # Convert string to multipart value (array)
+    else:
+        val = aval
     _check_type(ts, val, list)
     apival = list()
     extra = len(val) > len(ts[S_FLD])
@@ -478,6 +482,8 @@ def _encode_array(ts, val, codec):
                 _bad_value(ts, val, f)
     while encval and encval[-1] is None:    # Strip non-populated trailing optional values
         encval.pop()
+    if 'cvt' in ts[S_TOPT]:
+        encval = _format(ts, encval, FMT_B2S)    # Convert multipart value to string
     return encval
 
 

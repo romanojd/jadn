@@ -80,13 +80,14 @@ def topts_s2d(ostr):
     tval = {
         "compact": lambda x: True,
         "cvt": lambda x: x,
+        "format": lambda x: x,
         "min": lambda x: int(x),
         "max": lambda x: int(x),
         "rtype": lambda x: x,
         "pattern": lambda x: x,
-        "format": lambda x: x,
     }
 
+    assert set(tval) == {k for k in TYPE_OPTIONS.values()}
     assert isinstance(ostr, (list, tuple)), "%r is not a list" % ostr
     opts = {}
     for o in ostr:
@@ -111,6 +112,7 @@ def fopts_s2d(ostr):
         "default": lambda x: x
     }
 
+    assert set(fval) == {k for k in FIELD_OPTIONS.values()}
     assert isinstance(ostr, (list, tuple)), "%r is not a list" % ostr
     opts = {}
     for o in ostr:
@@ -130,26 +132,3 @@ def cardinality(min, max):
     if min == 1 and max == 1:
         return '1'
     return str(min) + '..' + ('n' if max == 0 else str(max))
-
-
-def opts_d2s(opts):     # TODO: Refactor to use TYPE_OPTIONS / FIELD_OPTIONS as above
-    """
-    Convert options dictionary to list of option strings
-    """
-    ostr = []
-    for k, v in opts.items():
-        if k == "optional" and v:
-            ostr.append("?")
-        elif k == "atfield":
-            ostr.append("{" + v)
-        elif k == "range":
-            ostr.append("[" + str(v[0]) + ":" + str(v[1]))
-        elif k == "pattern":
-            ostr.append(">" + v)
-        elif k == "format":
-            ostr.append("@" + v)
-        elif k == "rtype":
-            ostr.append("*" + v)
-        else:
-            print("Unknown option '", o, "'")
-    return ostr
