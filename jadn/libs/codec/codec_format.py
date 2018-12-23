@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 import base64
+import binascii
 import re
 import socket
 from socket import AF_INET, AF_INET6
@@ -89,7 +90,10 @@ FORMAT_CHECK_FUNCTIONS = {
 
 
 def s2b_hex(sval):      # Convert from hex string to binary
-    return base64.b16decode(sval)
+    try:
+        return base64.b16decode(sval)
+    except binascii.Error:
+        raise TypeError
 
 
 def b2s_hex(bval):      # Convert from binary to hex string
