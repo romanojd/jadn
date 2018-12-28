@@ -144,6 +144,7 @@ class Codec:
                 symval[S_DMAP] = {f[fx]: f[fa] for f in t[FIELDS]}
                 symval[S_EMAP] = {f[fa]: f[fx] for f in t[FIELDS]}
             elif t[TTYPE] in ['Choice', 'Map', 'Record']:
+                fx = FTAG if 'compact' in symval[S_TOPT] else fx
                 symval[S_FLD] = {f[fx]: symf(f) for f in t[FIELDS]}
                 symval[S_EMAP] = {f[FNAME]: f[fx] for f in t[FIELDS]}
             elif t[TTYPE] == 'Array':
@@ -355,29 +356,31 @@ def _encode_number(ts, val, codec):
 def _decode_maprec(ts, val, codec):
     _check_type(ts, val, ts[S_CODEC][C_ETYPE])
     apival = dict()
-    fx = FNAME if ts[S_VSTR] else FTAG    # Verbose or minified identifier strings
+    fx = FNAME if ts[S_VSTR] else FTAG  # Verbose or minified identifier strings
     fnames = [str(k) for k in ts[S_FLD]]
     for f in ts[S_TDEF][FIELDS]:
-        ft = f[fx]
-        fs = ts[S_FLD][ft]              # Symtab entry for field
+        fs = ts[S_FLD][f[fx]]           # Symtab entry for field
         fd = fs[S_FDEF]                 # JADN field definition from symtab
         fopts = fs[S_FOPT]              # Field options dict
         if type(val) == dict:
-            fn = next(iter(set(val) & set(fs[S_FNAMES])), None) if fd[FNAME] == '*' else str(ft)
+            fn = next(iter(set(val) & set(fs[S_FNAMES])), None) if fd[FNAME] == '<' else str(f[fx])
             fv = val[fn] if fn in val else None
         else:
             fn = fd[FTAG] - 1
             fv = val[fn] if len(val) > fn else None
         if fv is not None:
-            ftype = apival[fopts['atfield']] if 'atfield' in fopts else fd[FTYPE]
-            if fd[FNAME] == '*':
+            if fd[FNAME] == '<':
                 if type(val) == dict:
-                    apival.update(codec.decode(ftype, {fn: fv}))
+                    apival.update(codec.decode(fd[FTYPE], {fn: fv}))
                     fnames.append(fn)
                 else:
-                    apival.update(codec.decode(ftype, fv))
+                    apival.update(codec.decode(fd[FTYPE], fv))
+            elif 'atfield' in fopts:  # Type of this field is specified by contents of another field
+                choice_type = apival[fopts['atfield']]
+                av = codec.decode(fd[FTYPE], {choice_type: fv})
+                apival[fd[FNAME]] = next(iter(av.values()))
             else:
-                apival[fd[FNAME]] = codec.decode(ftype, fv)
+                apival[fd[FNAME]] = codec.decode(fd[FTYPE], fv)
         else:
             if 'min' not in fopts or fopts['min'] > 0:
                 _bad_value(ts, val, fd)
@@ -391,30 +394,32 @@ def _encode_maprec(ts, val, codec):
     _check_type(ts, val, dict)
     encval = ts[S_CODEC][C_ETYPE]()
     assert type(encval) in (list, dict)
-    fx = FNAME if ts[S_VSTR] else FTAG    # Verbose or minified identifier strings
+    fx = FNAME if ts[S_VSTR] else FTAG  # Verbose or minified identifier strings
     fnames = [f[S_FDEF][FNAME] for f in ts[S_FLD].values()]
     for f in ts[S_TDEF][FIELDS]:
         fs = ts[S_FLD][f[fx]]           # Symtab entry for field
         fd = fs[S_FDEF]                 # JADN field definition from symtab
+        fname = fd[FNAME]               # Field name
         fopts = fs[S_FOPT]              # Field options dict
-        ftype = val[fopts['atfield']] if 'atfield' in fopts else fd[FTYPE]
-        if fd[FNAME] == '*':                 # Implicit selector - pull Choice value up to this level
-            vn = next(iter(set(val) & set(fs[S_FNAMES])), None)
-            fnames.append(vn)
-            fv = codec.encode(ftype, {vn: val[vn]}) if vn in val else None
+        if fd[FNAME] == '<':            # Pull Choice value up to this level
+            fname = next(iter(set(val) & set(fs[S_FNAMES])), None)
+            fnames.append(fname)
+            fv = codec.encode(fd[FTYPE], {fname: val[fname]}) if fname in val else None
+        elif 'atfield' in fopts:        # Type of this field is specified by contents of another field
+            choice_type = val[fopts['atfield']]
+            e = codec.encode(fd[FTYPE], {choice_type: val[fname]})
+            fv = next(iter(e.values()))
         else:
-            vn = fd[FNAME]
-            fv = codec.encode(ftype, val[vn]) if vn in val else None
+            fv = codec.encode(fd[FTYPE], val[fname]) if fname in val else None
         if fv is None and ('min' not in fopts or fopts['min'] > 0):     # Missing required field
             _bad_value(ts, val, fd)
-        if type(encval) == list:            # Concise Record
+        if type(encval) == list:        # Concise Record
             encval.append(fv)
-        else:                               # Map or Verbose Record
-            if fv is not None:
-                if fd[FNAME] == '*':
-                    encval.update(fv)
-                else:
-                    encval[str(fd[fx])] = fv
+        elif fv is not None:            # Map or Verbose Record
+            if fd[FNAME] == '<':
+                encval.update(fv)
+            else:
+                encval[str(fd[fx])] = fv
 
     if set(val) - set(fnames):
         _extra_value(ts, val, fnames)
@@ -442,8 +447,8 @@ def _decode_array(ts, aval, codec):          # Ordered list of types, returned a
         av = val[fx] if len(val) > fx else None
         if av is not None:
             if 'atfield' in fopts:
-                ctype = val[int(fopts['atfield']) - 1]
-                d = codec.decode(f[FTYPE], {ctype: av})        # TODO: fix str/int handling of choice
+                choice_type = val[int(fopts['atfield']) - 1]
+                d = codec.decode(f[FTYPE], {choice_type: av})        # TODO: fix str/int handling of choice
                 dv = d[next(iter(d))]
             else:
                 dv = codec.decode(f[FTYPE], av)
@@ -470,8 +475,8 @@ def _encode_array(ts, val, codec):
         av = val[fx] if len(val) > fx else None
         if av is not None:
             if 'atfield' in fopts:
-                ctype = val[int(fopts['atfield']) - 1]
-                e = codec.encode(f[FTYPE], {ctype: av})
+                choice_type = val[int(fopts['atfield']) - 1]
+                e = codec.encode(f[FTYPE], {choice_type: av})
                 ev = e[next(iter(e))]
             else:
                 ev = codec.encode(f[FTYPE], av)

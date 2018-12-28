@@ -80,6 +80,7 @@ def _err(val):              # Unsupported format type
     raise NameError
 
 
+# Semantic validation function for type: String, Binary, Number
 FORMAT_CHECK_FUNCTIONS = {
     'hostname':     [s_hostname, _err, _err],       # Domain-Name
     'email':        [s_email, _err, _err],          # Email-Addr
@@ -88,6 +89,8 @@ FORMAT_CHECK_FUNCTIONS = {
     'uri':          [s_uri, _err, _err]             # URI
 }
 
+
+# Binary to String, String to Binary conversion functions
 
 def s2b_hex(sval):      # Convert from hex string to binary
     try:
@@ -155,6 +158,7 @@ def b2s_ipv6_addr(bval):        # Convert ipv6 address from binary to string
         return socket.inet_ntop(AF_INET6, bval)     # Python 2 doesn't support inet_ntop on Windows
     except OSError:
         raise ValueError
+
 
 # IP Net (address, prefix length tuple) conversions
 
