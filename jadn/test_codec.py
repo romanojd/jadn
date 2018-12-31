@@ -169,7 +169,7 @@ class BasicTypes(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.tc.encode('t_bin', self.B_bad3b)
 
-    C1a = {'type1': 'foo'}
+    C1a = {'type1': 'foo'}  # Choice - API keys are names
     C2a = {'type2': False}
     C3a = {'type3': 42}
     C1m = {1: 'foo'}
@@ -183,13 +183,33 @@ class BasicTypes(unittest.TestCase):
     C1_bad3m = {1: 'foo', '4': False}
     C1_bad4m = {'1': 'foo'}
 
+    Cc1a = {1: 'foo'}       # Choice.ID - API keys are IDs
+    Cc2a = {4: False}
+    Cc3a = {7: 42}
+    Cc1m = {1: 'foo'}
+    Cc2m = {4: False}
+    Cc3m = {7: 42}
+    Cc1_bad1a = {1: 15}
+    Cc1_bad2a = {8: 'foo'}
+    Cc1_bad3a = {1: 'foo', 4: False}
+    Cc1_bad1m = {1: 15}
+    Cc1_bad2m = {3: 'foo'}
+    Cc1_bad3m = {1: 'foo', '4': False}
+    Cc1_bad4m = {'1': 'foo'}
+
     def test_choice_min(self):
-        self.assertEqual(self.tc.decode('t_choice', self.C1m), self.C1a)
-        self.assertEqual(self.tc.decode('t_choice', self.C2m), self.C2a)
-        self.assertEqual(self.tc.decode('t_choice', self.C3m), self.C3a)
         self.assertEqual(self.tc.encode('t_choice', self.C1a), self.C1m)
+        self.assertEqual(self.tc.decode('t_choice', self.C1m), self.C1a)
         self.assertEqual(self.tc.encode('t_choice', self.C2a), self.C2m)
+        self.assertEqual(self.tc.decode('t_choice', self.C2m), self.C2a)
         self.assertEqual(self.tc.encode('t_choice', self.C3a), self.C3m)
+        self.assertEqual(self.tc.decode('t_choice', self.C3m), self.C3a)
+        with self.assertRaises(TypeError):
+            self.tc.encode('t_choice', self.C1_bad1a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_choice', self.C1_bad2a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_choice', self.C1_bad3a)
         with self.assertRaises(TypeError):
             self.tc.decode('t_choice', self.C1_bad1m)
         with self.assertRaises(ValueError):
@@ -198,34 +218,70 @@ class BasicTypes(unittest.TestCase):
             self.tc.decode('t_choice', self.C1_bad3m)
         with self.assertRaises(ValueError):
             self.tc.decode('t_choice', self.C1_bad4m)
+
+    def test_choice_verbose(self):
+        self.tc.set_mode(True, True)
+        self.assertEqual(self.tc.encode('t_choice', self.C1a), self.C1a)
+        self.assertEqual(self.tc.decode('t_choice', self.C1a), self.C1a)
+        self.assertEqual(self.tc.encode('t_choice', self.C2a), self.C2a)
+        self.assertEqual(self.tc.decode('t_choice', self.C2a), self.C2a)
+        self.assertEqual(self.tc.encode('t_choice', self.C3a), self.C3a)
+        self.assertEqual(self.tc.decode('t_choice', self.C3a), self.C3a)
         with self.assertRaises(TypeError):
             self.tc.encode('t_choice', self.C1_bad1a)
         with self.assertRaises(ValueError):
             self.tc.encode('t_choice', self.C1_bad2a)
         with self.assertRaises(ValueError):
             self.tc.encode('t_choice', self.C1_bad3a)
-
-    def test_choice_verbose(self):
-        self.tc.set_mode(True, True)
-        self.assertEqual(self.tc.decode('t_choice', self.C1a), self.C1a)
-        self.assertEqual(self.tc.decode('t_choice', self.C2a), self.C2a)
-        self.assertEqual(self.tc.decode('t_choice', self.C3a), self.C3a)
-        self.assertEqual(self.tc.encode('t_choice', self.C1a), self.C1a)
-        self.assertEqual(self.tc.encode('t_choice', self.C2a), self.C2a)
-        self.assertEqual(self.tc.encode('t_choice', self.C3a), self.C3a)
-
         with self.assertRaises(TypeError):
             self.tc.decode('t_choice', self.C1_bad1a)
         with self.assertRaises(ValueError):
             self.tc.decode('t_choice', self.C1_bad2a)
         with self.assertRaises(ValueError):
             self.tc.decode('t_choice', self.C1_bad3a)
+
+    def test_choice_c_min(self):
+        self.assertEqual(self.tc.encode('t_choice_c', self.Cc1a), self.Cc1m)
+        self.assertEqual(self.tc.decode('t_choice_c', self.Cc1m), self.Cc1a)
+        self.assertEqual(self.tc.encode('t_choice_c', self.Cc2a), self.Cc2m)
+        self.assertEqual(self.tc.decode('t_choice_c', self.Cc2m), self.Cc2a)
+        self.assertEqual(self.tc.encode('t_choice_c', self.Cc3a), self.Cc3m)
+        self.assertEqual(self.tc.decode('t_choice_c', self.Cc3m), self.Cc3a)
         with self.assertRaises(TypeError):
-            self.tc.encode('t_choice', self.C1_bad1a)
+            self.tc.encode('t_choice_c', self.Cc1_bad1a)
         with self.assertRaises(ValueError):
-            self.tc.encode('t_choice', self.C1_bad2a)
+            self.tc.encode('t_choice_c', self.Cc1_bad2a)
         with self.assertRaises(ValueError):
-            self.tc.encode('t_choice', self.C1_bad3a)
+            self.tc.encode('t_choice_c', self.Cc1_bad3a)
+        with self.assertRaises(TypeError):
+            self.tc.decode('t_choice_c', self.Cc1_bad1m)
+        with self.assertRaises(ValueError):
+            self.tc.decode('t_choice_c', self.Cc1_bad2m)
+        with self.assertRaises(ValueError):
+            self.tc.decode('t_choice_c', self.Cc1_bad3m)
+        with self.assertRaises(ValueError):
+            self.tc.decode('t_choice_c', self.Cc1_bad4m)
+
+    def test_choice_c_verbose(self):
+        self.tc.set_mode(True, True)
+        self.assertEqual(self.tc.encode('t_choice_c', self.Cc1a), self.Cc1a)
+        self.assertEqual(self.tc.decode('t_choice_c', self.Cc1a), self.Cc1a)
+        self.assertEqual(self.tc.encode('t_choice_c', self.Cc2a), self.Cc2a)
+        self.assertEqual(self.tc.decode('t_choice_c', self.Cc2a), self.Cc2a)
+        self.assertEqual(self.tc.encode('t_choice_c', self.Cc3a), self.Cc3a)
+        self.assertEqual(self.tc.decode('t_choice_c', self.Cc3a), self.Cc3a)
+        with self.assertRaises(TypeError):
+            self.tc.encode('t_choice_c', self.Cc1_bad1a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_choice_c', self.Cc1_bad2a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_choice_c', self.Cc1_bad3a)
+        with self.assertRaises(TypeError):
+            self.tc.decode('t_choice_c', self.Cc1_bad1a)
+        with self.assertRaises(ValueError):
+            self.tc.decode('t_choice_c', self.Cc1_bad2a)
+        with self.assertRaises(ValueError):
+            self.tc.decode('t_choice_c', self.Cc1_bad3a)
 
     def test_enumerated_min(self):
         self.assertEqual(self.tc.decode('t_enum', 15), 'extra')

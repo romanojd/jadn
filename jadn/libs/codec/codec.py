@@ -36,9 +36,9 @@ S_STYPE = 2     # Encoded identifier type (string or tag)
 S_FORMAT = 3    # Function to check value constraints
 S_TOPT = 4      # Type Options (dict format)
 S_VSTR = 5      # Verbose_str
-S_FLD = 6       # Field entries (definition and decoded options)
-S_DMAP = 6      # Enum Encoded Val to Name
-S_EMAP = 7      # Enum Name to Encoded Val
+S_DMAP = 6      # Decode: Encoded field key or enum value to API
+S_EMAP = 7      # Encode: API field key or enum value to Encoded
+S_FLD = 8       # Field entries (definition and decoded options)
 
 # Symbol Table Field Definition fields
 S_FDEF = 0      # JADN field definition
@@ -132,21 +132,20 @@ class Codec:
                 [],                                 # 3: S_FORMAT: Functions that check value constraints
                 topts_s2d(t[TOPTS]),                # 4: S_TOPT:  Type Options (dict)
                 verbose_str,                        # 5: S_VSTR:  Verbose String Identifiers
-                {},                                 # 6: S_FLD/S_DMAP: Field list / Enum Val to Name
-                {}                                  # 7: S_EMAP:  Enum Name to Val
+                {},                                 # 6: S_DMAP: Encoded field key or enum value to API
+                {},                                 # 7: S_EMAP: API field key or enum value to Encoded
+                {}                                  # 8: S_FLD: Symbol table field entry
             ]
             if t[TTYPE] == 'Record':
                 rtype = dict if verbose_rec else list
                 symval[S_CODEC] = [_decode_maprec, _encode_maprec, rtype]
             fx = FNAME if verbose_str else FTAG
-            if t[TTYPE] == 'Enumerated':
+            if t[TTYPE] in ['Enumerated', 'Choice', 'Map', 'Record']:
                 fx, fa = (FTAG, FTAG) if 'compact' in symval[S_TOPT] else (fx, FNAME)
                 symval[S_DMAP] = {f[fx]: f[fa] for f in t[FIELDS]}
                 symval[S_EMAP] = {f[fa]: f[fx] for f in t[FIELDS]}
-            elif t[TTYPE] in ['Choice', 'Map', 'Record']:
-                fx = FTAG if 'compact' in symval[S_TOPT] else fx
-                symval[S_FLD] = {f[fx]: symf(f) for f in t[FIELDS]}
-                symval[S_EMAP] = {f[FNAME]: f[fx] for f in t[FIELDS]}
+                if t[TTYPE] in ['Choice', 'Map', 'Record']:
+                    symval[S_FLD] = {f[fx]: symf(f) for f in t[FIELDS]}
             elif t[TTYPE] == 'Array':
                 symval[S_FLD] = {f[FTAG]: symf(f) for f in t[FIELDS]}
             elif t[TTYPE] == 'ArrayOf':
@@ -289,7 +288,7 @@ def _decode_choice(ts, val, codec):         # Map Choice:  val == {key: value}
     if len(val) != 1:
         _bad_choice(ts, val)
     k, v = next(iter(val.items()))
-    if k not in ts[S_FLD]:
+    if k not in ts[S_DMAP]:
         _bad_value(ts, val)
     f = ts[S_FLD][k][S_FDEF]
     return {f[FNAME]: codec.decode(f[FTYPE], v)}
@@ -300,8 +299,7 @@ def _encode_choice(ts, val, codec):         # TODO: bad schema - verify * field 
     if len(val) != 1:
         _bad_choice(ts, val)
     k, v = next(iter(val.items()))
-    ch = ts[S_DMAP] if 'compact' in ts[S_TOPT] else ts[S_EMAP]
-    if k not in ch:
+    if k not in ts[S_EMAP]:
         _bad_value(ts, val)
     k = k if 'compact' in ts[S_TOPT] else ts[S_EMAP][k]
     f = ts[S_FLD][k][S_FDEF]
