@@ -342,15 +342,15 @@ class BasicTypes(unittest.TestCase):
     RGB_bad4a = {'red': 'four', 'green': 120, 'blue': 240}
     RGB_bad5a = {'red': 24, 'green': '120', 'blue': 240}
     RGB_bad6a = {'red': 24, 'green': 120, 'bleu': 240}
-    RGB_bad7a = {2: 24, 'green': 120, 'blue': 240}
+    RGB_bad7a = {'2': 24, 'green': 120, 'blue': 240}
 
-    Map1m = {'2': 24, '4': 120, '6': 240}                  # Encoded values Map (minimized and dict/tag mode)
-    Map2m = {'2': 50, '6': 100}
-    Map3m = {'2': 9, '4': 80, '6': 96, '9': 128}
-    Map_bad1m = {'2': 24, '4': 120}
-    Map_bad2m = {'2': 9, '4': 80, '6': 96, '9': 128, '12': 42}
-    Map_bad3m = {'2': 'four', '4': 120, '6': 240}
-    Map_bad4m = {2: 24, 4: 120, 6: 240}
+    Map1m = {2: 24, 4: 120, 6: 240}                  # Encoded values Map (minimized and dict/tag mode)
+    Map2m = {2: 50, 6: 100}
+    Map3m = {2: 9, 4: 80, 6: 96, 9: 128}
+    Map_bad1m = {2: 24, 4: 120}
+    Map_bad2m = {2: 9, 4: 80, 6: 96, 9: 128, 12: 42}
+    Map_bad3m = {2: 'four', 4: 120, 6: 240}
+    Map_bad4m = {'2': 24, 4: 120, 6: 240}
     Map_bad5m = [24, 120, 240]
 
     Rec1m = [24, 120, 240]                          # Encoded values Record (minimized) and API+encoded Array values
@@ -360,13 +360,13 @@ class BasicTypes(unittest.TestCase):
     Rec_bad2m = [9, 80, 96, 128, 42]
     Rec_bad3m = ['four', 120, 240]
 
-    Rec1n = {'1': 24, '2': 120, '3': 240}                  # Encoded values Record (unused dict/tag mode)
-    Rec2n = {'1': 50, '3': 100}
-    Rec3n = {'1': 9, '2': 80, '3': 96, '4': 128}
-    Rec_bad1n = {'1': 24, '2': 120}
-    Rec_bad2n = {'1': 9, '2': 80, '3': 96, '4': 128, '5': 42}
-    Rec_bad3n = {'1': 'four', '2': 120, '3': 240}
-    Rec_bad4n = {1: 24, 2: 120, 3: 240}
+    Rec1n = {1: 24, 2: 120, 3: 240}                  # Encoded values Record (unused dict/tag mode)
+    Rec2n = {1: 50, 3: 100}
+    Rec3n = {1: 9, 2: 80, 3: 96, 4: 128}
+    Rec_bad1n = {1: 24, 2: 120}
+    Rec_bad2n = {1: 9, 2: 80, 3: 96, 4: 128, 5: 42}
+    Rec_bad3n = {1: 'four', 2: 120, 3: 240}
+    Rec_bad4n = {'1': 24, 2: 120, 3: 240}
 
     RGB1c = [24, 120, 240]                           # Encoded values Record (concise)
     RGB2c = [50, None, 100]
@@ -848,7 +848,7 @@ class Selectors(unittest.TestCase):         # TODO: bad schema - verify * field 
 
     arr_name1_min = [7, 17]                 # Enumerated type with 'compact' option always uses min encoding (tag)
     arr_name2_min = [6, 3]
-    arr_name3_min = [5, {'3': 'Fluffy'}]    # min encoding of map (serialized keys are strings)
+    arr_name3_min = [5, {3: 'Fluffy'}]      # min encoding of map (serialized keys are strings)
     arr_name4_bad_min = [9, 17]
     arr_name5_bad_min = [2, 17]
 
@@ -1004,10 +1004,10 @@ class Selectors(unittest.TestCase):         # TODO: bad schema - verify * field 
             self.tc.decode('t_attr_rec_implicit', self.attr5i_bad_api)
 
     attr1i_min = ['Integer', 17]
-    attr2i_min = ['Primitive', {'7': 17}]
-    attr3i_min = ['Category', {'2': {'5': [21, 0.342]}}]
-    attr4i_bad_min = ['Vegetable', {'7': 17}]
-    attr5i_bad_min = ['Category', {'2': {'9': 10}}]
+    attr2i_min = ['Primitive', {7: 17}]
+    attr3i_min = ['Category', {2: {5: [21, 0.342]}}]
+    attr4i_bad_min = ['Vegetable', {7: 17}]
+    attr5i_bad_min = ['Category', {2: {9: 10}}]
 
     def test_attr_rec_implicit_min(self):
         self.tc.set_mode(False, False)
@@ -1041,8 +1041,8 @@ class Selectors(unittest.TestCase):         # TODO: bad schema - verify * field 
         with self.assertRaises(ValueError):
             self.tc.decode('t_property_explicit_primitive', self.pep_bad_api)
 
-    pep_min = ['bar', {'7': 17}]
-    pec_min = ['bar', {'2': {'5': [21, 0.342]}}]
+    pep_min = ['bar', {7: 17}]
+    pec_min = ['bar', {2: {5: [21, 0.342]}}]
     pep_bad_min = ['bar', {'6': 17}]
 
     def test_property_explicit_min(self):
@@ -1076,8 +1076,8 @@ class Selectors(unittest.TestCase):         # TODO: bad schema - verify * field 
         with self.assertRaises(ValueError):
             self.tc.decode('t_property_implicit_primitive', self.pip_bad2_api)
 
-    pip_min = ['bar', {'7': 17}]
-    pic_min = ['bar', {'2': {'5': [21, .342]}}]
+    pip_min = ['bar', {7: 17}]
+    pic_min = ['bar', {2: {'5': [21, .342]}}]
     pip_bad1_min = []
     pip_bad2_min = []
 

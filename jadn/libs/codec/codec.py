@@ -272,17 +272,6 @@ def _encode_boolean(ts, val, codec):
     return val
 
 
-def _decode_achoice(ts, val, codec):        # Array Choice: val == [tag, value]
-    assert type(val) == list                # TODO: Write encoder, match tags
-    k, aval = val
-    _check_type(ts, aval, list)
-    if k < 1 or k > len(ts[S_FLD]) or k > len(aval):
-        _bad_index(ts, k, aval)
-    f = ts[S_FLD][k][S_FDEF]
-    assert k == f[FTAG]
-    return [k, codec.decode(f[FTYPE], aval[k-1])]
-
-
 def _decode_choice(ts, val, codec):         # Map Choice:  val == {key: value}
     _check_type(ts, val, dict)
     if len(val) != 1:
@@ -295,7 +284,7 @@ def _decode_choice(ts, val, codec):         # Map Choice:  val == {key: value}
     return {k: codec.decode(f[FTYPE], v)}
 
 
-def _encode_choice(ts, val, codec):         # TODO: bad schema - verify * field has only Choice type
+def _encode_choice(ts, val, codec):
     _check_type(ts, val, dict)
     if len(val) != 1:
         _bad_choice(ts, val)
@@ -308,8 +297,7 @@ def _encode_choice(ts, val, codec):         # TODO: bad schema - verify * field 
 
 
 def _decode_enumerated(ts, val, codec):
-    etype = int if 'compact' in ts[S_TOPT] else ts[S_STYPE]
-    _check_type(ts, val, etype)
+    _check_type(ts, val, type(next(iter(ts[S_DMAP]))))
     if val in ts[S_DMAP]:
         return ts[S_DMAP][val]
     else:
@@ -318,8 +306,7 @@ def _decode_enumerated(ts, val, codec):
 
 
 def _encode_enumerated(ts, val, codec):
-    etype = int if 'compact' in ts[S_TOPT] else type('')
-    _check_type(ts, val, etype)
+    _check_type(ts, val, type(next(iter(ts[S_EMAP]))))
     if val in ts[S_EMAP]:
         return ts[S_EMAP][val]
     else:
@@ -355,13 +342,13 @@ def _decode_maprec(ts, val, codec):
     _check_type(ts, val, ts[S_CODEC][C_ETYPE])
     apival = dict()
     fx = FNAME if ts[S_VSTR] else FTAG  # Verbose or minified identifier strings
-    fnames = [str(k) for k in ts[S_FLD]]
+    fnames = [k for k in ts[S_FLD]]
     for f in ts[S_TDEF][FIELDS]:
         fs = ts[S_FLD][f[fx]]           # Symtab entry for field
         fd = fs[S_FDEF]                 # JADN field definition from symtab
         fopts = fs[S_FOPT]              # Field options dict
         if type(val) == dict:
-            fn = next(iter(set(val) & set(fs[S_FNAMES])), None) if fd[FNAME] == '<' else str(f[fx])
+            fn = next(iter(set(val) & set(fs[S_FNAMES])), None) if fd[FNAME] == '<' else f[fx]
             fv = val[fn] if fn in val else None
         else:
             fn = fd[FTAG] - 1
@@ -374,7 +361,8 @@ def _decode_maprec(ts, val, codec):
                 else:
                     apival.update(codec.decode(fd[FTYPE], fv))
             elif 'atfield' in fopts:  # Type of this field is specified by contents of another field
-                choice_type = apival[fopts['atfield']]
+                ctf = fopts['atfield']
+                choice_type = val[ctf] if isinstance(val, dict) else val[ts[S_EMAP][ctf] - 1]
                 av = codec.decode(fd[FTYPE], {choice_type: fv})
                 apival[fd[FNAME]] = next(iter(av.values()))
             else:
@@ -417,7 +405,7 @@ def _encode_maprec(ts, val, codec):
             if fd[FNAME] == '<':
                 encval.update(fv)
             else:
-                encval[str(fd[fx])] = fv
+                encval[fd[fx]] = fv
 
     if set(val) - set(fnames):
         _extra_value(ts, val, fnames)
