@@ -291,7 +291,8 @@ def _decode_choice(ts, val, codec):         # Map Choice:  val == {key: value}
     if k not in ts[S_DMAP]:
         _bad_value(ts, val)
     f = ts[S_FLD][k][S_FDEF]
-    return {f[FNAME]: codec.decode(f[FTYPE], v)}
+    k = ts[S_DMAP][k]
+    return {k: codec.decode(f[FTYPE], v)}
 
 
 def _encode_choice(ts, val, codec):         # TODO: bad schema - verify * field has only Choice type
@@ -301,10 +302,9 @@ def _encode_choice(ts, val, codec):         # TODO: bad schema - verify * field 
     k, v = next(iter(val.items()))
     if k not in ts[S_EMAP]:
         _bad_value(ts, val)
-    k = k if 'compact' in ts[S_TOPT] else ts[S_EMAP][k]
+    k = ts[S_EMAP][k]
     f = ts[S_FLD][k][S_FDEF]
-    fx = f[FNAME] if ts[S_VSTR] else f[FTAG]            # Verbose or Minified identifier strings
-    return {fx: codec.encode(f[FTYPE], v)}
+    return {k: codec.encode(f[FTYPE], v)}
 
 
 def _decode_enumerated(ts, val, codec):
