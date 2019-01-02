@@ -1,12 +1,19 @@
 # This Python file uses the following encoding: utf-8
 from __future__ import unicode_literals
 
+import json
 import os
 import binascii
 import unittest
 
 from libs.codec.codec import Codec
 from libs.jadn import jadn_load, jadn_check, jadn_analyze
+
+
+# Encode and decode data to verify that numeric object keys work properly when JSON converts them to strings
+def _j(data):
+    return json.loads(json.dumps(data))
+
 
 schema_basic = {                # JADN schema for datatypes used in Basic Types tests
     'meta': {'module': 'unittests-BasicTypes'},
@@ -181,7 +188,7 @@ class BasicTypes(unittest.TestCase):
     C1_bad1m = {1: 15}
     C1_bad2m = {3: 'foo'}
     C1_bad3m = {1: 'foo', '4': False}
-    C1_bad4m = {'1': 'foo'}
+    C1_bad4m = {'one': 'foo'}
 
     Cc1a = {1: 'foo'}       # Choice.ID - API keys are IDs
     Cc2a = {4: False}
@@ -195,15 +202,18 @@ class BasicTypes(unittest.TestCase):
     Cc1_bad1m = {1: 15}
     Cc1_bad2m = {3: 'foo'}
     Cc1_bad3m = {1: 'foo', '4': False}
-    Cc1_bad4m = {'1': 'foo'}
+    Cc1_bad4m = {'one': 'foo'}
 
     def test_choice_min(self):
         self.assertEqual(self.tc.encode('t_choice', self.C1a), self.C1m)
         self.assertEqual(self.tc.decode('t_choice', self.C1m), self.C1a)
+        self.assertEqual(self.tc.decode('t_choice', _j(self.C1m)), self.C1a)
         self.assertEqual(self.tc.encode('t_choice', self.C2a), self.C2m)
         self.assertEqual(self.tc.decode('t_choice', self.C2m), self.C2a)
+        self.assertEqual(self.tc.decode('t_choice', _j(self.C2m)), self.C2a)
         self.assertEqual(self.tc.encode('t_choice', self.C3a), self.C3m)
         self.assertEqual(self.tc.decode('t_choice', self.C3m), self.C3a)
+        self.assertEqual(self.tc.decode('t_choice', _j(self.C3m)), self.C3a)
         with self.assertRaises(TypeError):
             self.tc.encode('t_choice', self.C1_bad1a)
         with self.assertRaises(ValueError):
@@ -240,13 +250,16 @@ class BasicTypes(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.tc.decode('t_choice', self.C1_bad3a)
 
-    def test_choice_c_min(self):
+    def test_choice_id_min(self):
         self.assertEqual(self.tc.encode('t_choice_c', self.Cc1a), self.Cc1m)
         self.assertEqual(self.tc.decode('t_choice_c', self.Cc1m), self.Cc1a)
+        self.assertEqual(self.tc.decode('t_choice_c', _j(self.Cc1m)), self.Cc1a)
         self.assertEqual(self.tc.encode('t_choice_c', self.Cc2a), self.Cc2m)
         self.assertEqual(self.tc.decode('t_choice_c', self.Cc2m), self.Cc2a)
+        self.assertEqual(self.tc.decode('t_choice_c', _j(self.Cc2m)), self.Cc2a)
         self.assertEqual(self.tc.encode('t_choice_c', self.Cc3a), self.Cc3m)
         self.assertEqual(self.tc.decode('t_choice_c', self.Cc3m), self.Cc3a)
+        self.assertEqual(self.tc.decode('t_choice_c', _j(self.Cc3m)), self.Cc3a)
         with self.assertRaises(TypeError):
             self.tc.encode('t_choice_c', self.Cc1_bad1a)
         with self.assertRaises(ValueError):
@@ -262,7 +275,7 @@ class BasicTypes(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.tc.decode('t_choice_c', self.Cc1_bad4m)
 
-    def test_choice_c_verbose(self):
+    def test_choice_id_verbose(self):
         self.tc.set_mode(True, True)
         self.assertEqual(self.tc.encode('t_choice_c', self.Cc1a), self.Cc1a)
         self.assertEqual(self.tc.decode('t_choice_c', self.Cc1a), self.Cc1a)
@@ -284,54 +297,54 @@ class BasicTypes(unittest.TestCase):
             self.tc.decode('t_choice_c', self.Cc1_bad3a)
 
     def test_enumerated_min(self):
-        self.assertEqual(self.tc.decode('t_enum', 15), 'extra')
         self.assertEqual(self.tc.encode('t_enum', 'extra'), 15)
-        with self.assertRaises(ValueError):
-            self.tc.decode('t_enum', 13)
-        with self.assertRaises(TypeError):
-            self.tc.decode('t_enum', 'extra')
-        with self.assertRaises(TypeError):
-            self.tc.decode('t_enum', ['first'])
+        self.assertEqual(self.tc.decode('t_enum', 15), 'extra')
         with self.assertRaises(ValueError):
             self.tc.encode('t_enum', 'foo')
         with self.assertRaises(TypeError):
             self.tc.encode('t_enum', 15)
         with self.assertRaises(TypeError):
             self.tc.encode('t_enum', [1])
+        with self.assertRaises(ValueError):
+            self.tc.decode('t_enum', 13)
+        with self.assertRaises(TypeError):
+            self.tc.decode('t_enum', 'extra')
+        with self.assertRaises(TypeError):
+            self.tc.decode('t_enum', ['first'])
 
     def test_enumerated_verbose(self):
         self.tc.set_mode(True, True)
-        self.assertEqual(self.tc.decode('t_enum', 'extra'), 'extra')
         self.assertEqual(self.tc.encode('t_enum', 'extra'), 'extra')
-        with self.assertRaises(ValueError):
-            self.tc.decode('t_enum', 'foo')
-        with self.assertRaises(TypeError):
-            self.tc.decode('t_enum', 42)
-        with self.assertRaises(TypeError):
-            self.tc.decode('t_enum', ['first'])
+        self.assertEqual(self.tc.decode('t_enum', 'extra'), 'extra')
         with self.assertRaises(ValueError):
             self.tc.encode('t_enum', 'foo')
         with self.assertRaises(TypeError):
             self.tc.encode('t_enum', 42)
         with self.assertRaises(TypeError):
             self.tc.encode('t_enum', ['first'])
-
-    def test_enumerated_comp_min(self):
-        self.assertEqual(self.tc.decode('t_enum_c', 15), 15)
-        self.assertEqual(self.tc.encode('t_enum_c', 15), 15)
+        with self.assertRaises(ValueError):
+            self.tc.decode('t_enum', 'foo')
         with self.assertRaises(TypeError):
-            self.tc.decode('t_enum_c', 'extra')
+            self.tc.decode('t_enum', 42)
+        with self.assertRaises(TypeError):
+            self.tc.decode('t_enum', ['first'])
+
+    def test_enumerated_id_min(self):
+        self.assertEqual(self.tc.encode('t_enum_c', 15), 15)
+        self.assertEqual(self.tc.decode('t_enum_c', 15), 15)
         with self.assertRaises(TypeError):
             self.tc.encode('t_enum_c', 'extra')
+        with self.assertRaises(TypeError):
+            self.tc.decode('t_enum_c', 'extra')
 
-    def test_enumerated_comp_verbose(self):
+    def test_enumerated_id_verbose(self):
         self.tc.set_mode(True, True)
-        self.assertEqual(self.tc.decode('t_enum_c', 15), 15)
         self.assertEqual(self.tc.encode('t_enum_c', 15), 15)
-        with self.assertRaises(TypeError):
-            self.tc.decode('t_enum_c', 'extra')
+        self.assertEqual(self.tc.decode('t_enum_c', 15), 15)
         with self.assertRaises(TypeError):
             self.tc.encode('t_enum_c', 'extra')
+        with self.assertRaises(TypeError):
+            self.tc.decode('t_enum_c', 'extra')
 
     RGB1 = {'red': 24, 'green': 120, 'blue': 240}    # API (decoded) and verbose values Map and Record
     RGB2 = {'red': 50, 'blue': 100}
@@ -342,7 +355,8 @@ class BasicTypes(unittest.TestCase):
     RGB_bad4a = {'red': 'four', 'green': 120, 'blue': 240}
     RGB_bad5a = {'red': 24, 'green': '120', 'blue': 240}
     RGB_bad6a = {'red': 24, 'green': 120, 'bleu': 240}
-    RGB_bad7a = {'2': 24, 'green': 120, 'blue': 240}
+    RGB_bad7a = {'1': 24, 'green': 120, 'blue': 240}
+    RGB_bad8a = {1: 24, 'green': 120, 'blue': 240}
 
     Map1m = {2: 24, 4: 120, 6: 240}                  # Encoded values Map (minimized and dict/tag mode)
     Map2m = {2: 50, 6: 100}
@@ -350,7 +364,7 @@ class BasicTypes(unittest.TestCase):
     Map_bad1m = {2: 24, 4: 120}
     Map_bad2m = {2: 9, 4: 80, 6: 96, 9: 128, 12: 42}
     Map_bad3m = {2: 'four', 4: 120, 6: 240}
-    Map_bad4m = {'2': 24, 4: 120, 6: 240}
+    Map_bad4m = {'two': 24, 4: 120, 6: 240}
     Map_bad5m = [24, 120, 240]
 
     Rec1m = [24, 120, 240]                          # Encoded values Record (minimized) and API+encoded Array values
@@ -366,7 +380,7 @@ class BasicTypes(unittest.TestCase):
     Rec_bad1n = {1: 24, 2: 120}
     Rec_bad2n = {1: 9, 2: 80, 3: 96, 4: 128, 5: 42}
     Rec_bad3n = {1: 'four', 2: 120, 3: 240}
-    Rec_bad4n = {'1': 24, 2: 120, 3: 240}
+    Rec_bad4n = {'one': 24, 2: 120, 3: 240}
 
     RGB1c = [24, 120, 240]                           # Encoded values Record (concise)
     RGB2c = [50, None, 100]
@@ -376,12 +390,29 @@ class BasicTypes(unittest.TestCase):
     RGB_bad3c = ['four', 120, 240]
 
     def test_map_min(self):             # dict structure, identifier tag
-        self.assertDictEqual(self.tc.decode('t_map_rgba', self.Map1m), self.RGB1)
-        self.assertDictEqual(self.tc.decode('t_map_rgba', self.Map2m), self.RGB2)
-        self.assertDictEqual(self.tc.decode('t_map_rgba', self.Map3m), self.RGB3)
         self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB1), self.Map1m)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', self.Map1m), self.RGB1)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', _j(self.Map1m)), self.RGB1)
         self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB2), self.Map2m)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', self.Map2m), self.RGB2)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', _j(self.Map2m)), self.RGB2)
         self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB3), self.Map3m)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', self.Map3m), self.RGB3)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', _j(self.Map3m)), self.RGB3)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_map_rgba', self.RGB_bad1a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_map_rgba', self.RGB_bad2a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_map_rgba', self.RGB_bad3a)
+        with self.assertRaises(TypeError):
+            self.tc.encode('t_map_rgba', self.RGB_bad4a)
+        with self.assertRaises(TypeError):
+            self.tc.encode('t_map_rgba', self.RGB_bad5a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_map_rgba', self.RGB_bad6a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_map_rgba', self.RGB_bad7a)
         with self.assertRaises(ValueError):
             self.tc.decode('t_map_rgba', self.Map_bad1m)
         with self.assertRaises(ValueError):
@@ -392,6 +423,18 @@ class BasicTypes(unittest.TestCase):
             self.tc.decode('t_map_rgba', self.Map_bad4m)
         with self.assertRaises(TypeError):
             self.tc.decode('t_map_rgba', self.Map_bad5m)
+
+    def test_map_unused(self):         # dict structure, identifier tag
+        self.tc.set_mode(True, False)
+        self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB1), self.Map1m)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', self.Map1m), self.RGB1)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', _j(self.Map1m)), self.RGB1)
+        self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB2), self.Map2m)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', self.Map2m), self.RGB2)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', _j(self.Map2m)), self.RGB2)
+        self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB3), self.Map3m)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', self.Map3m), self.RGB3)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', _j(self.Map3m)), self.RGB3)
         with self.assertRaises(ValueError):
             self.tc.encode('t_map_rgba', self.RGB_bad1a)
         with self.assertRaises(ValueError):
@@ -406,15 +449,6 @@ class BasicTypes(unittest.TestCase):
             self.tc.encode('t_map_rgba', self.RGB_bad6a)
         with self.assertRaises(ValueError):
             self.tc.encode('t_map_rgba', self.RGB_bad7a)
-
-    def test_map_unused(self):         # dict structure, identifier tag
-        self.tc.set_mode(True, False)
-        self.assertDictEqual(self.tc.decode('t_map_rgba', self.Map1m), self.RGB1)
-        self.assertDictEqual(self.tc.decode('t_map_rgba', self.Map2m), self.RGB2)
-        self.assertDictEqual(self.tc.decode('t_map_rgba', self.Map3m), self.RGB3)
-        self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB1), self.Map1m)
-        self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB2), self.Map2m)
-        self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB3), self.Map3m)
         with self.assertRaises(ValueError):
             self.tc.decode('t_map_rgba', self.Map_bad1m)
         with self.assertRaises(ValueError):
@@ -424,28 +458,16 @@ class BasicTypes(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.tc.decode('t_map_rgba', self.Map_bad4m)
         with self.assertRaises(ValueError):
-            self.tc.encode('t_map_rgba', self.RGB_bad1a)
-        with self.assertRaises(ValueError):
-            self.tc.encode('t_map_rgba', self.RGB_bad2a)
-        with self.assertRaises(ValueError):
-            self.tc.encode('t_map_rgba', self.RGB_bad3a)
-        with self.assertRaises(TypeError):
-            self.tc.encode('t_map_rgba', self.RGB_bad4a)
-        with self.assertRaises(TypeError):
-            self.tc.encode('t_map_rgba', self.RGB_bad5a)
-        with self.assertRaises(ValueError):
-            self.tc.encode('t_map_rgba', self.RGB_bad6a)
-        with self.assertRaises(ValueError):
-            self.tc.encode('t_map_rgba', self.RGB_bad7a)
+            self.tc.decode('t_map_rgba', _j(self.Map_bad4m))
 
     def test_map_concise(self):         # dict structure, identifier name
         self.tc.set_mode(False, True)
-        self.assertDictEqual(self.tc.decode('t_map_rgba', self.RGB1), self.RGB1)
-        self.assertDictEqual(self.tc.decode('t_map_rgba', self.RGB2), self.RGB2)
-        self.assertDictEqual(self.tc.decode('t_map_rgba', self.RGB3), self.RGB3)
         self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB1), self.RGB1)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', self.RGB1), self.RGB1)
         self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB2), self.RGB2)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', self.RGB2), self.RGB2)
         self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB3), self.RGB3)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', self.RGB3), self.RGB3)
         with self.assertRaises(ValueError):
             self.tc.decode('t_map_rgba', self.RGB_bad1a)
         with self.assertRaises(ValueError):
@@ -477,12 +499,28 @@ class BasicTypes(unittest.TestCase):
 
     def test_map_verbose(self):     # dict structure, identifier name
         self.tc.set_mode(True, True)
-        self.assertDictEqual(self.tc.decode('t_map_rgba', self.RGB1), self.RGB1)
-        self.assertDictEqual(self.tc.decode('t_map_rgba', self.RGB2), self.RGB2)
-        self.assertDictEqual(self.tc.decode('t_map_rgba', self.RGB3), self.RGB3)
         self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB1), self.RGB1)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', self.RGB1), self.RGB1)
         self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB2), self.RGB2)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', self.RGB2), self.RGB2)
         self.assertDictEqual(self.tc.encode('t_map_rgba', self.RGB3), self.RGB3)
+        self.assertDictEqual(self.tc.decode('t_map_rgba', self.RGB3), self.RGB3)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_map_rgba', self.RGB_bad1a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_map_rgba', self.RGB_bad2a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_map_rgba', self.RGB_bad3a)
+        with self.assertRaises(TypeError):
+            self.tc.encode('t_map_rgba', self.RGB_bad4a)
+        with self.assertRaises(TypeError):
+            self.tc.encode('t_map_rgba', self.RGB_bad5a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_map_rgba', self.RGB_bad6a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_map_rgba', self.RGB_bad7a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_map_rgba', self.RGB_bad8a)
         with self.assertRaises(ValueError):
             self.tc.decode('t_map_rgba', self.RGB_bad1a)
         with self.assertRaises(ValueError):
@@ -498,33 +536,15 @@ class BasicTypes(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.tc.decode('t_map_rgba', self.RGB_bad7a)
         with self.assertRaises(ValueError):
-            self.tc.encode('t_map_rgba', self.RGB_bad1a)
-        with self.assertRaises(ValueError):
-            self.tc.encode('t_map_rgba', self.RGB_bad2a)
-        with self.assertRaises(ValueError):
-            self.tc.encode('t_map_rgba', self.RGB_bad3a)
-        with self.assertRaises(TypeError):
-            self.tc.encode('t_map_rgba', self.RGB_bad4a)
-        with self.assertRaises(TypeError):
-            self.tc.encode('t_map_rgba', self.RGB_bad5a)
-        with self.assertRaises(ValueError):
-            self.tc.encode('t_map_rgba', self.RGB_bad6a)
-        with self.assertRaises(ValueError):
-            self.tc.encode('t_map_rgba', self.RGB_bad7a)
+            self.tc.decode('t_map_rgba', self.RGB_bad8a)
 
     def test_record_min(self):
+        self.assertListEqual(self.tc.encode('t_rec_rgba', self.RGB1), self.Rec1m)
         self.assertDictEqual(self.tc.decode('t_rec_rgba', self.Rec1m), self.RGB1)
+        self.assertListEqual(self.tc.encode('t_rec_rgba', self.RGB2), self.Rec2m)
         self.assertDictEqual(self.tc.decode('t_rec_rgba', self.Rec2m), self.RGB2)
+        self.assertListEqual(self.tc.encode('t_rec_rgba', self.RGB3), self.Rec3m)
         self.assertDictEqual(self.tc.decode('t_rec_rgba', self.Rec3m), self.RGB3)
-        self.assertEqual(self.tc.encode('t_rec_rgba', self.RGB1), self.Rec1m)
-        self.assertEqual(self.tc.encode('t_rec_rgba', self.RGB2), self.Rec2m)
-        self.assertEqual(self.tc.encode('t_rec_rgba', self.RGB3), self.Rec3m)
-        with self.assertRaises(ValueError):
-            self.tc.decode('t_rec_rgba', self.Rec_bad1m)
-        with self.assertRaises(ValueError):
-            self.tc.decode('t_rec_rgba', self.Rec_bad2m)
-        with self.assertRaises(TypeError):
-            self.tc.decode('t_rec_rgba', self.Rec_bad3m)
         with self.assertRaises(ValueError):
             self.tc.encode('t_rec_rgba', self.RGB_bad1a)
         with self.assertRaises(ValueError):
@@ -539,15 +559,38 @@ class BasicTypes(unittest.TestCase):
             self.tc.encode('t_rec_rgba', self.RGB_bad6a)
         with self.assertRaises(ValueError):
             self.tc.encode('t_rec_rgba', self.RGB_bad7a)
+        with self.assertRaises(ValueError):
+            self.tc.decode('t_rec_rgba', self.Rec_bad1m)
+        with self.assertRaises(ValueError):
+            self.tc.decode('t_rec_rgba', self.Rec_bad2m)
+        with self.assertRaises(TypeError):
+            self.tc.decode('t_rec_rgba', self.Rec_bad3m)
 
     def test_record_unused(self):
         self.tc.set_mode(True, False)
+        self.assertDictEqual(self.tc.encode('t_rec_rgba', self.RGB1), self.Rec1n)
         self.assertDictEqual(self.tc.decode('t_rec_rgba', self.Rec1n), self.RGB1)
+        self.assertDictEqual(self.tc.decode('t_rec_rgba', _j(self.Rec1n)), self.RGB1)
+        self.assertDictEqual(self.tc.encode('t_rec_rgba', self.RGB2), self.Rec2n)
         self.assertDictEqual(self.tc.decode('t_rec_rgba', self.Rec2n), self.RGB2)
+        self.assertDictEqual(self.tc.decode('t_rec_rgba', _j(self.Rec2n)), self.RGB2)
+        self.assertDictEqual(self.tc.encode('t_rec_rgba', self.RGB3), self.Rec3n)
         self.assertDictEqual(self.tc.decode('t_rec_rgba', self.Rec3n), self.RGB3)
-        self.assertEqual(self.tc.encode('t_rec_rgba', self.RGB1), self.Rec1n)
-        self.assertEqual(self.tc.encode('t_rec_rgba', self.RGB2), self.Rec2n)
-        self.assertEqual(self.tc.encode('t_rec_rgba', self.RGB3), self.Rec3n)
+        self.assertDictEqual(self.tc.decode('t_rec_rgba', _j(self.Rec3n)), self.RGB3)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_rec_rgba', self.RGB_bad1a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_rec_rgba', self.RGB_bad2a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_rec_rgba', self.RGB_bad3a)
+        with self.assertRaises(TypeError):
+            self.tc.encode('t_rec_rgba', self.RGB_bad4a)
+        with self.assertRaises(TypeError):
+            self.tc.encode('t_rec_rgba', self.RGB_bad5a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_rec_rgba', self.RGB_bad6a)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_rec_rgba', self.RGB_bad7a)
         with self.assertRaises(ValueError):
             self.tc.decode('t_rec_rgba', self.Rec_bad1n)
         with self.assertRaises(ValueError):
@@ -556,6 +599,15 @@ class BasicTypes(unittest.TestCase):
             self.tc.decode('t_rec_rgba', self.Rec_bad3n)
         with self.assertRaises(ValueError):
             self.tc.decode('t_rec_rgba', self.Rec_bad4n)
+
+    def test_record_concise(self):
+        self.tc.set_mode(False, True)
+        self.assertListEqual(self.tc.encode('t_rec_rgba', self.RGB1), self.RGB1c)
+        self.assertDictEqual(self.tc.decode('t_rec_rgba', self.RGB1c), self.RGB1)
+        self.assertListEqual(self.tc.encode('t_rec_rgba', self.RGB2), self.RGB2c)
+        self.assertDictEqual(self.tc.decode('t_rec_rgba', self.RGB2c), self.RGB2)
+        self.assertListEqual(self.tc.encode('t_rec_rgba', self.RGB3), self.RGB3c)
+        self.assertDictEqual(self.tc.decode('t_rec_rgba', self.RGB3c), self.RGB3)
         with self.assertRaises(ValueError):
             self.tc.encode('t_rec_rgba', self.RGB_bad1a)
         with self.assertRaises(ValueError):
@@ -570,21 +622,21 @@ class BasicTypes(unittest.TestCase):
             self.tc.encode('t_rec_rgba', self.RGB_bad6a)
         with self.assertRaises(ValueError):
             self.tc.encode('t_rec_rgba', self.RGB_bad7a)
-
-    def test_record_concise(self):
-        self.tc.set_mode(False, True)
-        self.assertDictEqual(self.tc.decode('t_rec_rgba', self.RGB1c), self.RGB1)
-        self.assertDictEqual(self.tc.decode('t_rec_rgba', self.RGB2c), self.RGB2)
-        self.assertDictEqual(self.tc.decode('t_rec_rgba', self.RGB3c), self.RGB3)
-        self.assertEqual(self.tc.encode('t_rec_rgba', self.RGB1), self.RGB1c)
-        self.assertEqual(self.tc.encode('t_rec_rgba', self.RGB2), self.RGB2c)
-        self.assertEqual(self.tc.encode('t_rec_rgba', self.RGB3), self.RGB3c)
         with self.assertRaises(ValueError):
             self.tc.decode('t_rec_rgba', self.RGB_bad1c)
         with self.assertRaises(ValueError):
             self.tc.decode('t_rec_rgba', self.RGB_bad2c)
         with self.assertRaises(TypeError):
             self.tc.decode('t_rec_rgba', self.RGB_bad3c)
+
+    def test_record_verbose(self):
+        self.tc.set_mode(True, True)
+        self.assertDictEqual(self.tc.encode('t_rec_rgba', self.RGB1), self.RGB1)
+        self.assertDictEqual(self.tc.decode('t_rec_rgba', self.RGB1), self.RGB1)
+        self.assertDictEqual(self.tc.encode('t_rec_rgba', self.RGB2), self.RGB2)
+        self.assertDictEqual(self.tc.decode('t_rec_rgba', self.RGB2), self.RGB2)
+        self.assertDictEqual(self.tc.encode('t_rec_rgba', self.RGB3), self.RGB3)
+        self.assertDictEqual(self.tc.decode('t_rec_rgba', self.RGB3), self.RGB3)
         with self.assertRaises(ValueError):
             self.tc.encode('t_rec_rgba', self.RGB_bad1a)
         with self.assertRaises(ValueError):
@@ -599,15 +651,8 @@ class BasicTypes(unittest.TestCase):
             self.tc.encode('t_rec_rgba', self.RGB_bad6a)
         with self.assertRaises(ValueError):
             self.tc.encode('t_rec_rgba', self.RGB_bad7a)
-
-    def test_record_verbose(self):
-        self.tc.set_mode(True, True)
-        self.assertDictEqual(self.tc.decode('t_rec_rgba', self.RGB1), self.RGB1)
-        self.assertDictEqual(self.tc.decode('t_rec_rgba', self.RGB2), self.RGB2)
-        self.assertDictEqual(self.tc.decode('t_rec_rgba', self.RGB3), self.RGB3)
-        self.assertDictEqual(self.tc.encode('t_rec_rgba', self.RGB1), self.RGB1)
-        self.assertDictEqual(self.tc.encode('t_rec_rgba', self.RGB2), self.RGB2)
-        self.assertDictEqual(self.tc.encode('t_rec_rgba', self.RGB3), self.RGB3)
+        with self.assertRaises(ValueError):
+            self.tc.encode('t_rec_rgba', self.RGB_bad8a)
         with self.assertRaises(ValueError):
             self.tc.decode('t_rec_rgba', self.RGB_bad1a)
         with self.assertRaises(ValueError):
@@ -623,19 +668,7 @@ class BasicTypes(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.tc.decode('t_rec_rgba', self.RGB_bad7a)
         with self.assertRaises(ValueError):
-            self.tc.encode('t_rec_rgba', self.RGB_bad1a)
-        with self.assertRaises(ValueError):
-            self.tc.encode('t_rec_rgba', self.RGB_bad2a)
-        with self.assertRaises(ValueError):
-            self.tc.encode('t_rec_rgba', self.RGB_bad3a)
-        with self.assertRaises(TypeError):
-            self.tc.encode('t_rec_rgba', self.RGB_bad4a)
-        with self.assertRaises(TypeError):
-            self.tc.encode('t_rec_rgba', self.RGB_bad5a)
-        with self.assertRaises(ValueError):
-            self.tc.encode('t_rec_rgba', self.RGB_bad6a)
-        with self.assertRaises(ValueError):
-            self.tc.encode('t_rec_rgba', self.RGB_bad7a)
+            self.tc.decode('t_rec_rgba', self.RGB_bad8a)
 
     Arr1 = [True, 3, 2.71828, 'Red']
     Arr2 = [None, 3, 2]
