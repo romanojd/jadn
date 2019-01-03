@@ -793,9 +793,17 @@ schema_selectors = {                # JADN schema for selector tests
             [1, 'type', 'Enumerated', ['*Menu_tag'], ''],
             [2, 'value', 'Menu_tag', ['&1'], '']
         ]],
+        ['t_attr_arr_tags', 'Array', [], '', [
+            [1, 'type', 'Enumerated', ['*Menu_tag'], ''],
+            [2, 'value', 'Menu_tag', ['&1', ']0'], '']
+        ]],
         ['t_attr_arr_name', 'Array', [], '', [
             [1, 'type', 'Enumerated', ['*Menu_name'], ''],
             [2, 'value', 'Menu_name', ['&1'], '']
+        ]],
+        ['t_attr_arr_names', 'Array', [], '', [
+            [1, 'type', 'Enumerated', ['*Menu_name'], ''],
+            [2, 'values', 'Menu_name', ['&1', ']0'], '']
         ]],
         ['t_attr_rec_tag', 'Record', [], '', [
             [1, 'type', 'Enumerated', ['*Menu_tag'], ''],
@@ -872,12 +880,14 @@ class Selectors(unittest.TestCase):         # TODO: bad schema - verify * field 
     arr_name3_api = ['animal', {'cat': 'Fluffy'}]
     arr_name4_bad_api = ['name', 17]        # name is type String, not Integer
     arr_name5_bad_api = ['universe', 17]    # universe is not a defined type
+    arr_names1_api = ['count', [13, 17]]    # array of values of the specified type
 
     arr_tag1_api = [7, 17]                  # enumerated tag values are integers
     arr_tag2_api = [6, 'green']
     arr_tag3_api = [5, {'cat': 'Fluffy'}]
     arr_tag4_bad_api = [9, 17]              # name is type String, not Integer
     arr_tag5_bad_api = [2, 17]              # 2 is not a defined type
+    arr_tags1_api = [7, [13, 17]]           # array of values of the specified type
 
     arr_name1_min = [7, 17]                 # Enumerated type with 'compact' option always uses min encoding (tag)
     arr_name2_min = [6, 3]
@@ -907,6 +917,13 @@ class Selectors(unittest.TestCase):         # TODO: bad schema - verify * field 
             self.tc.encode('t_attr_arr_name', self.arr_name5_bad_api)
         with self.assertRaises(ValueError):
             self.tc.decode('t_attr_arr_name', self.arr_name5_bad_api)
+
+    def test_attr_arrays_verbose(self):
+        self.tc.set_mode(True, True)
+        self.assertListEqual(self.tc.encode('t_attr_arr_names', self.arr_names1_api), self.arr_names1_api)
+        self.assertListEqual(self.tc.decode('t_attr_arr_names', self.arr_names1_api), self.arr_names1_api)
+        self.assertListEqual(self.tc.encode('t_attr_arr_tags', self.arr_tags1_api), self.arr_tags1_api)
+        self.assertListEqual(self.tc.decode('t_attr_arr_tags', self.arr_tags1_api), self.arr_tags1_api)
 
     def test_attr_arr_tag_verbose(self):
         self.tc.set_mode(True, True)
@@ -1130,7 +1147,7 @@ class Selectors(unittest.TestCase):         # TODO: bad schema - verify * field 
             self.tc.decode('t_property_implicit_primitive', self.pip_bad2_min)
 
 
-schema_listfield = {                # JADN schema for fields with cardinality > 1 (e.g., list of x)
+schema_list_cardinality = {                # JADN schema for fields with cardinality > 1 (e.g., list of x)
     'meta': {'module': 'unittests-ListField'},
     'types': [
         ['t_array0', 'ArrayOf', ['*String', '[0', ']2'], ''],   # Min array length = 0, Max = 2
@@ -1157,49 +1174,16 @@ schema_listfield = {                # JADN schema for fields with cardinality > 
         ]],
         ['t_list_1_n', 'Record', [], '', [
             [1, 'string', 'String', [], ''],
-            [2, 'list', 'String', [']0'], '']          # Min default = 1, Max = 0 -> n
-        ]],
-        ['t_list_types', 'Record', [], '', [
-            [1, 'bins', 'Binary', ['[0', ']2'], ''],
-            [2, 'bools', 'Boolean', ['[0', ']2'], ''],
-            [3, 'ints', 'Integer', ['[0', ']2'], ''],
-            [4, 'strs', 'String', ['[0', ']2'], ''],
-            [5, 'arrs', 't_arr', ['[0', ']2'], ''],
-            [6, 'aros', 't_aro', ['[0', ']2'], ''],
-            [7, 'choices', 't_ch', ['[0', ']2'], ''],
-            [8, 'enums', 't_enum', ['[0', ']2'], ''],
-            [9, 'maps', 't_map', ['[0', ']2'], ''],
-            [10, 'recs', 't_rec', ['[0', ']2'], '']
-        ]],
-        ['t_arr', 'Array', [], '', [
-            [1, 'x', 'Integer', [], ''],
-            [2, 'y', 'Number', [], '']
-        ]],
-        ['t_aro', 'ArrayOf', ['*String'], ''],
-        ['t_ch', 'Choice', [], '', [
-            [1, 'red', 'Integer', [], ''],
-            [2, 'blue', 'Integer', [], '']
-        ]],
-        ['t_enum', 'Enumerated', [], '', [
-            [1, 'heads', ''],
-            [2, 'tails', '']
-        ]],
-        ['t_map', 'Map', [], '', [
-            [1, 'red', 'Integer', [], ''],
-            [2, 'blue', 'Integer', [], '']
-        ]],
-        ['t_rec', 'Record', [], '', [
-            [1, 'red', 'Integer', [], ''],
-            [2, 'blue', 'Integer', [], '']
+            [2, 'list', 'String', [']0'], '']  # Min default = 1, Max = 0 -> n
         ]]
     ]}
 
 
-class ListField(unittest.TestCase):      # TODO: arrayOf(rec,map,array,arrayof,choice), array(), map(), rec()
+class ListCardinality(unittest.TestCase):      # TODO: arrayOf(rec,map,array,arrayof,choice), array(), map(), rec()
 
     def setUp(self):
-        jadn_check(schema_listfield)
-        self.tc = Codec(schema_listfield)
+        jadn_check(schema_list_cardinality)
+        self.tc = Codec(schema_list_cardinality)
 
     Lna = {'string': 'cat'}                     # Cardinality 0..n field omits empty list.  Use ArrayOf type to send empty list.
     Lsa = {'string': 'cat', 'list': 'red'}      # Always invalid, value is a string, not a list of one string.
@@ -1327,6 +1311,77 @@ class ListField(unittest.TestCase):      # TODO: arrayOf(rec,map,array,arrayof,c
         self.assertDictEqual(self.tc.decode('t_list_1_n', self.L2a), self.L2a)
         self.assertDictEqual(self.tc.encode('t_list_1_n', self.L3a), self.L3a)
         self.assertDictEqual(self.tc.decode('t_list_1_n', self.L3a), self.L3a)
+
+
+schema_list_types = {
+    'meta': {'module': 'unittests-ListType'},
+    'types': [
+        ['t_list', 'ArrayOf', ['*t_list_types'], ''],
+        ['t_list_types', 'Record', [], '', [
+            [1, 'bins', 'Binary', ['[0', ']2'], ''],
+            [2, 'bools', 'Boolean', ['[0', ']2'], ''],
+            [3, 'ints', 'Integer', ['[0', ']2'], ''],
+            [4, 'strs', 'String', ['[0', ']2'], ''],
+            [5, 'arrs', 't_arr', ['[0', ']2'], ''],
+            [6, 'aro_s', 't_aro_s', ['[0', ']2'], ''],
+            [7, 'aro_ch', 't_aro_ch', ['[0', ']2'], ''],
+            [8, 'choices', 't_ch', ['[0', ']2'], ''],
+            [9, 'enums', 't_enum', ['[0', ']2'], ''],
+            [10, 'maps', 't_map', ['[0', ']2'], ''],
+            [11, 'recs', 't_rec', ['[0', ']2'], '']
+        ]],
+        ['t_arr', 'Array', [], '', [
+            [1, 'x', 'Integer', [], ''],
+            [2, 'y', 'Number', [], '']
+        ]],
+        ['t_aro_s', 'ArrayOf', ['*String'], ''],
+        ['t_aro_ch', 'ArrayOf', ['*t_ch'], ''],
+        ['t_ch', 'Choice', [], '', [
+            [1, 'red', 'Integer', [], ''],
+            [2, 'blue', 'Integer', [], '']
+        ]],
+        ['t_enum', 'Enumerated', [], '', [
+            [1, 'heads', ''],
+            [2, 'tails', '']
+        ]],
+        ['t_map', 'Map', [], '', [
+            [1, 'red', 'Integer', [], ''],
+            [2, 'blue', 'Integer', [], '']
+        ]],
+        ['t_rec', 'Record', [], '', [
+            [1, 'red', 'Integer', [], ''],
+            [2, 'blue', 'Integer', [], '']
+        ]]
+    ]}
+
+
+class List_Types(unittest.TestCase):
+
+    def setUp(self):
+        jadn_check(schema_list_types)
+        self.tc = Codec(schema_list_types)
+
+    prims = [{
+            'bools': [True],
+            'ints': [1, 2]
+        },
+        {'strs': ['cat', 'dog']}
+    ]
+    enums = [
+        {'enums': ['heads', 'tails']},
+        {'enums': ['heads']},
+        {'enums': ['heads']},
+        {'enums': ['tails']},
+        {'enums': ['heads']},
+        {'enums': ['tails']}
+    ]
+
+    def test_list_primitives(self):
+        self.tc.set_mode(True, True)
+        self.assertListEqual(self.tc.encode('t_list', self.prims), self.prims)
+        self.assertListEqual(self.tc.decode('t_list', self.prims), self.prims)
+        self.assertListEqual(self.tc.encode('t_list', self.enums), self.enums)
+        self.assertListEqual(self.tc.decode('t_list', self.enums), self.enums)
 
 
 class Bounds(unittest.TestCase):        # TODO: check max and min string length, integer values, array sizes
