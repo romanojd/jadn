@@ -1,0 +1,237 @@
+/*
+module:        oasis-open.org/openc2/oc2ls/v1.0
+patch:         0-csdpr02+slpf.merged
+title:         OpenC2 Language Objects
+description:   OpenC2 Language content used by Stateless Packet Filters.
+exports:       OpenC2-Command, OpenC2-Response, Message-Type, Status-Code, Request-Id, Date-Time
+*/
+
+OpenC2-Command ::= RECORD {
+    action       Action,    -- The task or activity to be performed (i.e., the 'verb').
+    target       Target,    -- The object of the action. The action is performed on the target.
+    args         Args OPTIONAL,    -- Additional information that applies to the command.
+    actuator     Actuator OPTIONAL     -- The subject of the action. The actuator executes the action on the target.
+}
+
+Action ::= ENUMERATED {
+    query        (3),    -- Initiate a request for information.
+    deny         (6),    -- Prevent a certain event or action from completion, such as preventing a flow from reaching a destination or preventing access.
+    allow        (8),    -- Permit access to or execution of a target.
+    update       (16),    -- Instruct a component to retrieve, install, process, and operate in accordance with a software update, reconfiguration, or other update.
+    delete       (20)     -- Remove an entity (e.g., data, files, flows.
+}
+
+Target ::= CHOICE {    -- OpenC2 Target datatypes
+    features       [16] Features,    -- A set of items used with the query action to determine an actuator's capabilities
+    file           [10] File,    -- Properties of a file.
+    ip_addr        [11] IP-Addr,    -- The representation of one or more IP addresses (either version 4 or version 6).
+    ip_connection  [15] IP-Connection,    -- A network connection that originates from a source and is addressed to a destination.
+    slpf           [1024] slpf:Target     -- Targets defined in the Stateless Packet Filter Profile
+}
+
+Actuator ::= CHOICE {
+    slpf         [1024] slpf:Specifiers     -- Actuator specifiers and options as defined in the Stateless Packet Filter profile
+}
+
+Args ::= MAP {
+    start_time          [1] Date-Time OPTIONAL,    -- The specific date/time to initiate the action
+    stop_time           [2] Date-Time OPTIONAL,    -- The specific date/time to terminate the action
+    duration            [3] Duration OPTIONAL,    -- The length of time for an action to be in effect
+    response_requested  [4] Response-Type OPTIONAL,    -- The type of response required for the action
+    slpf                [1024] slpf:Args OPTIONAL     -- Command arguments defined in the Stateless Packet Filter profile
+}
+
+OpenC2-Response ::= MAP {
+    status       [1] Status-Code OPTIONAL,    -- An integer status code (Duplicates message status code)
+    status_text  [2] STRING OPTIONAL,    -- A free-form human-readable description of the response status
+    versions     [6] Version OPTIONAL,    -- Supported OpenC2 Language versions %{'max': 0}
+    profiles     [7] jadn:Uname OPTIONAL,    -- List of profiles supported by this actuator %{'max': 0}
+    schema       [8] jadn:Schema OPTIONAL,    -- Syntax of the OpenC2 language elements supported by this actuator
+    pairs        [9] Action-Targets OPTIONAL,    -- List of targets applicable to each supported action %{'max': 0}
+    rate_limit   [10] REAL OPTIONAL,    -- Maximum number of requests per minute supported by design or policy
+    slpf         [1024] slpf:Results OPTIONAL     -- Response data defined in the Stateless Packet Filter profile
+}
+
+Status-Code ::= ENUMERATED.ID {
+    Processing       (102),    -- an interim response used to inform the client that the server has accepted the request but not yet completed it.
+    OK               (200),    -- the request has succeeded.
+    Bad Request      (400),    -- the consumer cannot process the request due to something that is perceived to be a client error (e.g., malformed request syntax.)
+    Internal Error   (500),    -- the consumer encountered an unexpected condition that prevented it from fulfilling the request.
+    Not Implemented  (501)     -- the consumer does not support the functionality required to fulfill the request.
+}
+
+Features ::= ARRAY_OF(Feature)    -- A target used to query Actuator for its supported capabilities
+
+File ::= MAP {
+    name         [1] STRING OPTIONAL,    -- The name of the file as defined in the file system
+    path         [2] STRING OPTIONAL,    -- The absolute path to the location of the file in the file system
+    hashes       [3] Hashes OPTIONAL     -- One or more cryptographic hash codes of the file contents
+}
+
+IP-Addr ::= BINARY (CONSTRAINED BY {ip-addr})    -- 32 bit IPv4 address or 128 bit IPv6 address
+
+IP-Connection ::= RECORD {    -- 5-tuple that specifies a tcp/ip connection
+    src_addr     IP-Addr OPTIONAL,    -- source address
+    src_port     Port OPTIONAL,    -- source TCP/UDP port number
+    dst_addr     IP-Addr OPTIONAL,    -- destination address
+    dst_port     Port OPTIONAL,    -- destination TCP/UDP port number
+    protocol     L4-Protocol OPTIONAL     -- Protocol (IPv4) / Next Header (IPv6)
+}
+
+Message-Type ::= ENUMERATED {
+    notification  (0),    -- A message that does not solicit a response
+    request       (1),    -- A message for which a response is requested
+    response      (2)     -- A message containing a response to a request
+}
+
+Request-Id ::= BINARY    -- A value of up to 128 bits that uniquely identifies a particular command
+
+Date-Time ::= INTEGER    -- Milliseconds since 00:00:00 UTC, 1 January 1970.
+
+Duration ::= INTEGER    -- Milliseconds
+
+Hashes ::= MAP {    -- Cryptographic Hash values
+    md5          [1] BINARY OPTIONAL,    -- MD5 hash as defined in RFC3121
+    sha1         [4] BINARY OPTIONAL,    -- SHA1 hash as defined in RFC3174
+    sha256       [6] BINARY OPTIONAL     -- SHA256 as defined in RFC6234
+}
+
+L4-Protocol ::= ENUMERATED {    -- protocol (IPv4) or next header (IPv6) field - any IANA value, RFC 5237
+    icmp         (1),    -- Internet Control Message Protocol - RFC 792
+    tcp          (6),    -- Transmission Control Protocol - RFC 793-
+    udp          (17),    -- User Datagram Protocol - RFC 768
+    sctp         (132)     -- Stream Control Transmission Protocol - RFC 4960
+}
+
+Port ::= INTEGER (0..65535)    -- Transport Protocol Port Number, RFC 6335
+
+Feature ::= ENUMERATED {    -- Results to be included in response to query features command
+    versions     (1),    -- List of OpenC2 language versions supported by this actuator
+    profiles     (2),    -- List of profiles supported by this actuator
+    schema       (3),    -- Definition of the command syntax supported by this actuator
+    pairs        (4),    -- List of supported actions and applicable targets
+    rate_limit   (5)     -- Maximum number of supported requests per minute
+}
+
+Response-Type ::= ENUMERATED {
+    none         (0),    -- No response
+    ack          (1),    -- Respond when command received
+    status       (2),    -- Respond with progress toward command completion
+    complete     (3)     -- Respond when all aspects of command completed
+}
+
+Version ::= STRING    -- Major.Minor version number
+
+Action-Targets ::= ARRAY {
+    action       [1] Action,    -- An action supported by this actuator
+    targets      [2] Target.*     -- List of targets applicable to this action %{'max': 0}
+}
+
+slpf:Target ::= CHOICE {    -- SLPF targets
+    rule_number  [1] slpf:Rule-ID     -- Uniquely identifies a rule associated with a previously-issued deny or allow.
+}
+
+slpf:Args ::= MAP {    -- SLPF command arguments
+    drop_process  [1] slpf:Drop-Process OPTIONAL,    -- Specifies how to handle denied packets
+    running       [2] BOOLEAN OPTIONAL,    -- Normal operation assumes updates are persistent. If TRUE, updates are not persistent in the event of a reboot or restart.  Default=FALSE.
+    direction     [3] slpf:Direction OPTIONAL,    -- Specifies whether to apply rules to incoming or outgoing traffic. If omitted, rules are applied to both.
+    insert_rule   [4] slpf:Rule-ID OPTIONAL     -- Specifies the identifier of the rule within a list, typically used in a top-down rule list.
+}
+
+slpf:Drop-Process ::= ENUMERATED {
+    none         (1),    -- Drop the packet and do not send a notification to the source of the packet.
+    reject       (2),    -- Drop the packet and send an ICMP host unreachable (or equivalent) to the source of the packet.
+    false_ack    (3)     -- Drop the traffic and send a false acknowledgement that the data was received by the destination.
+}
+
+slpf:Direction ::= ENUMERATED {
+    ingress      (1),    -- Apply rules to incoming traffic only
+    egress       (2)     -- Apply rule to outbound traffic only
+}
+
+slpf:Rule-ID ::= INTEGER    -- Immutable identifier assigned when an access rule is created.
+
+slpf:Specifiers ::= MAP {    -- SLPF actuator specifiers
+    hostname     [1] STRING OPTIONAL,    -- RFC 1123 hostname (can be a domain name or IP address) for a particular device with SLPF functionality
+    named_group  [2] STRING OPTIONAL,    -- User-defined collection of devices with SLPF functionality
+    asset_id     [3] STRING OPTIONAL,    -- Unique identifier for a particular SLPF
+    asset_tuple  [4] STRING OPTIONAL     -- Unique tuple identifier for a particular SLPF consisting of a list of up to 10 strings %{'max': 10}
+}
+
+slpf:Results ::= MAP {    -- SLPF results
+    rule_number  [1] slpf:Rule-ID OPTIONAL     -- Rule identifier returned from allow or deny command.
+}
+
+jadn:Schema ::= RECORD {    -- Definition of a JADN file
+    meta         jadn:Meta,    -- Information about this schema module
+    types        jadn:Type     -- Types defined in this schema module %{'max': 0}
+}
+
+jadn:Meta ::= MAP {    -- Meta-information about this schema
+    module       [1] jadn:Uname,    -- Schema unique name/version
+    patch        [2] STRING OPTIONAL,    -- Patch version
+    title        [3] STRING OPTIONAL,    -- Title
+    description  [4] STRING OPTIONAL,    -- Description
+    imports      [5] jadn:Import OPTIONAL,    -- Imported schema modules %{'max': 0}
+    exports      [6] jadn:Identifier OPTIONAL,    -- Data types exported by this module %{'max': 0}
+    bounds       [7] jadn:Bounds OPTIONAL     -- Schema-wide upper bounds
+}
+
+jadn:Import ::= ARRAY {    -- Imported module id and unique name
+    nsid         [1] jadn:Nsid,    -- A short local identifier (namespace id) used within this module to refer to the imported module
+    uname        [2] jadn:Uname     -- Unique name of imported module
+}
+
+jadn:Bounds ::= ARRAY {    -- Schema-wide default upper bounds.  Overrides codec defaults, overridden by type definitions
+    max_msg      [1] INTEGER,    -- Maximum serialized message size in octets or characters
+    max_str      [2] INTEGER,    -- Maximum string length in characters
+    max_bin      [3] INTEGER,    -- Maximum binary length in octets
+    max_fields   [4] INTEGER     -- Maximum number of elements in ArrayOf
+}
+
+jadn:Type ::= ARRAY {
+    tname        [1] jadn:Identifier,    -- Name of this datatype
+    btype        [2] ENUMERATED.*,    -- Base type.  Enumerated value derived from list of JADN data types
+    opts         [3] jadn:Options,    -- Type options
+    desc         [4] STRING,    -- Description of this data type
+    fields       [5] jadn:JADN-Type.&2 OPTIONAL     -- List of fields for compound types.  Not present for primitive types %{'max': 0}
+}
+
+jadn:JADN-Type ::= CHOICE {
+    Binary       [1] NULL,    -- Octet (binary) string
+    Boolean      [2] NULL,    -- True or False
+    Integer      [3] NULL,    -- Whole number
+    Number       [4] NULL,    -- Real number
+    Null         [5] NULL,    -- Nothing
+    String       [6] NULL,    -- Character (text) string
+    Array        [7] jadn:FullField,    -- Ordered list of unnamed fields
+    ArrayOf      [8] NULL,    -- Ordered list of fields of a specified type
+    Choice       [9] jadn:FullField,    -- One of a set of named fields
+    Enumerated   [10] jadn:EnumField,    -- One of a set of id:name pairs
+    Map          [11] jadn:FullField,    -- Unordered set of named fields
+    Record       [12] jadn:FullField     -- Ordered list of named fields
+}
+
+jadn:EnumField ::= ARRAY {    -- Item definition for Enumerated types
+                 [1] INTEGER,    -- Item ID
+                 [2] STRING,    -- Item name
+                 [3] STRING     -- Item description
+}
+
+jadn:FullField ::= ARRAY {    -- Field definition for other compound types
+                 [1] INTEGER,    -- Field ID or ordinal position
+                 [2] jadn:Identifier,    -- Field name
+                 [3] jadn:Identifier,    -- Field type
+                 [4] jadn:Options,    -- Field options
+                 [5] STRING     -- Field description
+}
+
+jadn:Identifier ::= STRING (Size (0..32)) (PATTERN ("^[a-zA-Z][\w-]*$"))    -- A string starting with an alpha char followed by zero or more alphanumeric / underscore / dash chars
+
+jadn:Nsid ::= STRING (Size (1..8)) (PATTERN ("^[a-zA-Z][\w-]*$"))    -- Namespace ID - a short identifier
+
+jadn:Uname ::= STRING (Size (1..100))    -- Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes
+
+jadn:Options ::= ARRAY_OF(jadn:Option) (Size (0..10))    -- Options list may be empty but may not be omitted
+
+jadn:Option ::= STRING (Size (1..100))    -- Option string: 1st char = option id
