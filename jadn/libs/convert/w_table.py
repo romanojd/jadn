@@ -4,7 +4,7 @@ Translate JADN to HTML or Markdown property tables
 
 from __future__ import unicode_literals
 from libs.jadn_defs import *
-from libs.jadn_utils import topts_s2d, fopts_s2d, cardinality
+from libs.jadn_utils import topts_s2d, fopts_s2d, multiplicity
 from datetime import datetime
 
 
@@ -53,7 +53,7 @@ def meta_end_m():
 
 def type_begin_m(tname, ttype, topts, headers, cls):
     assert len(headers) == len(cls)
-    ch = {'n': '---:', 'h': '---:', 's': ':---', 'd': ':---'}
+    ch = {'n': '---:', 'h': '---:', 's': ':---', 'd': ':---', 'b': ':---'}
     clh = [ch[c] if c in ch else '---' for c in cls]
     to = ' (' + ttype + topts + ')' if ttype else ''
     tc = '\n**_Type: ' + tname + to + '_**' if tname else ''
@@ -392,7 +392,7 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
             id = '.ID'
             h = [head[0]] + head[2:]
             c = [cls[0]] + cls[2:]
-        cvt = '.s:' + to['cvt'] if 'cvt' in to else ''      # Multipart (Array) string conversion method (.s:xxx)
+        cvt = '.' + to['cvt'] if 'cvt' in to else ''      # Multipart (Array) string conversion method (.<xxx>)
         tos = ' ' + str([str(k) for k in tor]) if tor else ''
         return type_begin(td[TNAME], td[TTYPE] + id + cvt, tos, h, c)
 
@@ -401,7 +401,7 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
         c = cls
         if 'compact' in to:
             f = [fitems[0]] + fitems[2:]
-            f[-1] = fitems[1] + (' -- ' if fitems[1] and f[-1] else '') + f[-1]
+            f[-1] = '**' + fitems[1] + '**' + (' - ' if fitems[1] and f[-1] else '') + f[-1]
             c = [cls[0]] + cls[2:]
         return type_item(f, c)
 
@@ -424,26 +424,24 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
         tos = ' ' + str([str(k) for k in tor]) if tor else ''
         rng = ''
         if 'min' in to or 'max' in to:
-            lo = to['min'] if 'min' in to else 0
-            hi = to['max'] if 'max' in to else 0
-            rng = ' [' + str(lo) + '..' + (str(hi) if hi else 'n') + ']'
+            lo = to['min'] if 'min' in to else 1
+            hi = to['max'] if 'max' in to else 1
+            rng = ' [' + multiplicity(lo, hi) + ']'
         if td[TTYPE] in PRIMITIVE_TYPES or not is_builtin(td[TTYPE]):
-            cls = ['s', 's', 'd']
-            text += type_begin(td[TNAME], None, tos, ['Type Name', 'Base Type', 'Description'], cls)
-            cvt = ''                # Binary string conversion method:
-            if 'cvt' in to:         # base64url (default), hex (.x), or type-specific (.s:)
-                cvt = to['cvt']
-                if cvt not in ('x'):
-                    cvt = 's:' + cvt
-                cvt = '.' + cvt
+            cls = ['b', 's', 'd']
+            text += type_begin('', None, tos, ['Type Name', 'Type Definition', 'Description'], cls)
+            cvt = '.' + to['cvt'] if 'cvt' in to else ''    # Binary string conversion method:
             fmt = ' (' + to['format'] + ')' if 'format' in to else ''
             text += type_item([td[TNAME], td[TTYPE] + cvt + rng + fmt, td[TDESC]], cls)
-        elif td[TTYPE] == 'ArrayOf':            # In STRUCTURE_TYPES but with no field definitions
-            cls = ['s', 's', 'd']
-            rtype = '(' + to['rtype'] + ')'
-            tor = set(to) - {'rtype', 'min', 'max'}
+        elif td[TTYPE] in ['ArrayOf', 'MapOf']:            # In STRUCTURE_TYPES but with no field definitions
+            cls = ['b', 's', 'd']
+            if td[TTYPE] == 'MapOf':
+                rtype = '(' + to['ktype'] + ',' + to['rtype'] + ')'
+            else:
+                rtype = '(' + to['rtype'] + ')'
+            tor = set(to) - {'ktype', 'rtype', 'min', 'max'}
             tos = ' ' + str([str(k) for k in tor]) if tor else ''
-            text += type_begin(td[TNAME], None, tos, ['Type Name', 'Base Type', 'Description'], cls)
+            text += type_begin('', None, tos, ['Type Name', 'Type Definition', 'Description'], cls)
             text += type_item([td[TNAME], td[TTYPE] + rtype + rng, td[TDESC]], cls)
         elif td[TTYPE] == 'Enumerated':
             if 'rtype' in to:
@@ -468,7 +466,7 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
                 fo = {'min': 1, 'max': 1}
                 fo.update(fopts_s2d(fd[FOPTS]))
                 rtype = '.*' if 'rtype' in fo else ''
-                text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[FTYPE] + rtype, cardinality(fo['min'], fo['max']), fd[FDESC]], cls)
+                text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[FTYPE] + rtype, multiplicity(fo['min'], fo['max']), fd[FDESC]], cls)
         text += type_end()
 
     text += doc_end()

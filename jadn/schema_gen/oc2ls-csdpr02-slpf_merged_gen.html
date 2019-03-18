@@ -1,4 +1,4 @@
-<!-- Generated from schema\oc2ls-csdpr02-slpf_merged.jadn, Mon Jan  7 13:04:29 2019-->
+<!-- Generated from schema\oc2ls-csdpr02-slpf_merged.jadn, Mon Mar 18 17:59:50 2019-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,30 +48,30 @@
 <table><caption>OpenC2-Response (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
 <tr><td class="n">1</td><td class="b">status</td><td class="s">Status-Code</td><td class="n">0..1</td><td class="d">An integer status code (Duplicates message status code)</td></tr>
 <tr><td class="n">2</td><td class="b">status_text</td><td class="s">String</td><td class="n">0..1</td><td class="d">A free-form human-readable description of the response status</td></tr>
-<tr><td class="n">6</td><td class="b">versions</td><td class="s">Version</td><td class="n">0..n</td><td class="d">Supported OpenC2 Language versions</td></tr>
-<tr><td class="n">7</td><td class="b">profiles</td><td class="s">jadn:Uname</td><td class="n">0..n</td><td class="d">List of profiles supported by this actuator</td></tr>
+<tr><td class="n">6</td><td class="b">versions</td><td class="s">Version</td><td class="n">0..*</td><td class="d">Supported OpenC2 Language versions</td></tr>
+<tr><td class="n">7</td><td class="b">profiles</td><td class="s">jadn:Uname</td><td class="n">0..*</td><td class="d">List of profiles supported by this actuator</td></tr>
 <tr><td class="n">8</td><td class="b">schema</td><td class="s">jadn:Schema</td><td class="n">0..1</td><td class="d">Syntax of the OpenC2 language elements supported by this actuator</td></tr>
-<tr><td class="n">9</td><td class="b">pairs</td><td class="s">Action-Targets</td><td class="n">0..n</td><td class="d">List of targets applicable to each supported action</td></tr>
+<tr><td class="n">9</td><td class="b">pairs</td><td class="s">Action-Targets</td><td class="n">0..*</td><td class="d">List of targets applicable to each supported action</td></tr>
 <tr><td class="n">10</td><td class="b">rate_limit</td><td class="s">Number</td><td class="n">0..1</td><td class="d">Maximum number of requests per minute supported by design or policy</td></tr>
 <tr><td class="n">1024</td><td class="b">slpf</td><td class="s">slpf:Results</td><td class="n">0..1</td><td class="d">Response data defined in the Stateless Packet Filter profile</td></tr>
 </table>
 <table><caption>Status-Code (Enumerated.ID)</caption><tr><th class="n">ID</th><th class="d">Description</th></tr>
-<tr><td class="n">102</td><td class="d">Processing -- an interim response used to inform the client that the server has accepted the request but not yet completed it.</td></tr>
-<tr><td class="n">200</td><td class="d">OK -- the request has succeeded.</td></tr>
-<tr><td class="n">400</td><td class="d">Bad Request -- the consumer cannot process the request due to something that is perceived to be a client error (e.g., malformed request syntax.)</td></tr>
-<tr><td class="n">500</td><td class="d">Internal Error -- the consumer encountered an unexpected condition that prevented it from fulfilling the request.</td></tr>
-<tr><td class="n">501</td><td class="d">Not Implemented -- the consumer does not support the functionality required to fulfill the request.</td></tr>
+<tr><td class="n">102</td><td class="d">**Processing** - an interim response used to inform the client that the server has accepted the request but not yet completed it.</td></tr>
+<tr><td class="n">200</td><td class="d">**OK** - the request has succeeded.</td></tr>
+<tr><td class="n">400</td><td class="d">**Bad Request** - the consumer cannot process the request due to something that is perceived to be a client error (e.g., malformed request syntax.)</td></tr>
+<tr><td class="n">500</td><td class="d">**Internal Error** - the consumer encountered an unexpected condition that prevented it from fulfilling the request.</td></tr>
+<tr><td class="n">501</td><td class="d">**Not Implemented** - the consumer does not support the functionality required to fulfill the request.</td></tr>
 </table>
-<table><caption>Features</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
-<tr><td class="s">Features</td><td class="s">ArrayOf(Feature) [0..n]</td><td class="d">A target used to query Actuator for its supported capabilities</td></tr>
+<table><tr><th class="b">Type Name</th><th class="s">Type Definition</th><th class="d">Description</th></tr>
+<tr><td class="b">Features</td><td class="s">ArrayOf(Feature) [0..1]</td><td class="d">A target used to query Actuator for its supported capabilities</td></tr>
 </table>
 <table><caption>File (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
 <tr><td class="n">1</td><td class="b">name</td><td class="s">String</td><td class="n">0..1</td><td class="d">The name of the file as defined in the file system</td></tr>
 <tr><td class="n">2</td><td class="b">path</td><td class="s">String</td><td class="n">0..1</td><td class="d">The absolute path to the location of the file in the file system</td></tr>
 <tr><td class="n">3</td><td class="b">hashes</td><td class="s">Hashes</td><td class="n">0..1</td><td class="d">One or more cryptographic hash codes of the file contents</td></tr>
 </table>
-<table><caption>IP-Addr</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
-<tr><td class="s">IP-Addr</td><td class="s">Binary (ip-addr)</td><td class="d">32 bit IPv4 address or 128 bit IPv6 address</td></tr>
+<table><tr><th class="b">Type Name</th><th class="s">Type Definition</th><th class="d">Description</th></tr>
+<tr><td class="b">IP-Addr</td><td class="s">Binary (ip-addr)</td><td class="d">32 bit IPv4 address or 128 bit IPv6 address</td></tr>
 </table>
 <table><caption>IP-Connection (Record)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
 <tr><td class="n">1</td><td class="b">src_addr</td><td class="s">IP-Addr</td><td class="n">0..1</td><td class="d">source address</td></tr>
@@ -85,14 +85,14 @@
 <tr><td class="n">1</td><td class="b">request</td><td class="d">A message for which a response is requested</td></tr>
 <tr><td class="n">2</td><td class="b">response</td><td class="d">A message containing a response to a request</td></tr>
 </table>
-<table><caption>Request-Id</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
-<tr><td class="s">Request-Id</td><td class="s">Binary</td><td class="d">A value of up to 128 bits that uniquely identifies a particular command</td></tr>
+<table><tr><th class="b">Type Name</th><th class="s">Type Definition</th><th class="d">Description</th></tr>
+<tr><td class="b">Request-Id</td><td class="s">Binary</td><td class="d">A value of up to 128 bits that uniquely identifies a particular command</td></tr>
 </table>
-<table><caption>Date-Time</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
-<tr><td class="s">Date-Time</td><td class="s">Integer</td><td class="d">Milliseconds since 00:00:00 UTC, 1 January 1970.</td></tr>
+<table><tr><th class="b">Type Name</th><th class="s">Type Definition</th><th class="d">Description</th></tr>
+<tr><td class="b">Date-Time</td><td class="s">Integer</td><td class="d">Milliseconds since 00:00:00 UTC, 1 January 1970.</td></tr>
 </table>
-<table><caption>Duration</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
-<tr><td class="s">Duration</td><td class="s">Integer</td><td class="d">Milliseconds</td></tr>
+<table><tr><th class="b">Type Name</th><th class="s">Type Definition</th><th class="d">Description</th></tr>
+<tr><td class="b">Duration</td><td class="s">Integer</td><td class="d">Milliseconds</td></tr>
 </table>
 <table><caption>Hashes (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
 <tr><td class="n">1</td><td class="b">md5</td><td class="s">Binary</td><td class="n">0..1</td><td class="d">MD5 hash as defined in RFC3121</td></tr>
@@ -105,8 +105,8 @@
 <tr><td class="n">17</td><td class="b">udp</td><td class="d">User Datagram Protocol - RFC 768</td></tr>
 <tr><td class="n">132</td><td class="b">sctp</td><td class="d">Stream Control Transmission Protocol - RFC 4960</td></tr>
 </table>
-<table><caption>Port</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
-<tr><td class="s">Port</td><td class="s">Integer [0..65535]</td><td class="d">Transport Protocol Port Number, RFC 6335</td></tr>
+<table><tr><th class="b">Type Name</th><th class="s">Type Definition</th><th class="d">Description</th></tr>
+<tr><td class="b">Port</td><td class="s">Integer [0..65535]</td><td class="d">Transport Protocol Port Number, RFC 6335</td></tr>
 </table>
 <table><caption>Feature (Enumerated)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="d">Description</th></tr>
 <tr><td class="n">1</td><td class="b">versions</td><td class="d">List of OpenC2 language versions supported by this actuator</td></tr>
@@ -121,12 +121,12 @@
 <tr><td class="n">2</td><td class="b">status</td><td class="d">Respond with progress toward command completion</td></tr>
 <tr><td class="n">3</td><td class="b">complete</td><td class="d">Respond when all aspects of command completed</td></tr>
 </table>
-<table><caption>Version</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
-<tr><td class="s">Version</td><td class="s">String</td><td class="d">Major.Minor version number</td></tr>
+<table><tr><th class="b">Type Name</th><th class="s">Type Definition</th><th class="d">Description</th></tr>
+<tr><td class="b">Version</td><td class="s">String</td><td class="d">Major.Minor version number</td></tr>
 </table>
 <table><caption>Action-Targets (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
-<tr><td class="n">1</td><td class="s">Action</td><td class="n">1</td><td class="d">action -- An action supported by this actuator</td></tr>
-<tr><td class="n">2</td><td class="s">Target.*</td><td class="n">1..n</td><td class="d">targets -- List of targets applicable to this action</td></tr>
+<tr><td class="n">1</td><td class="s">Action</td><td class="n">1</td><td class="d">**action** - An action supported by this actuator</td></tr>
+<tr><td class="n">2</td><td class="s">Target.*</td><td class="n">1..*</td><td class="d">**targets** - List of targets applicable to this action</td></tr>
 </table>
 <table><caption>slpf:Target (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
 <tr><td class="n">1</td><td class="b">rule_number</td><td class="s">slpf:Rule-ID</td><td class="n">1</td><td class="d">Uniquely identifies a rule associated with a previously-issued deny or allow.</td></tr>
@@ -146,8 +146,8 @@
 <tr><td class="n">1</td><td class="b">ingress</td><td class="d">Apply rules to incoming traffic only</td></tr>
 <tr><td class="n">2</td><td class="b">egress</td><td class="d">Apply rule to outbound traffic only</td></tr>
 </table>
-<table><caption>slpf:Rule-ID</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
-<tr><td class="s">slpf:Rule-ID</td><td class="s">Integer</td><td class="d">Immutable identifier assigned when an access rule is created.</td></tr>
+<table><tr><th class="b">Type Name</th><th class="s">Type Definition</th><th class="d">Description</th></tr>
+<tr><td class="b">slpf:Rule-ID</td><td class="s">Integer</td><td class="d">Immutable identifier assigned when an access rule is created.</td></tr>
 </table>
 <table><caption>slpf:Specifiers (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
 <tr><td class="n">1</td><td class="b">hostname</td><td class="s">String</td><td class="n">0..1</td><td class="d">RFC 1123 hostname (can be a domain name or IP address) for a particular device with SLPF functionality</td></tr>
@@ -160,33 +160,33 @@
 </table>
 <table><caption>jadn:Schema (Record)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
 <tr><td class="n">1</td><td class="b">meta</td><td class="s">jadn:Meta</td><td class="n">1</td><td class="d">Information about this schema module</td></tr>
-<tr><td class="n">2</td><td class="b">types</td><td class="s">jadn:Type</td><td class="n">1..n</td><td class="d">Types defined in this schema module</td></tr>
+<tr><td class="n">2</td><td class="b">types</td><td class="s">jadn:Type</td><td class="n">1..*</td><td class="d">Types defined in this schema module</td></tr>
 </table>
 <table><caption>jadn:Meta (Map)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
 <tr><td class="n">1</td><td class="b">module</td><td class="s">jadn:Uname</td><td class="n">1</td><td class="d">Schema unique name/version</td></tr>
 <tr><td class="n">2</td><td class="b">patch</td><td class="s">String</td><td class="n">0..1</td><td class="d">Patch version</td></tr>
 <tr><td class="n">3</td><td class="b">title</td><td class="s">String</td><td class="n">0..1</td><td class="d">Title</td></tr>
 <tr><td class="n">4</td><td class="b">description</td><td class="s">String</td><td class="n">0..1</td><td class="d">Description</td></tr>
-<tr><td class="n">5</td><td class="b">imports</td><td class="s">jadn:Import</td><td class="n">0..n</td><td class="d">Imported schema modules</td></tr>
-<tr><td class="n">6</td><td class="b">exports</td><td class="s">jadn:Identifier</td><td class="n">0..n</td><td class="d">Data types exported by this module</td></tr>
+<tr><td class="n">5</td><td class="b">imports</td><td class="s">jadn:Import</td><td class="n">0..*</td><td class="d">Imported schema modules</td></tr>
+<tr><td class="n">6</td><td class="b">exports</td><td class="s">jadn:Identifier</td><td class="n">0..*</td><td class="d">Data types exported by this module</td></tr>
 <tr><td class="n">7</td><td class="b">bounds</td><td class="s">jadn:Bounds</td><td class="n">0..1</td><td class="d">Schema-wide upper bounds</td></tr>
 </table>
 <table><caption>jadn:Import (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
-<tr><td class="n">1</td><td class="s">jadn:Nsid</td><td class="n">1</td><td class="d">nsid -- A short local identifier (namespace id) used within this module to refer to the imported module</td></tr>
-<tr><td class="n">2</td><td class="s">jadn:Uname</td><td class="n">1</td><td class="d">uname -- Unique name of imported module</td></tr>
+<tr><td class="n">1</td><td class="s">jadn:Nsid</td><td class="n">1</td><td class="d">**nsid** - A short local identifier (namespace id) used within this module to refer to the imported module</td></tr>
+<tr><td class="n">2</td><td class="s">jadn:Uname</td><td class="n">1</td><td class="d">**uname** - Unique name of imported module</td></tr>
 </table>
 <table><caption>jadn:Bounds (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
-<tr><td class="n">1</td><td class="s">Integer</td><td class="n">1</td><td class="d">max_msg -- Maximum serialized message size in octets or characters</td></tr>
-<tr><td class="n">2</td><td class="s">Integer</td><td class="n">1</td><td class="d">max_str -- Maximum string length in characters</td></tr>
-<tr><td class="n">3</td><td class="s">Integer</td><td class="n">1</td><td class="d">max_bin -- Maximum binary length in octets</td></tr>
-<tr><td class="n">4</td><td class="s">Integer</td><td class="n">1</td><td class="d">max_fields -- Maximum number of elements in ArrayOf</td></tr>
+<tr><td class="n">1</td><td class="s">Integer</td><td class="n">1</td><td class="d">**max_msg** - Maximum serialized message size in octets or characters</td></tr>
+<tr><td class="n">2</td><td class="s">Integer</td><td class="n">1</td><td class="d">**max_str** - Maximum string length in characters</td></tr>
+<tr><td class="n">3</td><td class="s">Integer</td><td class="n">1</td><td class="d">**max_bin** - Maximum binary length in octets</td></tr>
+<tr><td class="n">4</td><td class="s">Integer</td><td class="n">1</td><td class="d">**max_fields** - Maximum number of elements in ArrayOf</td></tr>
 </table>
 <table><caption>jadn:Type (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
-<tr><td class="n">1</td><td class="s">jadn:Identifier</td><td class="n">1</td><td class="d">tname -- Name of this datatype</td></tr>
-<tr><td class="n">2</td><td class="s">Enumerated.*</td><td class="n">1</td><td class="d">btype -- Base type.  Enumerated value derived from list of JADN data types</td></tr>
-<tr><td class="n">3</td><td class="s">jadn:Options</td><td class="n">1</td><td class="d">opts -- Type options</td></tr>
-<tr><td class="n">4</td><td class="s">String</td><td class="n">1</td><td class="d">desc -- Description of this data type</td></tr>
-<tr><td class="n">5</td><td class="s">jadn:JADN-Type</td><td class="n">0..n</td><td class="d">fields -- List of fields for compound types.  Not present for primitive types</td></tr>
+<tr><td class="n">1</td><td class="s">jadn:Identifier</td><td class="n">1</td><td class="d">**tname** - Name of this datatype</td></tr>
+<tr><td class="n">2</td><td class="s">Enumerated.*</td><td class="n">1</td><td class="d">**btype** - Base type.  Enumerated value derived from list of JADN data types</td></tr>
+<tr><td class="n">3</td><td class="s">jadn:Options</td><td class="n">1</td><td class="d">**opts** - Type options</td></tr>
+<tr><td class="n">4</td><td class="s">String</td><td class="n">1</td><td class="d">**desc** - Description of this data type</td></tr>
+<tr><td class="n">5</td><td class="s">jadn:JADN-Type</td><td class="n">0..*</td><td class="d">**fields** - List of fields for compound types.  Not present for primitive types</td></tr>
 </table>
 <table><caption>jadn:JADN-Type (Choice)</caption><tr><th class="n">ID</th><th class="b">Name</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
 <tr><td class="n">1</td><td class="b">Binary</td><td class="s">Null</td><td class="n">1</td><td class="d">Octet (binary) string</td></tr>
@@ -203,30 +203,30 @@
 <tr><td class="n">12</td><td class="b">Record</td><td class="s">jadn:FullField</td><td class="n">1</td><td class="d">Ordered list of named fields</td></tr>
 </table>
 <table><caption>jadn:EnumField (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
-<tr><td class="n">1</td><td class="s">Integer</td><td class="n">1</td><td class="d">Item ID</td></tr>
-<tr><td class="n">2</td><td class="s">String</td><td class="n">1</td><td class="d">Item name</td></tr>
-<tr><td class="n">3</td><td class="s">String</td><td class="n">1</td><td class="d">Item description</td></tr>
+<tr><td class="n">1</td><td class="s">Integer</td><td class="n">1</td><td class="d">****Item ID</td></tr>
+<tr><td class="n">2</td><td class="s">String</td><td class="n">1</td><td class="d">****Item name</td></tr>
+<tr><td class="n">3</td><td class="s">String</td><td class="n">1</td><td class="d">****Item description</td></tr>
 </table>
 <table><caption>jadn:FullField (Array)</caption><tr><th class="n">ID</th><th class="s">Type</th><th class="n">#</th><th class="d">Description</th></tr>
-<tr><td class="n">1</td><td class="s">Integer</td><td class="n">1</td><td class="d">Field ID or ordinal position</td></tr>
-<tr><td class="n">2</td><td class="s">jadn:Identifier</td><td class="n">1</td><td class="d">Field name</td></tr>
-<tr><td class="n">3</td><td class="s">jadn:Identifier</td><td class="n">1</td><td class="d">Field type</td></tr>
-<tr><td class="n">4</td><td class="s">jadn:Options</td><td class="n">1</td><td class="d">Field options</td></tr>
-<tr><td class="n">5</td><td class="s">String</td><td class="n">1</td><td class="d">Field description</td></tr>
+<tr><td class="n">1</td><td class="s">Integer</td><td class="n">1</td><td class="d">****Field ID or ordinal position</td></tr>
+<tr><td class="n">2</td><td class="s">jadn:Identifier</td><td class="n">1</td><td class="d">****Field name</td></tr>
+<tr><td class="n">3</td><td class="s">jadn:Identifier</td><td class="n">1</td><td class="d">****Field type</td></tr>
+<tr><td class="n">4</td><td class="s">jadn:Options</td><td class="n">1</td><td class="d">****Field options</td></tr>
+<tr><td class="n">5</td><td class="s">String</td><td class="n">1</td><td class="d">****Field description</td></tr>
 </table>
-<table><caption>jadn:Identifier</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
-<tr><td class="s">jadn:Identifier</td><td class="s">String [0..32]</td><td class="d">A string starting with an alpha char followed by zero or more alphanumeric / underscore / dash chars</td></tr>
+<table><tr><th class="b">Type Name</th><th class="s">Type Definition</th><th class="d">Description</th></tr>
+<tr><td class="b">jadn:Identifier</td><td class="s">String [0..32]</td><td class="d">A string starting with an alpha char followed by zero or more alphanumeric / underscore / dash chars</td></tr>
 </table>
-<table><caption>jadn:Nsid</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
-<tr><td class="s">jadn:Nsid</td><td class="s">String [1..8]</td><td class="d">Namespace ID - a short identifier</td></tr>
+<table><tr><th class="b">Type Name</th><th class="s">Type Definition</th><th class="d">Description</th></tr>
+<tr><td class="b">jadn:Nsid</td><td class="s">String [1..8]</td><td class="d">Namespace ID - a short identifier</td></tr>
 </table>
-<table><caption>jadn:Uname</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
-<tr><td class="s">jadn:Uname</td><td class="s">String [1..100]</td><td class="d">Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes</td></tr>
+<table><tr><th class="b">Type Name</th><th class="s">Type Definition</th><th class="d">Description</th></tr>
+<tr><td class="b">jadn:Uname</td><td class="s">String [1..100]</td><td class="d">Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes</td></tr>
 </table>
-<table><caption>jadn:Options</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
-<tr><td class="s">jadn:Options</td><td class="s">ArrayOf(jadn:Option) [0..10]</td><td class="d">Options list may be empty but may not be omitted</td></tr>
+<table><tr><th class="b">Type Name</th><th class="s">Type Definition</th><th class="d">Description</th></tr>
+<tr><td class="b">jadn:Options</td><td class="s">ArrayOf(jadn:Option) [0..10]</td><td class="d">Options list may be empty but may not be omitted</td></tr>
 </table>
-<table><caption>jadn:Option</caption><tr><th class="s">Type Name</th><th class="s">Base Type</th><th class="d">Description</th></tr>
-<tr><td class="s">jadn:Option</td><td class="s">String [1..100]</td><td class="d">Option string: 1st char = option id</td></tr>
+<table><tr><th class="b">Type Name</th><th class="s">Type Definition</th><th class="d">Description</th></tr>
+<tr><td class="b">jadn:Option</td><td class="s">String [1..100]</td><td class="d">Option string: 1st char = option id</td></tr>
 </table>
 </body>

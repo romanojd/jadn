@@ -40,11 +40,12 @@ PRIMITIVE_TYPES = (
 )
 
 STRUCTURE_TYPES = (
-    'Array',
-    'ArrayOf',          # Special case: instance is a structure but type definition has no fields
-    'Choice',
     'Enumerated',
+    'Choice',
+    'Array',
+    'ArrayOf',          # (value type) Special case: instance is a structure but type definition has no fields
     'Map',
+    'MapOf',            # (key type, value type)
     'Record',
 )
 
@@ -69,13 +70,15 @@ TYPE_OPTIONS = {        # ID, value type, description
     0x40: 'format',     # '@', string, name of validation function, e.g., date-time, email, ipaddr, ...
     0x5b: 'min',        # '[', integer, minimum string length, integer value, array length, property count
     0x5d: 'max',        # ']', integer, maximum string length, integer value, array length, property count
-    0x2a: 'rtype',      # '*', string, Enumerated value from referenced type or ArrayOf element type
+    0x2a: 'rtype',      # '*', string, Value type for ArrayOf and MapOf
+    0x2b: 'ktype',      # '+', string, Key type for MapOf
     0x24: 'pattern',    # '$', string, regular expression that a string type must match
 }
 
 FIELD_OPTIONS = {
     0x5b: 'min',        # '[', integer, minimum cardinality of field, default = 1, 0 = field is optional
     0x5d: 'max',        # ']', integer, maximum cardinality of field, default = 1, 0 = inherited max, not 1 = array
+    0x25: 'enum',       # '%', boolean, enumeration derived from field type
     0x26: 'atfield',    # '&', string, name of a field that specifies the type of this field
     0x2a: 'rtype',      # '*', string, Enumerated value from referenced type
     0x2f: 'etype',      # '/', string, serializer-specific encoding type, e.g., u8, s16, hex, base64
@@ -94,6 +97,7 @@ SUPPORTED_TYPE_OPTIONS = {
     'Choice': ['compact'],
     'Enumerated': ['compact', 'rtype'],
     'Map': ['compact', 'min', 'max'],
+    'MapOf': ['min', 'max', 'ktype', 'rtype'],
     'Record': ['min', 'max'],
 }
 
@@ -104,12 +108,12 @@ SUPPORTED_FIELD_OPTIONS = {
     'Number': ['min', 'max'],
     'Null': [],
     'String': ['min', 'max', 'pattern', 'format'],
-    'Array': ['min', 'max', 'etype', 'atfield'],
+    'Array': ['min', 'max', 'etype', 'enum', 'atfield'],
     'ArrayOf': ['min', 'max', 'rtype'],
-    'Choice': ['min', 'max', 'etype'],
+    'Choice': ['min', 'max', 'etype', 'enum'],
     'Enumerated': ['rtype'],
-    'Map': ['min', 'max', 'etype'],
-    'Record': ['min', 'max', 'etype', 'atfield'],
+    'Map': ['min', 'max', 'etype', 'enum'],
+    'Record': ['min', 'max', 'etype', 'enum', 'atfield'],
 }
 
 FORMAT_CHECK = {            # Semantic validation functions

@@ -1,4 +1,4 @@
-<!-- Generated from schema\jadn-csdpr02.jadn, Mon Jan  7 13:04:29 2019-->
+<!-- Generated from schema\jadn-csdpr02.jadn, Mon Mar 18 17:59:50 2019-->
 ## Schema
 | . | . |
 | ---: | :--- |
@@ -11,52 +11,52 @@
 **_Type: Schema (Record)_**
 
 | ID | Name | Type | # | Description |
-| ---: | --- | :--- | ---: | :--- |
+| ---: | :--- | :--- | ---: | :--- |
 | 1 | **meta** | Meta | 1 | Information about this schema module |
-| 2 | **types** | Type | 1..n | Types defined in this schema module |
+| 2 | **types** | Type | 1..* | Types defined in this schema module |
 
 **_Type: Meta (Map)_**
 
 | ID | Name | Type | # | Description |
-| ---: | --- | :--- | ---: | :--- |
+| ---: | :--- | :--- | ---: | :--- |
 | 1 | **module** | Uname | 1 | Schema unique name/version |
 | 2 | **patch** | String | 0..1 | Patch version |
 | 3 | **title** | String | 0..1 | Title |
 | 4 | **description** | String | 0..1 | Description |
-| 5 | **imports** | Import | 0..n | Imported schema modules |
-| 6 | **exports** | Identifier | 0..n | Data types exported by this module |
+| 5 | **imports** | Import | 0..* | Imported schema modules |
+| 6 | **exports** | Identifier | 0..* | Data types exported by this module |
 | 7 | **bounds** | Bounds | 0..1 | Schema-wide upper bounds |
 
 **_Type: Import (Array)_**
 
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |
-| 1 | Nsid | 1 | nsid -- A short local identifier (namespace id) used within this module to refer to the imported module |
-| 2 | Uname | 1 | uname -- Unique name of imported module |
+| 1 | Nsid | 1 | **nsid** - A short local identifier (namespace id) used within this module to refer to the imported module |
+| 2 | Uname | 1 | **uname** - Unique name of imported module |
 
 **_Type: Bounds (Array)_**
 
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |
-| 1 | Integer | 1 | max_msg -- Maximum serialized message size in octets or characters |
-| 2 | Integer | 1 | max_str -- Maximum string length in characters |
-| 3 | Integer | 1 | max_bin -- Maximum binary length in octets |
-| 4 | Integer | 1 | max_fields -- Maximum number of elements in ArrayOf |
+| 1 | Integer | 1 | **max_msg** - Maximum serialized message size in octets or characters |
+| 2 | Integer | 1 | **max_str** - Maximum string length in characters |
+| 3 | Integer | 1 | **max_bin** - Maximum binary length in octets |
+| 4 | Integer | 1 | **max_fields** - Maximum number of elements in ArrayOf |
 
 **_Type: Type (Array)_**
 
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |
-| 1 | Identifier | 1 | tname -- Name of this datatype |
-| 2 | Enumerated.* | 1 | btype -- Base type.  Enumerated value derived from list of JADN data types |
-| 3 | Options | 1 | opts -- Type options |
-| 4 | String | 1 | desc -- Description of this data type |
-| 5 | JADN-Type | 0..n | fields -- List of fields for compound types.  Not present for primitive types |
+| 1 | Identifier | 1 | **tname** - Name of this datatype |
+| 2 | Enumerated.* | 1 | **btype** - Base type.  Enumerated value derived from list of JADN data types |
+| 3 | Options | 1 | **opts** - Type options |
+| 4 | String | 1 | **desc** - Description of this data type |
+| 5 | JADN-Type | 0..* | **fields** - List of fields for compound types.  Not present for primitive types |
 
 **_Type: JADN-Type (Choice)_**
 
 | ID | Name | Type | # | Description |
-| ---: | --- | :--- | ---: | :--- |
+| ---: | :--- | :--- | ---: | :--- |
 | 1 | **Binary** | Null | 1 | Octet (binary) string |
 | 2 | **Boolean** | Null | 1 | True or False |
 | 3 | **Integer** | Null | 1 | Whole number |
@@ -74,46 +74,41 @@
 
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |
-| 1 | Integer | 1 | Item ID |
-| 2 | String | 1 | Item name |
-| 3 | String | 1 | Item description |
+| 1 | Integer | 1 | ****Item ID |
+| 2 | String | 1 | ****Item name |
+| 3 | String | 1 | ****Item description |
 
 **_Type: FullField (Array)_**
 
 | ID | Type | # | Description |
 | ---: | :--- | ---: | :--- |
-| 1 | Integer | 1 | Field ID or ordinal position |
-| 2 | Identifier | 1 | Field name |
-| 3 | Identifier | 1 | Field type |
-| 4 | Options | 1 | Field options |
-| 5 | String | 1 | Field description |
+| 1 | Integer | 1 | ****Field ID or ordinal position |
+| 2 | Identifier | 1 | ****Field name |
+| 3 | Identifier | 1 | ****Field type |
+| 4 | Options | 1 | ****Field options |
+| 5 | String | 1 | ****Field description |
 
-**_Type: Identifier_**
 
-| Type Name | Base Type | Description |
+| Type Name | Type Definition | Description |
 | :--- | :--- | :--- |
-| Identifier | String [0..32] | A string starting with an alpha char followed by zero or more alphanumeric / underscore / dash chars |
+| **Identifier** | String [0..32] | A string starting with an alpha char followed by zero or more alphanumeric / underscore / dash chars |
 
-**_Type: Nsid_**
 
-| Type Name | Base Type | Description |
+| Type Name | Type Definition | Description |
 | :--- | :--- | :--- |
-| Nsid | String [1..8] | Namespace ID - a short identifier |
+| **Nsid** | String [1..8] | Namespace ID - a short identifier |
 
-**_Type: Uname_**
 
-| Type Name | Base Type | Description |
+| Type Name | Type Definition | Description |
 | :--- | :--- | :--- |
-| Uname | String [1..100] | Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes |
+| **Uname** | String [1..100] | Unique name (e.g., of a schema) - typically a set of Identifiers separated by forward slashes |
 
-**_Type: Options_**
 
-| Type Name | Base Type | Description |
+| Type Name | Type Definition | Description |
 | :--- | :--- | :--- |
-| Options | ArrayOf(Option) [0..10] | Options list may be empty but may not be omitted |
+| **Options** | ArrayOf(Option) [0..10] | Options list may be empty but may not be omitted |
 
-**_Type: Option_**
 
-| Type Name | Base Type | Description |
+| Type Name | Type Definition | Description |
 | :--- | :--- | :--- |
-| Option | String [1..100] | Option string: 1st char = option id |
+| **Option** | String [1..100] | Option string: 1st char = option id |

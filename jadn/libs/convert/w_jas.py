@@ -9,18 +9,19 @@ from datetime import datetime
 from textwrap import fill
 
 stype_map = {                   # Map JADN built-in types to JAS type names (Equivalent ASN.1 types in comments)
-    'Binary': 'BINARY',           # OCTET STRING
-    'Boolean': 'BOOLEAN',         # BOOLEAN
-    'Integer': 'INTEGER',         # INTEGER
-    'Number': 'REAL',             # REAL
-    'Null': 'NULL',               # NULL
-    'String': 'STRING',           # UTF8String
-    'Array': 'ARRAY',             # SEQUENCE
-    'ArrayOf': 'ARRAY_OF',        # SEQUENCE OF
-    'Choice': 'CHOICE',           # CHOICE
-    'Enumerated': 'ENUMERATED',   # ENUMERATED
-    'Map': 'MAP',                 # SET
-    'Record': 'RECORD'            # SEQUENCE
+    'Binary': 'BINARY',         # OCTET STRING
+    'Boolean': 'BOOLEAN',       # BOOLEAN
+    'Integer': 'INTEGER',       # INTEGER
+    'Number': 'REAL',           # REAL
+    'Null': 'NULL',             # NULL
+    'String': 'STRING',         # UTF8String
+    'Array': 'ARRAY',           # SEQUENCE
+    'ArrayOf': 'ARRAY_OF',      # SEQUENCE OF
+    'Choice': 'CHOICE',         # CHOICE
+    'Enumerated': 'ENUMERATED', # ENUMERATED
+    'Map': 'MAP',               # SET
+    'MapOf': 'MAP_OF',          #
+    'Record': 'RECORD'          # SEQUENCE
 }
 
 
@@ -58,9 +59,9 @@ def jas_dumps(jadn):
     jas += '*/\n'
 
     assert set(stype_map) == set(PRIMITIVE_TYPES + STRUCTURE_TYPES)         # Ensure type list is up to date
-    tolist = ['compact', 'cvt', 'rtype', 'min', 'max', 'pattern', 'format']
+    tolist = ['compact', 'cvt', 'ktype', 'rtype', 'min', 'max', 'pattern', 'format']
     assert set(TYPE_OPTIONS.values()) == set(tolist)                # Ensure type options list is up to date
-    folist = ['rtype', 'atfield', 'min', 'max', 'etype', 'default']
+    folist = ['rtype', 'atfield', 'min', 'max', 'etype', 'enum', 'default']
     assert set(FIELD_OPTIONS.values()) == set(folist)               # Ensure field options list is up to date
     for td in jadn['types']:                    # 0:type name, 1:base type, 2:type opts, 3:type desc, 4:fields
         tname = td[TNAME]
@@ -84,6 +85,8 @@ def jas_dumps(jadn):
                     tostr += '.' + ov
                 elif opt =='rtype':
                     tostr += '(' + ov + ')'
+                elif opt == 'ktype':
+                    pass            # fix MapOf(ktype, rtype)
                 elif opt == 'pattern':
                     tostr += ' (PATTERN ("' + ov + '"))'
                 elif opt == 'format':

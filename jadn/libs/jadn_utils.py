@@ -83,6 +83,7 @@ def topts_s2d(ostr):
         "format": lambda x: x,
         "min": lambda x: int(x),
         "max": lambda x: int(x),
+        'ktype': lambda x: x,
         "rtype": lambda x: x,
         "pattern": lambda x: x,
     }
@@ -109,6 +110,7 @@ def fopts_s2d(ostr):
         "atfield": lambda x: x,
         "rtype": lambda x: x,
         "etype": lambda x: x,
+        'enum': lambda x: True,
         "default": lambda x: x
     }
 
@@ -128,7 +130,7 @@ def basetype(tt):                   # Return base type of derived subtypes
     return tt.rsplit('.')[0]        # Strip off subtype (e.g., .ID)
 
 
-def cardinality(min, max):
+def multiplicity(min, max):
     if min == 1 and max == 1:
         return '1'
-    return str(min) + '..' + ('n' if max == 0 else str(max))
+    return str(min) + '..' + ('*' if max == 0 else str(max))
