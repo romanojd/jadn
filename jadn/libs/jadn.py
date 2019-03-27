@@ -96,59 +96,59 @@ def jadn_check(schema):
 
     # TODO: raise exception instead of print
 
-    for t in schema['types']:     # datatype definition: TNAME, TTYPE, TOPTS, TDESC, FIELDS
-        tt = basetype(t[TTYPE])
+    for t in schema['types']:     # datatype definition: TypeName, BaseType, TypeOptions, TypeDesc, Fields
+        tt = basetype(t[BaseType])
         if is_builtin(tt):
-            topts = topts_s2d(t[TOPTS])
+            topts = topts_s2d(t[TypeOptions])
             vop = {k for k in topts} - {k for k in SUPPORTED_TYPE_OPTIONS[tt]}
             if vop:
-                print('Error:', t[TNAME], 'type', tt, 'invalid type option', str(vop))
+                print('Error:', t[TypeName], 'type', tt, 'invalid type option', str(vop))
         else:
-            print('Error: Unknown Base Type:', tt, '(' + t[TNAME] + ')')       # TODO: handle if t[TNAME] doesn't exist
+            print('Error: Unknown Base Type:', tt, '(' + t[TypeName] + ')')       # TODO: handle if t[TypeName] doesn't exist
             topts = {}
         if tt == 'ArrayOf' and 'rtype' not in topts:
-            print('Error:', t[TNAME], '- Missing array element type')
+            print('Error:', t[TypeName], '- Missing array element type')
         if 'format' in topts:
             f = topts['format']
             if f not in FORMAT_CHECK or tt != FORMAT_CHECK[f]:
-                print('Unsupported value constraint', '"' + topts['format'] + '" on', tt + ':',  t[TNAME])
+                print('Unsupported value constraint', '"' + topts['format'] + '" on', tt + ':',  t[TypeName])
         if 'cvt' in topts:
             f = topts['cvt']
             if f not in FORMAT_CONVERT or tt != FORMAT_CONVERT[f]:
-                print('Unsupported String conversion', '"' + topts['cvt'] + '" on', tt + ':',  t[TNAME])
+                print('Unsupported String conversion', '"' + topts['cvt'] + '" on', tt + ':',  t[TypeName])
         if is_primitive(tt) or tt == 'ArrayOf':
             if len(t) != 4:    # TODO: trace back to base type
-                print('Type format error:', t[TNAME], '- type', tt, 'cannot have items')
+                print('Type format error:', t[TypeName], '- type', tt, 'cannot have items')
         elif is_builtin(tt):
             if len(t) == 5:
                 tags = set()                            # TODO: check for name and tag collisions
                 n = 3 if tt == 'Enumerated' else 5      # TODO: check Choice min cardinality != 0
-                for k, i in enumerate(t[FIELDS]):       # item definition: 0-tag, 1-name, 2-type, 3-options, 4-description
-                    tags.update({i[FTAG]})              # or (enumerated): 0-tag, 1-name, 2-description
+                for k, i in enumerate(t[Fields]):       # item definition: 0-tag, 1-name, 2-type, 3-options, 4-description
+                    tags.update({i[FieldID]})              # or (enumerated): 0-tag, 1-name, 2-description
                     ordinal = tt in ('Array', 'Record')
-                    if ordinal and i[FTAG] != k + 1:
-                        print('Item tag error:', t[TNAME] + '(' + tt + '):' + i[FNAME], '--', i[FTAG], 'should be', k + 1)
+                    if ordinal and i[FieldID] != k + 1:
+                        print('Item tag error:', t[TypeName] + '(' + tt + '):' + i[FieldName], '--', i[FieldID], 'should be', k + 1)
                     if len(i) != n:
-                        print('Item format error:', t[TNAME], tt, i[FNAME], '-', len(i), '!=', n)
-                    if len(i) > 3 and is_builtin(i[FTYPE]):     # TODO: trace back to builtin types
-                        fop = {k for k in fopts_s2d(i[FOPTS])} - {k for k in SUPPORTED_FIELD_OPTIONS[i[FTYPE]]}
+                        print('Item format error:', t[TypeName], tt, i[FieldName], '-', len(i), '!=', n)
+                    if len(i) > 3 and is_builtin(i[FieldType]):     # TODO: trace back to builtin types
+                        fop = {k for k in fopts_s2d(i[FieldOptions])} - {k for k in SUPPORTED_FIELD_OPTIONS[i[FieldType]]}
                         if fop:
-                            print('Error:', t[TNAME], ':', i[FNAME], i[FTYPE], 'invalid field option', str(fop))
+                            print('Error:', t[TypeName], ':', i[FieldName], i[FieldType], 'invalid field option', str(fop))
                     # TODO: check that wildcard name has Choice type, and that there is only one wildcard.
-                if len(t[FIELDS]) != len(tags):
-                    print('Tag collision', t[TNAME], len(t[FIELDS]), 'items,', len(tags), 'unique tags')
+                if len(t[Fields]) != len(tags):
+                    print('Tag collision', t[TypeName], len(t[Fields]), 'items,', len(tags), 'unique tags')
             else:
-                print('Type format error:', t[TNAME], '- missing items from compound type', tt)
+                print('Type format error:', t[TypeName], '- missing items from compound type', tt)
     return schema
 
 
 def jadn_strip(schema):             # Strip comments from schema
     sc = copy.deepcopy(schema)
     for tdef in sc['types']:
-        tdef[TDESC] = ''
-        if len(tdef) > FIELDS:
-            fd = EDESC if tdef[TTYPE] == 'Enumerated' else FDESC
-            for fdef in tdef[FIELDS]:
+        tdef[TypeDesc] = ''
+        if len(tdef) > Fields:
+            fd = EnumDesc if tdef[BaseType] == 'Enumerated' else FieldDesc
+            for fdef in tdef[Fields]:
                 fdef[fd] = ''
     return sc
 
@@ -158,17 +158,17 @@ def jadn_merge(base, imp, nsid):      # Merge an imported schema into a base sch
         return [(x[0] + nsid + ':' + x[1:] if x[0] == '*' and x[1:] in imported_names else x) for x in opts]
 
     types = base['types'][:]        # Make a copy to avoid modifying base
-    imported_names = {t[TNAME] for t in imp['types']}
+    imported_names = {t[TypeName] for t in imp['types']}
     for t in imp['types']:
-        new_types = [nsid + ':' + t[TNAME], t[TTYPE], t[TOPTS], t[TDESC]]
-        new_types[TOPTS] = update_opts(new_types[TOPTS])
-        if len(t) > FIELDS:
-            new_fields = t[FIELDS][:]
-            if t[TTYPE] != 'Enumerated':
+        new_types = [nsid + ':' + t[TypeName], t[BaseType], t[TypeOptions], t[TypeDesc]]
+        new_types[TypeOptions] = update_opts(new_types[TypeOptions])
+        if len(t) > Fields:
+            new_fields = t[Fields][:]
+            if t[BaseType] != 'Enumerated':
                 for f in new_fields:
-                    f[FOPTS] = update_opts(f[FOPTS])
-                    if f[FTYPE] in imported_names:
-                        f[FTYPE] = nsid + ':' + f[FTYPE]
+                    f[FieldOptions] = update_opts(f[FieldOptions])
+                    if f[FieldType] in imported_names:
+                        f[FieldType] = nsid + ':' + f[FieldType]
             new_types.append(new_fields)
         types.append(new_types)
     return {'meta': base['meta'], 'types': types}
@@ -208,15 +208,15 @@ def build_jadn_deps(schema):
     nsids = [n[0] for n in imps]
     for tdef in schema['types']:
         deps = []
-        if tdef[TTYPE] == 'ArrayOf':
-            rtype = topts_s2d(tdef[TOPTS])['rtype']
+        if tdef[BaseType] == 'ArrayOf':
+            rtype = topts_s2d(tdef[TypeOptions])['rtype']
             if not is_builtin(rtype):
                 deps.append(ns(rtype, nsids))
-        if len(tdef) > FIELDS and tdef[TTYPE] != 'Enumerated':
-            for f in tdef[FIELDS]:
-                if not is_builtin(f[FTYPE]):
-                    deps.append(ns(f[FTYPE], nsids))
-        items.append((tdef[TNAME], deps))
+        if len(tdef) > Fields and tdef[BaseType] != 'Enumerated':
+            for f in tdef[Fields]:
+                if not is_builtin(f[FieldType]):
+                    deps.append(ns(f[FieldType], nsids))
+        items.append((tdef[TypeName], deps))
     return items
 
 

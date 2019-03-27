@@ -394,7 +394,7 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
             c = [cls[0]] + cls[2:]
         cvt = '.' + to['cvt'] if 'cvt' in to else ''      # Multipart (Array) string conversion method (.<xxx>)
         tos = ' ' + str([str(k) for k in tor]) if tor else ''
-        return type_begin(td[TNAME], td[TTYPE] + id + cvt, tos, h, c)
+        return type_begin(td[TypeName], td[BaseType] + id + cvt, tos, h, c)
 
     def _titem(to, fitems, cls):
         f = fitems
@@ -419,7 +419,7 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
     text += meta_end()
 
     for td in jadn['types']:
-        to = topts_s2d(td[TOPTS])
+        to = topts_s2d(td[TypeOptions])
         tor = set(to) - {'min', 'max'}       # Remaining type options after known options are processed
         tos = ' ' + str([str(k) for k in tor]) if tor else ''
         rng = ''
@@ -427,46 +427,46 @@ def table_dumps(jadn, form=DEFAULT_FORMAT):
             lo = to['min'] if 'min' in to else 1
             hi = to['max'] if 'max' in to else 1
             rng = ' [' + multiplicity(lo, hi) + ']'
-        if td[TTYPE] in PRIMITIVE_TYPES or not is_builtin(td[TTYPE]):
+        if td[BaseType] in PRIMITIVE_TYPES or not is_builtin(td[BaseType]):
             cls = ['b', 's', 'd']
             text += type_begin('', None, tos, ['Type Name', 'Type Definition', 'Description'], cls)
             cvt = '.' + to['cvt'] if 'cvt' in to else ''    # Binary string conversion method:
             fmt = ' (' + to['format'] + ')' if 'format' in to else ''
-            text += type_item([td[TNAME], td[TTYPE] + cvt + rng + fmt, td[TDESC]], cls)
-        elif td[TTYPE] in ['ArrayOf', 'MapOf']:            # In STRUCTURE_TYPES but with no field definitions
+            text += type_item([td[TypeName], td[BaseType] + cvt + rng + fmt, td[TypeDesc]], cls)
+        elif td[BaseType] in ['ArrayOf', 'MapOf']:            # In STRUCTURE_TYPES but with no field definitions
             cls = ['b', 's', 'd']
-            if td[TTYPE] == 'MapOf':
+            if td[BaseType] == 'MapOf':
                 rtype = '(' + to['ktype'] + ',' + to['rtype'] + ')'
             else:
                 rtype = '(' + to['rtype'] + ')'
             tor = set(to) - {'ktype', 'rtype', 'min', 'max'}
             tos = ' ' + str([str(k) for k in tor]) if tor else ''
             text += type_begin('', None, tos, ['Type Name', 'Type Definition', 'Description'], cls)
-            text += type_item([td[TNAME], td[TTYPE] + rtype + rng, td[TDESC]], cls)
-        elif td[TTYPE] == 'Enumerated':
+            text += type_item([td[TypeName], td[BaseType] + rtype + rng, td[TypeDesc]], cls)
+        elif td[BaseType] == 'Enumerated':
             if 'rtype' in to:
                 rtype = '.*' + to['rtype']
                 tor = set(to) - {'rtype'}
                 tos = ' ' + str([str(k) for k in tor]) if tor else ''
-                text += type_begin(td[TNAME], td[TTYPE] + rtype, tos, [], [])
+                text += type_begin(td[TypeName], td[BaseType] + rtype, tos, [], [])
             else:
                 cls = ['n', 'b', 'd']
                 text += _tbegin(to, td, ['ID', 'Name', 'Description'], cls)
-                for fd in td[FIELDS]:
-                    text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[EDESC]], cls)
+                for fd in td[Fields]:
+                    text += _titem(to, [str(fd[FieldID]), fd[FieldName], fd[EnumDesc]], cls)
         else:                                   # Array, Choice, Map, Record
             cls = ['n', 'b', 's', 'n', 'd']
-            if td[TTYPE] == 'Array':
+            if td[BaseType] == 'Array':
                 cls2 = ['n', 's', 'n', 'd']      # Don't print ".ID" in type name but display fields as compact
                 text += _tbegin(to, td, ['ID', 'Type', '#', 'Description'], cls2)
                 to.update({'compact': True})
             else:
                 text += _tbegin(to, td, ['ID', 'Name', 'Type', '#', 'Description'], cls)
-            for fd in td[FIELDS]:
+            for fd in td[Fields]:
                 fo = {'min': 1, 'max': 1}
-                fo.update(fopts_s2d(fd[FOPTS]))
+                fo.update(fopts_s2d(fd[FieldOptions]))
                 rtype = '.*' if 'rtype' in fo else ''
-                text += _titem(to, [str(fd[FTAG]), fd[FNAME], fd[FTYPE] + rtype, multiplicity(fo['min'], fo['max']), fd[FDESC]], cls)
+                text += _titem(to, [str(fd[FieldID]), fd[FieldName], fd[FieldType] + rtype, multiplicity(fo['min'], fo['max']), fd[FieldDesc]], cls)
         text += type_end()
 
     text += doc_end()

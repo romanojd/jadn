@@ -64,9 +64,9 @@ def jas_dumps(jadn):
     folist = ['rtype', 'atfield', 'min', 'max', 'etype', 'enum', 'default']
     assert set(FIELD_OPTIONS.values()) == set(folist)               # Ensure field options list is up to date
     for td in jadn['types']:                    # 0:type name, 1:base type, 2:type opts, 3:type desc, 4:fields
-        tname = td[TNAME]
-        ttype = basetype(td[TTYPE])
-        topts = topts_s2d(td[TOPTS])
+        tname = td[TypeName]
+        ttype = basetype(td[BaseType])
+        topts = topts_s2d(td[TypeOptions])
         tostr = ''
         if 'min' in topts or 'max' in topts:
             lo = topts['min'] if 'min' in topts else 0
@@ -102,19 +102,19 @@ def jas_dumps(jadn):
                     range = ''
                 else:
                     tostr += ' %' + opt + ': ' + str(ov) + '%'
-        tdesc = '    -- ' + td[TDESC] if td[TDESC] else ''
+        tdesc = '    -- ' + td[TypeDesc] if td[TypeDesc] else ''
         jas += '\n' + tname + ' ::= ' + stype(ttype) + tostr
-        if len(td) > FIELDS:
-            titems = deepcopy(td[FIELDS])
+        if len(td) > Fields:
+            titems = deepcopy(td[Fields])
             for n, i in enumerate(titems):      # 0:tag, 1:enum item name, 2:enum item desc  (enumerated), or
-                if len(i) > FOPTS:              # 0:tag, 1:field name, 2:field type, 3: field opts, 4:field desc
-                    desc = i[FDESC]
-                    i[FTYPE] = stype(i[FTYPE])
+                if len(i) > FieldOptions:              # 0:tag, 1:field name, 2:field type, 3: field opts, 4:field desc
+                    desc = i[FieldDesc]
+                    i[FieldType] = stype(i[FieldType])
                 else:
-                    desc = i[EDESC]
+                    desc = i[EnumDesc]
                 desc = '    -- ' + desc if desc else ''
                 i.append(',' + desc if n < len(titems) - 1 else (' ' + desc if desc else ''))   # TODO: fix hacked desc for join
-            flen = min(32, max(12, max([len(i[FNAME]) for i in titems]) + 1 if titems else 0))
+            flen = min(32, max(12, max([len(i[FieldName]) for i in titems]) + 1 if titems else 0))
             jas += ' {' + tdesc + '\n'
             if ttype.lower() == 'enumerated':
                 fmt = '    {1:' + str(flen) + '} ({0:d}){3}'
@@ -126,7 +126,7 @@ def jas_dumps(jadn):
                 items = []
                 for n, i in enumerate(titems):
                     ostr = ''
-                    opts = fopts_s2d(i[FOPTS])
+                    opts = fopts_s2d(i[FieldOptions])
                     if 'atfield' in opts:
                         ostr += '.&' + opts['atfield']
                         del opts['atfield']
@@ -137,7 +137,7 @@ def jas_dumps(jadn):
                         if opts['min'] == 0:         # TODO: handle array fields (max != 1)
                             ostr += ' OPTIONAL'
                         del opts['min']
-                    items += [fmt.format(i[FTAG], i[FNAME], i[FTYPE], ostr, i[5]) + (' %' + str(opts) if opts else '')]
+                    items += [fmt.format(i[FieldID], i[FieldName], i[FieldType], ostr, i[5]) + (' %' + str(opts) if opts else '')]
                 jas += '\n'.join(items)
             jas += '\n}\n' if titems else '}\n'
         else:
